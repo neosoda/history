@@ -590,9 +590,9 @@ export function Sidebar({
               </div>
 
               {/* Research Tasks List */}
-              <ScrollArea className="flex-1 px-2">
+              <ScrollArea className="flex-1">
                 {loadingTasks ? (
-                  <div className="space-y-2 p-2">
+                  <div className="space-y-2 p-4">
                     {[...Array(5)].map((_, i) => (
                       <div
                         key={i}
@@ -607,7 +607,7 @@ export function Sidebar({
                     </p>
                   </div>
                 ) : (
-                  <div className="space-y-1.5 py-2">
+                  <div className="space-y-1.5 py-2 px-4">
                     {tasks.map((task: ResearchTask) => {
                       const StatusIcon = task.status === 'completed' ? CheckCircle2 : task.status === 'running' ? Loader : task.status === 'failed' ? AlertCircle : Clock;
                       const statusColor = task.status === 'completed' ? 'text-green-600 dark:text-green-400' : task.status === 'running' ? 'text-blue-600 dark:text-blue-400' : task.status === 'failed' ? 'text-red-600 dark:text-red-400' : 'text-gray-600 dark:text-gray-400';
@@ -617,7 +617,7 @@ export function Sidebar({
                         <div
                           key={task.id}
                           onClick={() => handleTaskSelect(task)}
-                          className="flex items-start gap-2.5 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 group cursor-pointer transition-colors"
+                          className="w-full flex items-start gap-2.5 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 group cursor-pointer transition-colors"
                         >
                           <MapPin className="h-4 w-4 text-gray-400 dark:text-gray-500 flex-shrink-0 mt-0.5" />
                           <div className="flex-1 min-w-0">

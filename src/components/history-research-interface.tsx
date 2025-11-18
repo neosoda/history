@@ -141,21 +141,45 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
           total: statusData.total_steps || 10,
         });
 
-        // Update messages array
-        if (statusData.messages && Array.isArray(statusData.messages)) {
+        // Update messages array if provided
+        if (statusData.messages && Array.isArray(statusData.messages) && statusData.messages.length > 0) {
           setMessages(statusData.messages);
+        }
+
+        // Update content/sources/images if provided during running state
+        if (statusData.output) {
+          setContent(statusData.output);
+        }
+
+        if (statusData.sources && Array.isArray(statusData.sources) && statusData.sources.length > 0) {
+          setSources(statusData.sources);
+        }
+
+        if (statusData.images && Array.isArray(statusData.images) && statusData.images.length > 0) {
+          setImages(statusData.images);
         }
 
         return { completed: false };
       } else if (statusData.status === 'completed') {
-        // Set final messages
-        if (statusData.messages && Array.isArray(statusData.messages)) {
+        // Only update state if we have actual data, otherwise keep existing data
+        // This prevents showing empty content when switching from running to completed
+
+        if (statusData.messages && Array.isArray(statusData.messages) && statusData.messages.length > 0) {
           setMessages(statusData.messages);
         }
 
-        setContent(statusData.output || '');
-        setSources(statusData.sources || []);
-        setImages(statusData.images || []);
+        if (statusData.output) {
+          setContent(statusData.output);
+        }
+
+        if (statusData.sources && Array.isArray(statusData.sources) && statusData.sources.length > 0) {
+          setSources(statusData.sources);
+        }
+
+        if (statusData.images && Array.isArray(statusData.images) && statusData.images.length > 0) {
+          setImages(statusData.images);
+        }
+
         setStatus('completed');
         return { completed: true };
       } else if (statusData.status === 'failed') {
