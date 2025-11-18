@@ -152,8 +152,12 @@ export async function POST(req: Request) {
     }
 
     // Construct the research query
+    // Use the user's message content (which includes custom instructions or preset prompts)
     let researchQuery = typeof lastMessage.content === 'string' ? lastMessage.content : '';
-    if (location) {
+
+    // Only add default comprehensive prompt if no custom instructions were provided
+    // (If location is provided but message looks like a simple location name, use default prompt)
+    if (location && researchQuery.length < 100) {
       researchQuery = `Provide a comprehensive historical analysis of ${location.name}. Include:
 - Major historical events and periods
 - Key historical figures and their contributions

@@ -204,11 +204,11 @@ export function Sidebar({
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           onClick={toggleSidebar}
-          className="fixed left-0 top-1/2 -translate-y-1/2 z-50 w-10 h-16 flex items-center justify-center bg-white dark:bg-gray-900 border-r-2 border-t-2 border-b-2 border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 rounded-r-2xl transition-all duration-200 shadow-lg hover:shadow-xl hover:w-12 group"
+          className="fixed left-0 top-1/2 -translate-y-1/2 z-50 w-10 h-16 flex items-center justify-center bg-card border-r-2 border-t-2 border-b-2 border-border hover:border-border/80 rounded-r-2xl transition-all duration-200 shadow-lg hover:shadow-xl hover:w-12 group"
           title="Open Menu"
         >
           <svg
-            className="w-5 h-5 text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors"
+            className="w-5 h-5 text-muted-foreground group-hover:text-foreground transition-colors"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -235,7 +235,7 @@ export function Sidebar({
               damping: 30,
               stiffness: 300
             }}
-            className="fixed left-6 top-1/2 -translate-y-1/2 z-40 bg-white/80 dark:bg-gray-900/80 backdrop-blur-2xl border border-gray-200 dark:border-gray-700 rounded-[32px] shadow-2xl py-4 px-3"
+            className="fixed left-6 top-1/2 -translate-y-1/2 z-40 bg-card/80 backdrop-blur-2xl border border-border rounded-[32px] shadow-2xl py-4 px-3"
           >
             <div className="flex flex-col items-center gap-2">
               {/* Always Open Toggle */}
@@ -244,15 +244,15 @@ export function Sidebar({
                   onClick={() => setAlwaysOpen(!alwaysOpen)}
                   className={`w-12 h-12 flex items-center justify-center rounded-[20px] transition-all duration-200 hover:scale-110 active:scale-95 ${
                     alwaysOpen
-                      ? 'bg-blue-100 dark:bg-blue-900/30'
-                      : 'hover:bg-gray-100 dark:hover:bg-gray-800'
+                      ? 'bg-primary/10'
+                      : 'hover:bg-accent'
                   }`}
                 >
                   <svg
                     className={`w-6 h-6 transition-colors ${
                       alwaysOpen
-                        ? 'text-blue-600 dark:text-blue-400'
-                        : 'text-gray-600 dark:text-gray-400'
+                        ? 'text-primary'
+                        : 'text-muted-foreground'
                     }`}
                     fill="none"
                     stroke="currentColor"
@@ -266,19 +266,19 @@ export function Sidebar({
                     />
                   </svg>
                 </button>
-                <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-sm font-medium rounded-lg opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50">
+                <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-popover text-popover-foreground text-sm font-medium rounded-lg opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50 border border-border shadow-md">
                   {alwaysOpen ? 'Always Open (On)' : 'Always Open (Off)'}
                 </div>
               </div>
 
               {/* Divider */}
-              <div className="w-10 h-px bg-gradient-to-r from-transparent via-gray-300 dark:via-gray-600 to-transparent" />
+              <div className="w-10 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
 
               {/* Logo */}
               <div className="relative group/tooltip">
                 <button
                   onClick={handleLogoClick}
-                  className="w-12 h-12 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800 rounded-[20px] transition-all duration-200 hover:scale-110 active:scale-95"
+                  className="w-12 h-12 flex items-center justify-center hover:bg-accent rounded-[20px] transition-all duration-200 hover:scale-110 active:scale-95"
                 >
                   <Image
                     src="/nabla.png"
@@ -288,24 +288,24 @@ export function Sidebar({
                     className="rounded-lg"
                   />
                 </button>
-                <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-sm font-medium rounded-lg opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50">
+                <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-popover text-popover-foreground text-sm font-medium rounded-lg opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50 border border-border shadow-md">
                   Home
                 </div>
               </div>
 
               {/* Divider */}
-              <div className="w-10 h-px bg-gradient-to-r from-transparent via-gray-300 dark:via-gray-600 to-transparent" />
+              <div className="w-10 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
 
               {/* New Research */}
               {(user || isDevelopment) && (
                 <div className="relative group/tooltip">
                   <button
                     onClick={handleNewResearch}
-                    className="w-12 h-12 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800 rounded-[20px] transition-all duration-200 group hover:scale-110 active:scale-95"
+                    className="w-12 h-12 flex items-center justify-center hover:bg-accent rounded-[20px] transition-all duration-200 group hover:scale-110 active:scale-95"
                   >
-                    <Plus className="h-6 w-6 text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors" />
+                    <Plus className="h-6 w-6 text-muted-foreground group-hover:text-foreground transition-colors" />
                   </button>
-                  <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-sm font-medium rounded-lg opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50">
+                  <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-popover text-popover-foreground text-sm font-medium rounded-lg opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50 border border-border shadow-md">
                     New Research
                   </div>
                 </div>
@@ -323,27 +323,27 @@ export function Sidebar({
                   }}
                   className={`w-12 h-12 flex items-center justify-center rounded-[20px] transition-all duration-200 hover:scale-110 active:scale-95 ${
                     !user && !isDevelopment
-                      ? 'opacity-50 cursor-not-allowed hover:bg-gray-100 dark:hover:bg-gray-800'
+                      ? 'opacity-50 cursor-not-allowed hover:bg-accent'
                       : showHistory
-                        ? 'bg-gray-900 dark:bg-gray-100 shadow-lg'
-                        : 'hover:bg-gray-100 dark:hover:bg-gray-800'
+                        ? 'bg-primary text-primary-foreground shadow-lg'
+                        : 'hover:bg-accent'
                   }`}
                 >
                   <History className={`h-6 w-6 transition-colors ${
                     !user && !isDevelopment
-                      ? 'text-gray-400 dark:text-gray-600'
+                      ? 'text-muted-foreground/50'
                       : showHistory
-                        ? 'text-white dark:text-gray-900'
-                        : 'text-gray-600 dark:text-gray-400'
+                        ? 'text-primary-foreground'
+                        : 'text-muted-foreground'
                   }`} />
                 </button>
-                <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-sm font-medium rounded-lg opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50">
+                <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-popover text-popover-foreground text-sm font-medium rounded-lg opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50 border border-border shadow-md">
                   {!user && !isDevelopment ? 'Sign up (free) for history' : 'Research History'}
                 </div>
               </div>
 
               {/* Divider */}
-              {user && !isDevelopment && <div className="w-10 h-px bg-gradient-to-r from-transparent via-gray-300 dark:via-gray-600 to-transparent my-1" />}
+              {user && !isDevelopment && <div className="w-10 h-px bg-gradient-to-r from-transparent via-border to-transparent my-1" />}
 
               {/* Billing/Subscription - Hidden in development mode */}
               {user && !isDevelopment && (
@@ -352,11 +352,11 @@ export function Sidebar({
                     <div className="relative group/tooltip">
                       <button
                         onClick={() => setShowSubscription(true)}
-                        className="w-12 h-12 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800 rounded-[20px] transition-all duration-200 group hover:scale-110 active:scale-95"
+                        className="w-12 h-12 flex items-center justify-center hover:bg-accent rounded-[20px] transition-all duration-200 group hover:scale-110 active:scale-95"
                       >
-                        <CreditCard className="h-6 w-6 text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors" />
+                        <CreditCard className="h-6 w-6 text-muted-foreground group-hover:text-foreground transition-colors" />
                       </button>
-                      <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-sm font-medium rounded-lg opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50">
+                      <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-popover text-popover-foreground text-sm font-medium rounded-lg opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50 border border-border shadow-md">
                         Upgrade
                       </div>
                     </div>
@@ -364,11 +364,11 @@ export function Sidebar({
                     <div className="relative group/tooltip">
                       <button
                         onClick={handleViewUsage}
-                        className="w-12 h-12 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800 rounded-[20px] transition-all duration-200 group hover:scale-110 active:scale-95"
+                        className="w-12 h-12 flex items-center justify-center hover:bg-accent rounded-[20px] transition-all duration-200 group hover:scale-110 active:scale-95"
                       >
-                        <BarChart3 className="h-6 w-6 text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors" />
+                        <BarChart3 className="h-6 w-6 text-muted-foreground group-hover:text-foreground transition-colors" />
                       </button>
-                      <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-sm font-medium rounded-lg opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50">
+                      <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-popover text-popover-foreground text-sm font-medium rounded-lg opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50 border border-border shadow-md">
                         Usage & Billing
                       </div>
                     </div>
@@ -381,11 +381,11 @@ export function Sidebar({
                 <div className="relative group/tooltip">
                   <button
                     onClick={() => setShowEnterpriseModal(true)}
-                    className="w-12 h-12 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800 rounded-[20px] transition-all duration-200 group hover:scale-110 active:scale-95"
+                    className="w-12 h-12 flex items-center justify-center hover:bg-accent rounded-[20px] transition-all duration-200 group hover:scale-110 active:scale-95"
                   >
-                    <Building2 className="h-6 w-6 text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors" />
+                    <Building2 className="h-6 w-6 text-muted-foreground group-hover:text-foreground transition-colors" />
                   </button>
-                  <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-sm font-medium rounded-lg opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50">
+                  <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-popover text-popover-foreground text-sm font-medium rounded-lg opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50 border border-border shadow-md">
                     Enterprise Solutions
                   </div>
                 </div>
@@ -396,11 +396,11 @@ export function Sidebar({
                 <div className="relative group/tooltip">
                   <button
                     onClick={() => setShowMapStyles(!showMapStyles)}
-                    className="w-12 h-12 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800 rounded-[20px] transition-all duration-200 group hover:scale-110 active:scale-95"
+                    className="w-12 h-12 flex items-center justify-center hover:bg-accent rounded-[20px] transition-all duration-200 group hover:scale-110 active:scale-95"
                   >
-                    <Globe2 className="h-6 w-6 text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors" />
+                    <Globe2 className="h-6 w-6 text-muted-foreground group-hover:text-foreground transition-colors" />
                   </button>
-                  <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-sm font-medium rounded-lg opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50">
+                  <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-popover text-popover-foreground text-sm font-medium rounded-lg opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50 border border-border shadow-md">
                     Map Style
                   </div>
                 </div>
@@ -411,18 +411,18 @@ export function Sidebar({
                 <div className="relative group/tooltip">
                   <button
                     onClick={() => setShowSettings(true)}
-                    className="w-12 h-12 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800 rounded-[20px] transition-all duration-200 group hover:scale-110 active:scale-95"
+                    className="w-12 h-12 flex items-center justify-center hover:bg-accent rounded-[20px] transition-all duration-200 group hover:scale-110 active:scale-95"
                   >
-                    <Settings className="h-6 w-6 text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors" />
+                    <Settings className="h-6 w-6 text-muted-foreground group-hover:text-foreground transition-colors" />
                   </button>
-                  <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-sm font-medium rounded-lg opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50">
+                  <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-popover text-popover-foreground text-sm font-medium rounded-lg opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50 border border-border shadow-md">
                     Settings
                   </div>
                 </div>
               )}
 
               {/* Divider */}
-              <div className="w-10 h-px bg-gradient-to-r from-transparent via-gray-300 dark:via-gray-600 to-transparent mt-1" />
+              <div className="w-10 h-px bg-gradient-to-r from-transparent via-border to-transparent mt-1" />
 
               {/* Log In Button for unauthenticated users */}
               {!user && (
@@ -431,15 +431,15 @@ export function Sidebar({
                     onClick={() => {
                       window.dispatchEvent(new CustomEvent('show-auth-modal'));
                     }}
-                    className="w-12 h-12 flex items-center justify-center bg-gradient-to-br from-blue-50 to-emerald-50 dark:from-blue-900/30 dark:to-emerald-900/30 hover:from-blue-100 hover:to-emerald-100 dark:hover:from-blue-900/40 dark:hover:to-emerald-900/40 rounded-[20px] transition-all duration-200 hover:scale-110 active:scale-95 border border-blue-200/50 dark:border-blue-800/50 relative"
+                    className="w-12 h-12 flex items-center justify-center bg-gradient-to-br from-primary/10 to-primary/5 hover:from-primary/20 hover:to-primary/10 rounded-[20px] transition-all duration-200 hover:scale-110 active:scale-95 border border-primary/20 relative"
                   >
-                    <LogOut className="h-6 w-6 text-blue-600 dark:text-blue-400 rotate-180" />
+                    <LogOut className="h-6 w-6 text-primary rotate-180" />
                     <span className="absolute -top-1 -right-1 flex h-3 w-3">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-3 w-3 bg-blue-500"></span>
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-3 w-3 bg-primary"></span>
                     </span>
                   </button>
-                  <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-sm font-medium rounded-lg opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50">
+                  <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-popover text-popover-foreground text-sm font-medium rounded-lg opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50 border border-border shadow-md">
                     Log in
                   </div>
                 </div>
@@ -450,18 +450,18 @@ export function Sidebar({
                 <div className="relative group/tooltip">
                   <button
                     onClick={() => setShowProfileMenu(!showProfileMenu)}
-                    className="w-12 h-12 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800 rounded-[20px] transition-all duration-200 hover:scale-110 active:scale-95"
+                    className="w-12 h-12 flex items-center justify-center hover:bg-accent rounded-[20px] transition-all duration-200 hover:scale-110 active:scale-95"
                   >
-                    <Avatar className="h-9 w-9 ring-2 ring-transparent hover:ring-gray-300 dark:hover:ring-gray-600 transition-all">
+                    <Avatar className="h-9 w-9 ring-2 ring-transparent hover:ring-border transition-all">
                       <AvatarImage src={user.user_metadata?.avatar_url} />
-                      <AvatarFallback className="text-xs bg-gradient-to-br from-gray-900 to-gray-700 dark:from-gray-100 dark:to-gray-300 text-white dark:text-gray-900 font-semibold">
+                      <AvatarFallback className="text-xs bg-gradient-to-br from-primary to-primary/80 text-primary-foreground font-semibold">
                         {user.email?.[0]?.toUpperCase() || 'U'}
                       </AvatarFallback>
                     </Avatar>
                   </button>
                   {/* Only show tooltip when menu is NOT open */}
                   {!showProfileMenu && (
-                    <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-sm font-medium rounded-lg opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50">
+                    <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-popover text-popover-foreground text-sm font-medium rounded-lg opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50 border border-border shadow-md">
                       Account
                     </div>
                   )}
@@ -480,18 +480,18 @@ export function Sidebar({
                           animate={{ opacity: 1, x: 0, scale: 1 }}
                           exit={{ opacity: 0, x: -10, scale: 0.95 }}
                           transition={{ duration: 0.15 }}
-                          className="absolute left-full ml-4 bottom-0 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border border-gray-200 dark:border-gray-700 rounded-2xl shadow-2xl py-2 px-1 min-w-[220px] z-50"
+                          className="absolute left-full ml-4 bottom-0 bg-popover/95 backdrop-blur-xl border border-border rounded-2xl shadow-2xl py-2 px-1 min-w-[220px] z-50"
                         >
                         {/* User Email */}
                         <div className="px-3 py-2.5 mb-1">
-                          <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Signed in as</p>
-                          <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
+                          <p className="text-xs text-muted-foreground mb-1">Signed in as</p>
+                          <p className="text-sm font-medium text-popover-foreground truncate">
                             {user.email}
                           </p>
                         </div>
 
                         {/* Divider */}
-                        <div className="h-px bg-gray-200 dark:bg-gray-700 my-1" />
+                        <div className="h-px bg-border my-1" />
 
                         {/* Sign Out */}
                         <button
@@ -502,7 +502,7 @@ export function Sidebar({
                               signOut();
                             }
                           }}
-                          className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-all duration-200"
+                          className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-red-600 hover:bg-red-500/10 rounded-xl transition-all duration-200"
                         >
                           <LogOut className="h-4 w-4" />
                           <span className="font-medium">Sign out</span>
@@ -517,14 +517,14 @@ export function Sidebar({
               {/* Close Dock Button - Only show if not always open */}
               {!alwaysOpen && (
                 <>
-                  <div className="w-10 h-px bg-gradient-to-r from-transparent via-gray-300 dark:via-gray-600 to-transparent mt-2" />
+                  <div className="w-10 h-px bg-gradient-to-r from-transparent via-border to-transparent mt-2" />
                   <div className="relative group/tooltip">
                     <button
                       onClick={toggleSidebar}
-                      className="w-12 h-12 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800 rounded-[20px] transition-all duration-200 hover:scale-110 active:scale-95 mt-2"
+                      className="w-12 h-12 flex items-center justify-center hover:bg-accent rounded-[20px] transition-all duration-200 hover:scale-110 active:scale-95 mt-2"
                     >
                       <svg
-                        className="w-5 h-5 text-gray-600 dark:text-gray-400"
+                        className="w-5 h-5 text-muted-foreground"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -537,7 +537,7 @@ export function Sidebar({
                         />
                       </svg>
                     </button>
-                    <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-sm font-medium rounded-lg opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50">
+                    <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-popover text-popover-foreground text-sm font-medium rounded-lg opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50 border border-border shadow-md">
                       Close
                     </div>
                   </div>
@@ -571,12 +571,12 @@ export function Sidebar({
                 damping: 30,
                 stiffness: 300
               }}
-              className="fixed left-20 top-4 bottom-4 w-72 bg-white dark:bg-gray-900 rounded-3xl z-50 shadow-xl ml-2 flex flex-col border border-gray-200 dark:border-gray-800"
+              className="fixed left-20 top-4 bottom-4 w-80 bg-card rounded-3xl z-50 shadow-xl ml-2 flex flex-col border border-border overflow-hidden"
             >
               {/* Header */}
-              <div className="p-4 border-b border-gray-200 dark:border-gray-800">
+              <div className="p-4 border-b border-border flex-shrink-0">
                 <div className="flex items-center justify-between">
-                  <h3 className="font-semibold text-gray-900 dark:text-gray-100">Research History</h3>
+                  <h3 className="font-semibold text-card-foreground">Research History</h3>
                   <Button
                     variant="ghost"
                     size="sm"
@@ -590,19 +590,19 @@ export function Sidebar({
               </div>
 
               {/* Research Tasks List */}
-              <ScrollArea className="flex-1">
+              <div className="flex-1 overflow-y-auto">
                 {loadingTasks ? (
                   <div className="space-y-2 p-4">
                     {[...Array(5)].map((_, i) => (
                       <div
                         key={i}
-                        className="h-20 bg-gray-100 dark:bg-gray-800 rounded-xl animate-pulse"
+                        className="h-20 bg-muted rounded-xl animate-pulse"
                       />
                     ))}
                   </div>
                 ) : tasks.length === 0 ? (
                   <div className="flex items-center justify-center h-full p-4">
-                    <p className="text-sm text-gray-500 dark:text-gray-400 text-center">
+                    <p className="text-sm text-muted-foreground text-center">
                       No research history yet.<br />Click anywhere on the globe to start researching!
                     </p>
                   </div>
@@ -610,21 +610,21 @@ export function Sidebar({
                   <div className="space-y-1.5 py-2 px-4">
                     {tasks.map((task: ResearchTask) => {
                       const StatusIcon = task.status === 'completed' ? CheckCircle2 : task.status === 'running' ? Loader : task.status === 'failed' ? AlertCircle : Clock;
-                      const statusColor = task.status === 'completed' ? 'text-green-600 dark:text-green-400' : task.status === 'running' ? 'text-blue-600 dark:text-blue-400' : task.status === 'failed' ? 'text-red-600 dark:text-red-400' : 'text-gray-600 dark:text-gray-400';
-                      const statusBg = task.status === 'completed' ? 'bg-green-50 dark:bg-green-950/30' : task.status === 'running' ? 'bg-blue-50 dark:bg-blue-950/30' : task.status === 'failed' ? 'bg-red-50 dark:bg-red-950/30' : 'bg-gray-50 dark:bg-gray-800/30';
+                      const statusColor = task.status === 'completed' ? 'text-green-600' : task.status === 'running' ? 'text-blue-600' : task.status === 'failed' ? 'text-red-600' : 'text-muted-foreground';
+                      const statusBg = task.status === 'completed' ? 'bg-green-500/10' : task.status === 'running' ? 'bg-blue-500/10' : task.status === 'failed' ? 'bg-red-500/10' : 'bg-muted';
 
                       return (
                         <div
                           key={task.id}
                           onClick={() => handleTaskSelect(task)}
-                          className="w-full flex items-start gap-2.5 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 group cursor-pointer transition-colors"
+                          className="flex items-start gap-2.5 p-3 rounded-xl hover:bg-accent group cursor-pointer transition-colors"
                         >
-                          <MapPin className="h-4 w-4 text-gray-400 dark:text-gray-500 flex-shrink-0 mt-0.5" />
+                          <MapPin className="h-4 w-4 text-muted-foreground flex-shrink-0 mt-0.5" />
                           <div className="flex-1 min-w-0">
-                            <div className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
+                            <div className="text-sm font-medium text-foreground break-words">
                               {task.locationName}
                             </div>
-                            <div className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
+                            <div className="text-xs text-muted-foreground mt-0.5">
                               {new Date(task.createdAt).toLocaleDateString()}
                             </div>
                             <div className={`inline-flex items-center gap-1 mt-1.5 px-2 py-0.5 rounded-full text-[10px] font-medium ${statusBg} ${statusColor}`}>
@@ -637,7 +637,7 @@ export function Sidebar({
                     })}
                   </div>
                 )}
-              </ScrollArea>
+              </div>
             </motion.div>
           </>
         )}
@@ -675,9 +675,9 @@ export function Sidebar({
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: -400, opacity: 0 }}
               transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-              className="fixed left-24 top-1/2 -translate-y-1/2 z-50 w-80 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border border-gray-200 dark:border-gray-700 rounded-2xl shadow-2xl p-6"
+              className="fixed left-24 top-1/2 -translate-y-1/2 z-50 w-80 bg-popover/95 backdrop-blur-xl border border-border rounded-2xl shadow-2xl p-6"
             >
-              <h3 className="text-lg font-semibold mb-4">Map Style</h3>
+              <h3 className="text-lg font-semibold mb-4 text-popover-foreground">Map Style</h3>
               <div className="space-y-2">
                 {[
                   { value: 'satellite-streets-v12', label: 'Satellite Streets', description: 'Satellite imagery with labels' },
@@ -697,11 +697,11 @@ export function Sidebar({
                     }}
                     className={`w-full text-left px-4 py-3 rounded-xl transition-all ${
                       globeTheme === option.value
-                        ? 'bg-gradient-to-r from-blue-500/10 via-violet-500/10 to-purple-500/10 border-l-2 border-violet-500'
-                        : 'hover:bg-gray-100 dark:hover:bg-gray-800'
+                        ? 'bg-primary/10 border-l-2 border-primary'
+                        : 'hover:bg-accent'
                     }`}
                   >
-                    <div className="font-medium text-sm">{option.label}</div>
+                    <div className="font-medium text-sm text-popover-foreground">{option.label}</div>
                     <div className="text-xs text-muted-foreground">{option.description}</div>
                   </button>
                 ))}

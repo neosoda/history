@@ -15,6 +15,7 @@ import { useAuthStore } from '@/lib/stores/use-auth-store';
 import { Sidebar } from '@/components/sidebar';
 import BottomBar from '@/components/bottom-bar';
 import { SignupPrompt } from '@/components/signup-prompt';
+import { ResearchConfirmationDialog } from '@/components/research-confirmation-dialog';
 
 function HomeContent() {
   const { user, loading } = useAuthStore();
@@ -29,6 +30,9 @@ function HomeContent() {
   const [pendingLocation, setPendingLocation] = useState<{ name: string; lat: number; lng: number; taskId?: string } | null>(null);
   const [notification, setNotification] = useState<{ type: 'success' | 'error' | 'info'; message: string } | null>(null);
   const [selectedLocation, setSelectedLocation] = useState<{ name: string; lat: number; lng: number } | null>(null);
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [confirmLocation, setConfirmLocation] = useState<{ name: string; lat: number; lng: number } | null>(null);
+  const [customInstructions, setCustomInstructions] = useState<string | undefined>(undefined);
   const [globeTheme, setGlobeTheme] = useState<GlobeTheme>('satellite-streets-v12');
   const globeRef = useRef<any>(null);
 
@@ -90,15 +94,32 @@ function HomeContent() {
       return;
     }
 
-    setSelectedLocation(location);
-
-    // Update URL with research ID if provided
-    if (taskId) {
+    // Show confirmation dialog if this is a new research (no taskId)
+    if (!taskId) {
+      setConfirmLocation(location);
+      setShowConfirmDialog(true);
+    } else {
+      // If taskId exists, it's loading existing research - skip confirmation
+      setSelectedLocation(location);
       const params = new URLSearchParams(window.location.search);
       params.set('research', taskId);
       window.history.pushState({}, '', `?${params.toString()}`);
     }
   }, [allowed, user, resetTime, handleRateLimitError]);
+
+  const handleConfirmResearch = useCallback((instructions?: string) => {
+    if (confirmLocation) {
+      setCustomInstructions(instructions);
+      setSelectedLocation(confirmLocation);
+      setShowConfirmDialog(false);
+      setConfirmLocation(null);
+    }
+  }, [confirmLocation]);
+
+  const handleCancelResearch = useCallback(() => {
+    setShowConfirmDialog(false);
+    setConfirmLocation(null);
+  }, []);
 
   const handleCloseResearch = useCallback(() => {
     setSelectedLocation(null);
@@ -206,11 +227,11 @@ function HomeContent() {
                 transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
               >
                 <h1 className="text-7xl font-light tracking-tight mb-4 relative">
-                  <span className="font-serif italic bg-gradient-to-br from-white via-white/95 to-white/90 bg-clip-text text-transparent drop-shadow-lg">
+                  <span className="font-serif italic bg-gradient-to-br from-primary-foreground via-primary-foreground/95 to-primary-foreground/90 bg-clip-text text-transparent drop-shadow-lg">
                     History
                   </span>
                   <motion.div
-                    className="absolute -bottom-1 left-1/2 -translate-x-1/2 h-[2px] bg-gradient-to-r from-transparent via-white/60 to-transparent"
+                    className="absolute -bottom-1 left-1/2 -translate-x-1/2 h-[2px] bg-gradient-to-r from-transparent via-primary-foreground/60 to-transparent"
                     initial={{ width: 0 }}
                     animate={{ width: "100%" }}
                     transition={{ duration: 1, delay: 0.6 }}
@@ -221,7 +242,7 @@ function HomeContent() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.6, delay: 0.4 }}
-                className="text-base text-white/90 font-light tracking-wide drop-shadow-md"
+                className="text-base text-primary-foreground/90 font-light tracking-wide drop-shadow-md"
               >
                 Discover the stories behind every place on Earth
               </motion.p>
@@ -239,7 +260,7 @@ function HomeContent() {
               whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.95 }}
               onClick={handleFeelingLucky}
-              className="group relative px-6 py-3 text-sm font-semibold bg-white/90 dark:bg-black/40 backdrop-blur-xl text-foreground border border-black/10 dark:border-white/15 rounded-full transition-all shadow-xl shadow-black/10 hover:shadow-2xl hover:shadow-black/20 hover:bg-white dark:hover:bg-black/60 hover:border-black/20 dark:hover:border-white/25 flex items-center gap-2.5"
+              className="group relative px-6 py-3 text-sm font-semibold bg-card/90 backdrop-blur-xl text-card-foreground border border-border rounded-full transition-all shadow-xl hover:shadow-2xl hover:bg-card hover:border-border/80 flex items-center gap-2.5"
             >
               <Shuffle className="h-4 w-4 group-hover:rotate-180 transition-transform duration-500" />
               <span>Random Location</span>
@@ -274,12 +295,21 @@ function HomeContent() {
                 window.history.pushState({}, '', `?${params.toString()}`);
               }}
               initialTaskId={searchParams.get('research') || undefined}
+              customInstructions={customInstructions}
             />
           </motion.div>
         )}
       </AnimatePresence>
 
       {/* Modals and dialogs */}
+      {showConfirmDialog && (
+        <ResearchConfirmationDialog
+          location={confirmLocation}
+          onConfirm={handleConfirmResearch}
+          onCancel={handleCancelResearch}
+        />
+      )}
+
       <SignupPrompt
         open={showSignupPrompt}
         onClose={() => {
@@ -328,18 +358,18 @@ function HomeContent() {
             <div
               className={`flex items-center gap-3 px-4 py-3 rounded-lg shadow-lg border ${
                 notification.type === 'success'
-                  ? 'bg-green-50 dark:bg-green-950 border-green-200 dark:border-green-800'
+                  ? 'bg-green-500/10 border-green-500/20'
                   : notification.type === 'info'
-                  ? 'bg-blue-50 dark:bg-blue-950 border-blue-200 dark:border-blue-800'
-                  : 'bg-red-50 dark:bg-red-950 border-red-200 dark:border-red-800'
+                  ? 'bg-blue-500/10 border-blue-500/20'
+                  : 'bg-red-500/10 border-red-500/20'
               }`}
             >
               {notification.type === 'success' ? (
-                <CheckCircle className="h-5 w-5 text-green-600 dark:text-green-400" />
+                <CheckCircle className="h-5 w-5 text-green-600" />
               ) : notification.type === 'info' ? (
-                <Sparkles className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                <Sparkles className="h-5 w-5 text-blue-600" />
               ) : (
-                <AlertCircle className="h-5 w-5 text-red-600 dark:text-red-400" />
+                <AlertCircle className="h-5 w-5 text-red-600" />
               )}
               <p className="text-sm font-medium">{notification.message}</p>
             </div>

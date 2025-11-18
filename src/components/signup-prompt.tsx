@@ -32,73 +32,73 @@ export function SignupPrompt({ open, onClose, onSignUp }: SignupPromptProps) {
             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
             className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-full max-w-lg"
           >
-            <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-800 overflow-hidden">
+            <div className="bg-card rounded-2xl shadow-2xl border border-border overflow-hidden">
               {/* Close Button */}
               <button
                 onClick={onClose}
-                className="absolute top-4 right-4 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors z-10"
+                className="absolute top-4 right-4 p-2 rounded-lg hover:bg-accent transition-colors z-10"
               >
-                <X className="h-4 w-4 text-gray-500" />
+                <X className="h-4 w-4 text-muted-foreground" />
               </button>
 
               {/* Content */}
               <div className="p-8">
                 {/* Icon */}
                 <div className="flex justify-center mb-6">
-                  <div className="w-16 h-16 bg-gradient-to-br from-blue-50 to-violet-50 dark:from-blue-900/20 dark:to-violet-900/20 rounded-2xl flex items-center justify-center border border-blue-200 dark:border-blue-800">
-                    <Sparkles className="h-8 w-8 text-blue-600 dark:text-blue-400" />
+                  <div className="w-16 h-16 bg-gradient-to-br from-primary/10 to-primary/5 rounded-2xl flex items-center justify-center border border-primary/20">
+                    <Sparkles className="h-8 w-8 text-primary" />
                   </div>
                 </div>
 
                 {/* Title */}
-                <h2 className="text-2xl font-semibold text-center mb-2 text-gray-900 dark:text-gray-100">
+                <h2 className="text-2xl font-semibold text-center mb-2 text-foreground">
                   Unlock the Full Experience
                 </h2>
 
                 {/* Subtitle */}
-                <p className="text-center text-gray-600 dark:text-gray-400 mb-6">
+                <p className="text-center text-muted-foreground mb-6">
                   Sign up to save your research and explore unlimited locations.
                 </p>
 
                 {/* Features */}
                 <div className="space-y-4 mb-8">
                   <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 bg-gray-100 dark:bg-gray-800 rounded-lg flex items-center justify-center flex-shrink-0 border border-gray-200 dark:border-gray-700">
-                      <History className="h-4 w-4 text-gray-600 dark:text-gray-400" />
+                    <div className="w-8 h-8 bg-muted rounded-lg flex items-center justify-center flex-shrink-0 border border-border">
+                      <History className="h-4 w-4 text-muted-foreground" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-sm text-gray-900 dark:text-gray-100">
+                      <h3 className="font-semibold text-sm text-foreground">
                         Save Your Research History
                       </h3>
-                      <p className="text-xs text-gray-600 dark:text-gray-400">
+                      <p className="text-xs text-muted-foreground">
                         Never lose your discoveries. Access all research anytime.
                       </p>
                     </div>
                   </div>
 
                   <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 bg-gray-100 dark:bg-gray-800 rounded-lg flex items-center justify-center flex-shrink-0 border border-gray-200 dark:border-gray-700">
-                      <Sparkles className="h-4 w-4 text-gray-600 dark:text-gray-400" />
+                    <div className="w-8 h-8 bg-muted rounded-lg flex items-center justify-center flex-shrink-0 border border-border">
+                      <Sparkles className="h-4 w-4 text-muted-foreground" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-sm text-gray-900 dark:text-gray-100">
+                      <h3 className="font-semibold text-sm text-foreground">
                         Unlimited Searches
                       </h3>
-                      <p className="text-xs text-gray-600 dark:text-gray-400">
+                      <p className="text-xs text-muted-foreground">
                         Free accounts get limited searches. Upgrade for unlimited access.
                       </p>
                     </div>
                   </div>
 
                   <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 bg-gray-100 dark:bg-gray-800 rounded-lg flex items-center justify-center flex-shrink-0 border border-gray-200 dark:border-gray-700">
-                      <Lock className="h-4 w-4 text-gray-600 dark:text-gray-400" />
+                    <div className="w-8 h-8 bg-muted rounded-lg flex items-center justify-center flex-shrink-0 border border-border">
+                      <Lock className="h-4 w-4 text-muted-foreground" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-sm text-gray-900 dark:text-gray-100">
+                      <h3 className="font-semibold text-sm text-foreground">
                         Advanced Features
                       </h3>
-                      <p className="text-xs text-gray-600 dark:text-gray-400">
+                      <p className="text-xs text-muted-foreground">
                         Access premium tools, deeper analysis, and priority support.
                       </p>
                     </div>
@@ -110,7 +110,7 @@ export function SignupPrompt({ open, onClose, onSignUp }: SignupPromptProps) {
                   <Button
                     onClick={onSignUp}
                     size="lg"
-                    className="w-full bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 hover:bg-gray-800 dark:hover:bg-gray-200 font-medium"
+                    className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-medium"
                   >
                     Create Free Account
                   </Button>
@@ -118,14 +118,14 @@ export function SignupPrompt({ open, onClose, onSignUp }: SignupPromptProps) {
                     onClick={onClose}
                     variant="ghost"
                     size="lg"
-                    className="w-full text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800"
+                    className="w-full"
                   >
                     Continue Without Account
                   </Button>
                 </div>
 
                 {/* Note */}
-                <p className="text-center text-xs text-gray-500 dark:text-gray-500 mt-4">
+                <p className="text-center text-xs text-muted-foreground mt-4">
                   Takes less than 30 seconds. No credit card required.
                 </p>
               </div>

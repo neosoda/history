@@ -60,9 +60,10 @@ interface HistoryResearchInterfaceProps {
   onClose: () => void;
   onTaskCreated?: (taskId: string) => void;
   initialTaskId?: string;
+  customInstructions?: string;
 }
 
-export function HistoryResearchInterface({ location, onClose, onTaskCreated, initialTaskId }: HistoryResearchInterfaceProps) {
+export function HistoryResearchInterface({ location, onClose, onTaskCreated, initialTaskId, customInstructions }: HistoryResearchInterfaceProps) {
   const { user } = useAuthStore();
   const [status, setStatus] = useState<'idle' | 'queued' | 'running' | 'completed' | 'error'>('idle');
   const [content, setContent] = useState<string>('');
@@ -216,6 +217,11 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
       setShouldContinuePolling(false);
 
       try {
+        // Build the research prompt based on custom instructions or default
+        const researchPrompt = customInstructions
+          ? `${customInstructions}\n\nLocation: ${location.name}`
+          : `Research the history of ${location.name}`;
+
         const response = await fetch('/api/chat', {
           method: 'POST',
           headers: {
@@ -225,7 +231,7 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
             messages: [
               {
                 role: 'user',
-                content: `Research the history of ${location.name}`,
+                content: researchPrompt,
               },
             ],
             location,
@@ -538,7 +544,7 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
                     <p className="text-sm font-medium mb-2">Researching {displayLocation.name}...</p>
                     {shouldContinuePolling && (
                       <div className="p-3 bg-amber-500/10 border border-amber-500/20 rounded-lg mb-3">
-                        <p className="text-xs text-amber-700 dark:text-amber-300">
+                        <p className="text-xs text-amber-700">
                           Deep research in progress - this may take up to 30 minutes
                         </p>
                       </div>
@@ -588,16 +594,16 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
                             <div
                               className={`flex items-start gap-2.5 p-3 rounded-lg border overflow-hidden backdrop-blur-sm ${
                                 isReasoning
-                                  ? 'bg-amber-50/70 dark:bg-amber-950/20 border-amber-200/60 dark:border-amber-800/40'
+                                  ? 'bg-amber-500/10 border-amber-500/20'
                                   : 'bg-background/70 border-border/60'
                               }`}
                             >
                               {isReasoning && (
-                                <Lightbulb className="h-4 w-4 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
+                                <Lightbulb className="h-4 w-4 text-amber-600 flex-shrink-0 mt-0.5" />
                               )}
                               <div className="flex-1 min-w-0">
                                 {isReasoning && (
-                                  <div className="text-xs font-semibold text-amber-900 dark:text-amber-100 mb-1.5">
+                                  <div className="text-xs font-semibold text-amber-900 mb-1.5">
                                     Reasoning
                                   </div>
                                 )}
@@ -637,8 +643,8 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
                               }`}>
                                 <div className={`flex items-center gap-2 ${
                                   hasResult
-                                    ? 'text-green-700 dark:text-green-400'
-                                    : 'text-blue-700 dark:text-blue-400'
+                                    ? 'text-green-700'
+                                    : 'text-blue-700'
                                 }`}>
                                   {hasResult ? (
                                     <CheckCircle2 className="h-3.5 w-3.5" />
@@ -675,12 +681,12 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
                             className="flex gap-2.5 pl-1"
                           >
                             <div className="flex items-start pt-1">
-                              <CornerDownRight className="h-3.5 w-3.5 text-green-600/40 dark:text-green-400/40 flex-shrink-0" />
+                              <CornerDownRight className="h-3.5 w-3.5 text-green-600/40 flex-shrink-0" />
                             </div>
                             <div className="flex-1 space-y-1.5 min-w-0">
                               <div className="flex items-center gap-1.5">
-                                <CheckCircle2 className="h-3 w-3 text-green-600 dark:text-green-400" />
-                                <div className="text-[10px] font-medium text-green-700 dark:text-green-400 uppercase tracking-wide">
+                                <CheckCircle2 className="h-3 w-3 text-green-600" />
+                                <div className="text-[10px] font-medium text-green-700 uppercase tracking-wide">
                                   {sources.length > 0 ? `${sources.length} ${sources.length === 1 ? 'Source' : 'Sources'} Found` : 'Result'}
                                 </div>
                               </div>
@@ -747,7 +753,7 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.3 }}
-                  className="flex items-center justify-between gap-2 text-sm font-semibold text-green-700 dark:text-green-400 bg-green-500/10 rounded-lg px-4 py-3 border border-green-500/20 shadow-sm"
+                  className="flex items-center justify-between gap-2 text-sm font-semibold text-green-700 bg-green-500/10 rounded-lg px-4 py-3 border border-green-500/20 shadow-sm"
                 >
                   <div className="flex items-center gap-2">
                     <CheckCircle2 className="h-5 w-5" />
@@ -914,16 +920,16 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
                   key={`text-${idx}`}
                   className={`flex items-start gap-2.5 p-3 rounded-lg border overflow-hidden ${
                     isReasoning
-                      ? 'bg-amber-50/70 dark:bg-amber-950/20 border-amber-200/60 dark:border-amber-800/40'
+                      ? 'bg-amber-500/10 border-amber-500/20'
                       : 'bg-background/70 border-border/60'
                   }`}
                 >
                   {isReasoning && (
-                    <Lightbulb className="h-4 w-4 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
+                    <Lightbulb className="h-4 w-4 text-amber-600 flex-shrink-0 mt-0.5" />
                   )}
                   <div className="flex-1 min-w-0">
                     {isReasoning && (
-                      <div className="text-xs font-semibold text-amber-900 dark:text-amber-100 mb-1.5">
+                      <div className="text-xs font-semibold text-amber-900 mb-1.5">
                         Reasoning
                       </div>
                     )}
@@ -957,7 +963,7 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
                   >
                     <div
                       className={`flex items-center gap-2 transition-colors ${
-                        hasResult ? 'text-green-700 dark:text-green-400' : 'text-primary'
+                        hasResult ? 'text-green-700' : 'text-primary'
                       }`}
                     >
                       <Search className="h-3.5 w-3.5" />
@@ -986,7 +992,7 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
                   className="overflow-hidden rounded-lg border border-green-500/20 bg-background/50 ml-4"
                 >
                   <div className="px-3 py-2 bg-green-500/10 border-b border-green-500/20">
-                    <div className="flex items-center gap-2 text-green-700 dark:text-green-400">
+                    <div className="flex items-center gap-2 text-green-700">
                       <CornerDownRight className="h-3 w-3" />
                       <span className="text-[10px] font-medium uppercase tracking-wide">
                         {sources.length > 0 ? `${sources.length} ${sources.length === 1 ? 'Source' : 'Sources'} Found` : 'Result'}
