@@ -23,24 +23,24 @@ export const metadata: Metadata = {
     process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"
   ),
   title: {
-    default: "History | Explore Historical Research",
+    default: "History | Discover the stories behind every place on Earth",
     template: "%s | History",
   },
   description:
-    "Interactive history research platform with 3D globe visualization. Click anywhere on Earth to explore comprehensive historical analysis powered by AI.",
+    "Click anywhere on an interactive 3D globe and get comprehensive historical research in minutes. Deep research powered by AI, sourced from historical databases, academic archives, and verified sources.",
   applicationName: "History",
   openGraph: {
-    title: "History | Explore Historical Research",
+    title: "History | Discover the stories behind every place on Earth",
     description:
-      "Interactive history research platform with 3D globe visualization. Click anywhere on Earth to explore comprehensive historical analysis powered by AI.",
+      "Click anywhere on an interactive 3D globe and get comprehensive historical research in minutes. Deep research powered by AI, sourced from historical databases, academic archives, and verified sources.",
     url: "/",
     siteName: "History",
     images: [
       {
-        url: "/valyu.png",
+        url: "/history.png",
         width: 1200,
         height: 630,
-        alt: "History | Explore Historical Research",
+        alt: "History | Discover the stories behind every place on Earth",
       },
     ],
     locale: "en_US",
@@ -48,10 +48,10 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "History | Explore Historical Research",
+    title: "History | Discover the stories behind every place on Earth",
     description:
-      "Interactive history research platform with 3D globe visualization. Click anywhere on Earth to explore comprehensive historical analysis powered by AI.",
-    images: ["/valyu.png"],
+      "Click anywhere on an interactive 3D globe and get comprehensive historical research in minutes. Deep research powered by AI, sourced from historical databases, academic archives, and verified sources.",
+    images: ["/history.png"],
   },
   icons: {
     icon: "/favicon.ico",

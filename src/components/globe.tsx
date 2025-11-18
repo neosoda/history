@@ -92,7 +92,7 @@ export const Globe = forwardRef<GlobeRef, GlobeProps>(function Globe({ onLocatio
         // Use selected theme style
         style: `mapbox://styles/mapbox/${theme}`,
         center: [0, 30], // Center on world view
-        zoom: 1.5,
+        zoom: 1.2,
         projection: 'globe' as any, // Enable globe projection
         pitch: 0,
         bearing: 0,

@@ -4,7 +4,7 @@
 
 An interactive 3D globe that lets you explore the fascinating history of any location on the planet. Born from a love of "doom-scrolling" Google Maps and learning about random islands, untouched places, and interesting geographical areas - History brings deep historical research to your fingertips.
 
-![History](public/valyu.png)
+![History](public/history.png)
 
 ##  What is History?
 
