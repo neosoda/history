@@ -530,6 +530,14 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
         });
 
         if (!response.ok) {
+          // Handle rate limit errors specially
+          if (response.status === 429) {
+            const errorData = await response.json();
+            const rateLimitError = new Error(errorData.message || 'Rate limit exceeded');
+            (rateLimitError as any).isRateLimit = true;
+            (rateLimitError as any).rateLimitData = errorData;
+            throw rateLimitError;
+          }
           throw new Error('Failed to start research');
         }
 
@@ -640,6 +648,15 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
         }
       } catch (err) {
         console.error('Research error:', err);
+
+        // Handle rate limit errors by showing signup prompt instead of error state
+        if ((err as any).isRateLimit) {
+          setStatus('idle'); // Reset to idle instead of error
+          onClose(); // Close the research interface
+          // The parent component should show the signup prompt
+          return;
+        }
+
         setError(err instanceof Error ? err.message : 'Unknown error');
         setStatus('error');
       }
