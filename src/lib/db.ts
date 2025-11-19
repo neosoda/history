@@ -517,6 +517,7 @@ export async function updateResearchTask(
   updates: {
     status?: string;
     completed_at?: Date | null;
+    location_images?: string;
   }
 ) {
   if (isDevelopmentMode()) {
@@ -527,6 +528,8 @@ export async function updateResearchTask(
     if (updates.status !== undefined) updateData.status = updates.status;
     if (updates.completed_at !== undefined)
       updateData.completedAt = updates.completed_at;
+    if (updates.location_images !== undefined)
+      updateData.locationImages = updates.location_images;
 
     await db
       .update(schema.researchTasks)

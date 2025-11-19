@@ -23,7 +23,7 @@ export async function POST(req: Request) {
   // Store images if provided (for sharing)
   if (images && images.length > 0) {
     try {
-      await db.updateResearchTask(taskId, user.id, {
+      await db.updateResearchTask(taskId, {
         location_images: JSON.stringify(images),
       });
     } catch (err) {
