@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { X, Loader2, MapPin, ExternalLink, FileText, Lightbulb, CornerDownRight, Globe2, CheckCircle2, Brain, Clock, Sparkles, Share2, Check, Copy, Compass } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
+import { PhotoGallery } from '@/components/ui/gallery';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Favicon } from '@/components/ui/favicon';
 import { ReasoningDialog } from '@/components/reasoning-dialog';
@@ -62,7 +63,31 @@ interface HistoryResearchInterfaceProps {
   onTaskCreated?: (taskId: string) => void;
   initialTaskId?: string;
   customInstructions?: string;
+  initialImages?: string[];
 }
+
+// Animated dots component
+const AnimatedDots = ({ isActive }: { isActive: boolean }) => {
+  const [dots, setDots] = useState('');
+
+  useEffect(() => {
+    if (!isActive) {
+      setDots('');
+      return;
+    }
+
+    const interval = setInterval(() => {
+      setDots(prev => {
+        if (prev === '...') return '';
+        return prev + '.';
+      });
+    }, 500);
+
+    return () => clearInterval(interval);
+  }, [isActive]);
+
+  return <span className="inline-block w-6 text-left">{dots}</span>;
+};
 
 // Reusable timeline item renderer
 const TimelineItem = ({ item, idx, timeline, animated = true }: { item: any; idx: number; timeline: any[]; animated?: boolean }) => {
@@ -80,14 +105,14 @@ const TimelineItem = ({ item, idx, timeline, animated = true }: { item: any; idx
 
     return (
       <ItemWrapper key={`text-${idx}`} {...itemProps}>
-        <div className={`overflow-hidden rounded-lg border backdrop-blur-sm ${
+        <div className={`overflow-hidden rounded-lg border backdrop-blur-sm shadow-sm ${
           isReasoning
-            ? 'border-border/40 bg-muted/30'
-            : 'border-border/40 bg-background/60'
+            ? 'border-amber-200/40 bg-amber-50/30 dark:border-amber-900/40 dark:bg-amber-950/20'
+            : 'border-border/40 bg-background/90'
         }`}>
           <div className={`px-3 py-2 border-b ${
             isReasoning
-              ? 'bg-muted/20 border-border/30'
+              ? 'bg-amber-100/30 border-amber-200/30 dark:bg-amber-900/10 dark:border-amber-900/30'
               : 'bg-muted/10 border-border/30'
           }`}>
             <div className={`flex items-center gap-2 ${
@@ -126,14 +151,14 @@ const TimelineItem = ({ item, idx, timeline, animated = true }: { item: any; idx
 
     return (
       <ItemWrapper key={`tool-call-${idx}-${item.toolCallId}`} {...itemProps}>
-        <div className={`overflow-hidden rounded-lg border backdrop-blur-sm ${
+        <div className={`overflow-hidden rounded-lg border backdrop-blur-sm shadow-sm ${
           hasResult
-            ? 'border-border/50 bg-background/70'
+            ? 'border-blue-200/40 bg-blue-50/20 dark:border-blue-900/40 dark:bg-blue-950/10'
             : 'border-border/40 bg-muted/20'
         }`}>
           <div className={`px-3 py-2 border-b ${
             hasResult
-              ? 'bg-muted/20 border-border/40'
+              ? 'bg-blue-100/20 border-blue-200/30 dark:bg-blue-900/10 dark:border-blue-900/30'
               : 'bg-muted/10 border-border/30'
           }`}>
             <div className={`flex items-center gap-2 ${
@@ -190,7 +215,7 @@ const TimelineItem = ({ item, idx, timeline, animated = true }: { item: any; idx
                   href={source.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group flex items-start gap-2 p-2.5 bg-muted/30 rounded-lg border hover:border-primary transition-colors"
+                  className="group flex items-start gap-2 p-2.5 bg-green-50/40 dark:bg-green-950/20 rounded-lg border border-green-200/40 dark:border-green-900/40 hover:border-primary hover:bg-green-50/60 dark:hover:bg-green-950/30 transition-colors shadow-sm"
                 >
                   {source.url && (
                     <Favicon url={source.url} className="w-4 h-4 flex-shrink-0 mt-0.5" />
@@ -222,7 +247,7 @@ const TimelineItem = ({ item, idx, timeline, animated = true }: { item: any; idx
   return null;
 };
 
-export function HistoryResearchInterface({ location, onClose, onTaskCreated, initialTaskId, customInstructions }: HistoryResearchInterfaceProps) {
+export function HistoryResearchInterface({ location, onClose, onTaskCreated, initialTaskId, customInstructions, initialImages }: HistoryResearchInterfaceProps) {
   const { user } = useAuthStore();
   const [status, setStatus] = useState<'idle' | 'queued' | 'running' | 'completed' | 'error'>('idle');
   const [content, setContent] = useState<string>('');
@@ -239,7 +264,7 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
   const [shareUrl, setShareUrl] = useState<string | null>(null);
   const [sharing, setSharing] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [heroImages, setHeroImages] = useState<string[]>([]);
+  const [heroImages, setHeroImages] = useState<string[]>(initialImages || []);
   const [isGeneratingImage, setIsGeneratingImage] = useState(false);
 
   const handleShare = async () => {
@@ -844,7 +869,7 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
                 {/* Location Title */}
                 <div className="text-center py-6">
                   <h1 className="text-5xl font-light tracking-tight font-serif italic text-foreground/95">
-                    {displayLocation.name}
+                    {displayLocation.name}<AnimatedDots isActive={status === 'running'} />
                   </h1>
                   {displayLocation.lat !== 0 && displayLocation.lng !== 0 && (
                     <p className="text-sm text-muted-foreground/70 mt-2 font-light tracking-wide">
@@ -853,70 +878,42 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
                   )}
                 </div>
 
-                {/* Hero Images Grid */}
+                {/* Hero Images Gallery */}
                 {isGeneratingImage ? (
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                  <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+                    <Skeleton className="h-48 w-full rounded-lg" />
                     <Skeleton className="h-48 w-full rounded-lg" />
                     <Skeleton className="h-48 w-full rounded-lg" />
                     <Skeleton className="h-48 w-full rounded-lg" />
                     <Skeleton className="h-48 w-full rounded-lg" />
                   </div>
-                ) : heroImages.length > 0 ? (
-                  <div className={`grid gap-3 ${
-                    heroImages.length === 1 ? 'grid-cols-1' :
-                    heroImages.length === 2 ? 'grid-cols-2' :
-                    heroImages.length === 3 ? 'grid-cols-3' :
-                    'grid-cols-2 md:grid-cols-4'
-                  }`}>
-                    {heroImages.map((imageUrl, index) => (
-                      <div key={index} className="relative rounded-lg overflow-hidden border border-border/50 shadow-md group">
-                        <div className={`relative w-full ${heroImages.length === 1 ? 'h-64' : 'h-48'}`}>
-                          <img
-                            src={imageUrl}
-                            alt={`${displayLocation.name} - View ${index + 1}`}
-                            className="w-full h-full object-cover transition-transform group-hover:scale-110 duration-500"
-                          />
-                          {/* Subtle overlay on hover */}
-                          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                ) : null}
+                ) : (
+                  <PhotoGallery images={heroImages} />
+                )}
 
-                <div className="flex items-center justify-center py-8">
-                  <div className="text-center w-full max-w-md space-y-4">
-                    <motion.div
-                      animate={{ rotate: 360 }}
-                      transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
-                    >
-                      <Compass className="h-10 w-10 text-foreground/40 mx-auto" />
-                    </motion.div>
-                    <p className="text-base font-light text-foreground/70">Researching {displayLocation.name}...</p>
-                    {shouldContinuePolling && (
-                      <div className="p-3 bg-amber-500/10 border border-amber-500/20 rounded-lg mb-3">
-                        <p className="text-xs text-amber-700">
-                          Deep research in progress - this may take up to 30 minutes
+                {/* Report skeleton while waiting for first content */}
+                {timeline.length === 0 && status === 'running' && (
+                  <div className="space-y-6">
+                    <div className="bg-background/60 backdrop-blur-sm rounded-lg p-6 border shadow-sm space-y-3">
+                      <Skeleton className="h-8 w-3/4" />
+                      <Skeleton className="h-4 w-full" />
+                      <Skeleton className="h-4 w-full" />
+                      <Skeleton className="h-4 w-5/6" />
+                      <div className="pt-2" />
+                      <Skeleton className="h-6 w-2/3" />
+                      <Skeleton className="h-4 w-full" />
+                      <Skeleton className="h-4 w-full" />
+                      <Skeleton className="h-4 w-4/5" />
+                    </div>
+                    <div className="flex items-center justify-center py-4">
+                      <div className="text-center">
+                        <p className="text-sm font-light text-foreground/60">
+                          Generating report...
                         </p>
                       </div>
-                    )}
-                    {progress.current > 0 && progress.total > 0 && (
-                      <>
-                        <p className="text-xs text-muted-foreground mb-3">
-                          Step {progress.current} of {progress.total} maximum steps
-                        </p>
-                        <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
-                          <motion.div
-                            className="h-full bg-primary"
-                            initial={{ width: 0 }}
-                            animate={{ width: `${Math.min(100, (progress.current / progress.total) * 100)}%` }}
-                            transition={{ duration: 0.3 }}
-                          />
-                        </div>
-                      </>
-                    )}
+                    </div>
                   </div>
-                </div>
+                )}
 
                 {/* Activity Feed - Show during running and completed */}
                 {timeline.length > 0 && (status === 'running' || status === 'completed') && (
@@ -960,26 +957,7 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
                         </p>
                       )}
                     </div>
-                    <div className={`grid gap-4 ${
-                      heroImages.length === 1 ? 'grid-cols-1' :
-                      heroImages.length === 2 ? 'grid-cols-2' :
-                      heroImages.length === 3 ? 'grid-cols-3' :
-                      'grid-cols-2 md:grid-cols-4'
-                    }`}>
-                      {heroImages.map((imageUrl, index) => (
-                        <div key={index} className="relative rounded-lg overflow-hidden border border-border/50 shadow-lg group">
-                          <div className={`relative w-full ${heroImages.length === 1 ? 'h-80' : 'h-56'}`}>
-                            <img
-                              src={imageUrl}
-                              alt={`${displayLocation.name} - View ${index + 1}`}
-                              className="w-full h-full object-cover transition-transform group-hover:scale-110 duration-500"
-                            />
-                            {/* Subtle overlay on hover */}
-                            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
-                          </div>
-                        </div>
-                      ))}
-                    </div>
+                    <PhotoGallery images={heroImages} />
                   </div>
                 )}
 

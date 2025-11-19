@@ -73,6 +73,7 @@ function SharePageContent() {
         }}
         onClose={() => window.location.href = '/'}
         initialTaskId={task.deepresearchId || task.deepresearch_id}
+        initialImages={task.locationImages || task.location_images || []}
       />
     </div>
   );

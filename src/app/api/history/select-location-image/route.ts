@@ -5,7 +5,7 @@ import { openai } from '@ai-sdk/openai';
 import { z } from 'zod';
 
 const LocationImageSelectionSchema = z.object({
-  selectedImageIndices: z.array(z.number()).describe('Array of image indices to select (0-based), ordered by preference. Select 2-4 images.'),
+  selectedImageIndices: z.array(z.number()).describe('Array of image indices to select (0-based), ordered by preference. Select 4-5 images.'),
   reasoning: z.string().describe('Brief explanation of why these images were selected'),
 });
 
@@ -149,7 +149,7 @@ Return ONLY the short search query (3-5 words max).`,
               content: [
                 {
                   type: 'text',
-                  text: `Select 2-4 images that are related to: ${locationName}
+                  text: `Select 4-5 images that are related to: ${locationName}
 
 ${preset ? `Topic focus: ${preset}` : ''}
 

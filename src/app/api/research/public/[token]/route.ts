@@ -22,7 +22,22 @@ export async function GET(
     });
   }
 
-  return new Response(JSON.stringify({ task }), {
+  // Parse location_images if it exists (it's double-encoded JSON)
+  let parsedTask = { ...task };
+  if (task.location_images || task.locationImages) {
+    try {
+      const imagesField = task.location_images || task.locationImages;
+      // First parse gets us a JSON string, second parse gets the array
+      const parsed = JSON.parse(imagesField);
+      const images = typeof parsed === 'string' ? JSON.parse(parsed) : parsed;
+      parsedTask.locationImages = images;
+      parsedTask.location_images = images;
+    } catch (err) {
+      console.error('[Share] Failed to parse location_images:', err);
+    }
+  }
+
+  return new Response(JSON.stringify({ task: parsedTask }), {
     headers: { "Content-Type": "application/json" }
   });
 }
