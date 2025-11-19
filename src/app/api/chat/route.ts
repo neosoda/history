@@ -508,12 +508,8 @@ Please be thorough and well-researched, citing historical sources where possible
     if (isUserInitiated && !isDevelopment) {
       console.log("[Chat API] Incrementing rate limit for user-initiated message");
       try {
-        if (user) {
-          const rateLimitResult = await incrementRateLimit(user.id);
-          console.log("[Chat API] Authenticated user rate limit incremented:", rateLimitResult);
-        } else {
-          console.log("[Chat API] Skipping server-side increment for anonymous user (handled client-side)");
-        }
+        const rateLimitResult = await incrementRateLimit(user?.id);
+        console.log("[Chat API] Rate limit incremented:", rateLimitResult);
       } catch (error) {
         console.error("[Chat API] Failed to increment rate limit:", error);
       }
