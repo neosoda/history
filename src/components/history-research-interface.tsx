@@ -271,6 +271,21 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
   const [heroImages, setHeroImages] = useState<string[]>(initialImages || []);
   const [isGeneratingImage, setIsGeneratingImage] = useState(false);
 
+  // Memoize Globe props to prevent unnecessary re-renders
+  const globeInitialCenter = useMemo<[number, number] | undefined>(() => {
+    if (displayLocation && displayLocation.lat !== 0 && displayLocation.lng !== 0) {
+      return [displayLocation.lng, displayLocation.lat];
+    }
+    return undefined;
+  }, [displayLocation]);
+
+  const globeMarker = useMemo<{ lat: number; lng: number } | undefined>(() => {
+    if (displayLocation && displayLocation.lat !== 0 && displayLocation.lng !== 0) {
+      return { lat: displayLocation.lat, lng: displayLocation.lng };
+    }
+    return undefined;
+  }, [displayLocation]);
+
   const handleShare = async () => {
     if (!user || !taskId) return;
 
@@ -884,9 +899,9 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
                 <Globe
                   onLocationClick={() => {}}
                   theme="satellite-streets-v12"
-                  initialCenter={displayLocation.lat !== 0 && displayLocation.lng !== 0 ? [displayLocation.lng, displayLocation.lat] : undefined}
-                  initialZoom={displayLocation.lat !== 0 && displayLocation.lng !== 0 ? 4 : undefined}
-                  marker={displayLocation.lat !== 0 && displayLocation.lng !== 0 ? { lat: displayLocation.lat, lng: displayLocation.lng } : undefined}
+                  initialCenter={globeInitialCenter}
+                  initialZoom={globeInitialCenter ? 4 : undefined}
+                  marker={globeMarker}
                   disableInteraction={false}
                 />
               </div>
@@ -1221,9 +1236,9 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
               <Globe
                 onLocationClick={() => {}}
                 theme="satellite-streets-v12"
-                initialCenter={displayLocation.lat !== 0 && displayLocation.lng !== 0 ? [displayLocation.lng, displayLocation.lat] : undefined}
-                initialZoom={displayLocation.lat !== 0 && displayLocation.lng !== 0 ? 3 : undefined}
-                marker={displayLocation.lat !== 0 && displayLocation.lng !== 0 ? { lat: displayLocation.lat, lng: displayLocation.lng } : undefined}
+                initialCenter={globeInitialCenter}
+                initialZoom={globeInitialCenter ? 3 : undefined}
+                marker={globeMarker}
                 disableInteraction={false}
               />
             </div>
