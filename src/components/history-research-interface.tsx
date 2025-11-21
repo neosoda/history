@@ -445,9 +445,8 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
         }
 
         // Update all state in batch before changing status
-        if (extractedContent) {
-          setContent(extractedContent); // Always set on completion
-        }
+        // ALWAYS set content even if empty - component will handle empty state
+        setContent(extractedContent);
 
         if (statusData.messages && Array.isArray(statusData.messages) && statusData.messages.length > 0) {
           setMessages([...statusData.messages]);
@@ -515,10 +514,6 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
     const runResearch = async () => {
       researchInitiatedRef.current = true;
 
-      // Increment rate limit BEFORE starting research
-      await increment();
-      await refresh();
-
       setStatus('queued');
       setContent('');
       setSources([]);
@@ -561,6 +556,9 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
           }
           throw new Error('Failed to start research');
         }
+
+        // API call succeeded - refresh rate limit to reflect the increment done by the API
+        await refresh();
 
         const reader = response.body?.getReader();
         const decoder = new TextDecoder();
@@ -988,8 +986,8 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
               </div>
             )}
 
-            {/* Research Content */}
-            {(content || status === 'completed') && (
+            {/* Research Content - show when we have content AND status is completed */}
+            {status === 'completed' && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}

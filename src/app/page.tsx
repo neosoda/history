@@ -87,7 +87,6 @@ function HomeContent() {
   const checkAnonymousRateLimit = () => {
     const COOKIE_NAME = '$dekcuf_teg';
     const ANONYMOUS_LIMIT = 1;
-    const today = new Date().toISOString().split('T')[0];
 
     const getCookie = (name: string): string | null => {
       if (typeof window === 'undefined') return null;
@@ -96,19 +95,17 @@ function HomeContent() {
       return parts.length === 2 ? parts.pop()?.split(';').shift() || null : null;
     };
 
-    const decodeCookieData = (encoded: string | null): { count: number; date: string } => {
-      if (!encoded) return { count: 0, date: '' };
+    const decodeCookieData = (encoded: string | null): number => {
+      if (!encoded) return 0;
       try {
         const decoded = atob(encoded);
-        const [count, date] = decoded.split('|');
-        return { count: parseInt(count) || 0, date: date || '' };
+        return parseInt(decoded) || 0;
       } catch {
-        return { count: 0, date: '' };
+        return 0;
       }
     };
 
-    const storedData = decodeCookieData(getCookie(COOKIE_NAME));
-    const used = storedData.date === today ? storedData.count : 0;
+    const used = decodeCookieData(getCookie(COOKIE_NAME));
     return used < ANONYMOUS_LIMIT;
   };
 
