@@ -147,7 +147,9 @@ function HomeContent() {
   const handleConfirmResearch = useCallback((instructions?: string) => {
     if (confirmLocation) {
       // Double-check rate limit before starting research
-      if (!allowed) {
+      const isRateLimitOk = !user ? checkAnonymousRateLimit() : allowed;
+
+      if (!isRateLimitOk) {
         setShowConfirmDialog(false);
         if (!user) {
           setShowSignupPrompt(true);
