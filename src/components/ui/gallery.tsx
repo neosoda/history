@@ -74,10 +74,12 @@ export function PhotoGallery({ images, animationDelay = 0.2 }: PhotoGalleryProps
     }),
   };
 
-  // Calculate photo positions based on number of images
-  const getPhotoPositions = (imageCount: number) => {
+  // Calculate photo positions based on number of images and screen size
+  const getPhotoPositions = (imageCount: number, isMobile: boolean = false) => {
     const positions = [];
-    const photoSize = 220;
+
+    // Mobile scaling factor (approximately 0.65x)
+    const scale = isMobile ? 0.65 : 1;
 
     if (imageCount === 1) {
       return [{ x: "0px", y: "0px", zIndex: 50, direction: "left" as Direction }];
@@ -85,39 +87,41 @@ export function PhotoGallery({ images, animationDelay = 0.2 }: PhotoGalleryProps
 
     if (imageCount === 2) {
       return [
-        { x: "-120px", y: "10px", zIndex: 50, direction: "left" as Direction },
-        { x: "120px", y: "10px", zIndex: 40, direction: "right" as Direction },
+        { x: `${-120 * scale}px`, y: `${10 * scale}px`, zIndex: 50, direction: "left" as Direction },
+        { x: `${120 * scale}px`, y: `${10 * scale}px`, zIndex: 40, direction: "right" as Direction },
       ];
     }
 
     if (imageCount === 3) {
       return [
-        { x: "-200px", y: "15px", zIndex: 50, direction: "left" as Direction },
-        { x: "0px", y: "8px", zIndex: 40, direction: "left" as Direction },
-        { x: "200px", y: "22px", zIndex: 30, direction: "right" as Direction },
+        { x: `${-200 * scale}px`, y: `${15 * scale}px`, zIndex: 50, direction: "left" as Direction },
+        { x: "0px", y: `${8 * scale}px`, zIndex: 40, direction: "left" as Direction },
+        { x: `${200 * scale}px`, y: `${22 * scale}px`, zIndex: 30, direction: "right" as Direction },
       ];
     }
 
     if (imageCount === 4) {
       return [
-        { x: "-270px", y: "18px", zIndex: 50, direction: "left" as Direction },
-        { x: "-90px", y: "28px", zIndex: 40, direction: "left" as Direction },
-        { x: "90px", y: "12px", zIndex: 30, direction: "right" as Direction },
-        { x: "270px", y: "35px", zIndex: 20, direction: "right" as Direction },
+        { x: `${-270 * scale}px`, y: `${18 * scale}px`, zIndex: 50, direction: "left" as Direction },
+        { x: `${-90 * scale}px`, y: `${28 * scale}px`, zIndex: 40, direction: "left" as Direction },
+        { x: `${90 * scale}px`, y: `${12 * scale}px`, zIndex: 30, direction: "right" as Direction },
+        { x: `${270 * scale}px`, y: `${35 * scale}px`, zIndex: 20, direction: "right" as Direction },
       ];
     }
 
     // 5 or more images
     return [
-      { x: "-320px", y: "15px", zIndex: 50, direction: "left" as Direction },
-      { x: "-160px", y: "32px", zIndex: 40, direction: "left" as Direction },
-      { x: "0px", y: "8px", zIndex: 30, direction: "right" as Direction },
-      { x: "160px", y: "22px", zIndex: 20, direction: "right" as Direction },
-      { x: "320px", y: "44px", zIndex: 10, direction: "left" as Direction },
+      { x: `${-320 * scale}px`, y: `${15 * scale}px`, zIndex: 50, direction: "left" as Direction },
+      { x: `${-160 * scale}px`, y: `${32 * scale}px`, zIndex: 40, direction: "left" as Direction },
+      { x: "0px", y: `${8 * scale}px`, zIndex: 30, direction: "right" as Direction },
+      { x: `${160 * scale}px`, y: `${22 * scale}px`, zIndex: 20, direction: "right" as Direction },
+      { x: `${320 * scale}px`, y: `${44 * scale}px`, zIndex: 10, direction: "left" as Direction },
     ];
   };
 
-  const positions = getPhotoPositions(Math.min(images.length, 5));
+  // Detect if we're on mobile (you may want to use a hook for this)
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 640;
+  const positions = getPhotoPositions(Math.min(images.length, 5), isMobile);
   const displayImages = images.slice(0, 5);
 
   const openLightbox = (index: number) => setSelectedIndex(index);
@@ -127,7 +131,7 @@ export function PhotoGallery({ images, animationDelay = 0.2 }: PhotoGalleryProps
 
   return (
     <>
-      <div className="relative mb-8 h-[320px] w-full items-center justify-center lg:flex">
+      <div className="relative mb-4 sm:mb-8 h-[200px] sm:h-[260px] md:h-[320px] w-full items-center justify-center lg:flex">
         <motion.div
           className="relative mx-auto flex w-full max-w-7xl justify-center"
           initial={{ opacity: 0 }}
@@ -140,7 +144,7 @@ export function PhotoGallery({ images, animationDelay = 0.2 }: PhotoGalleryProps
             initial="hidden"
             animate={isLoaded ? "visible" : "hidden"}
           >
-            <div className="relative h-[220px] w-[220px]">
+            <div className="relative h-[140px] w-[140px] sm:h-[180px] sm:w-[180px] md:h-[220px] md:w-[220px]">
               {/* Render photos in reverse order so that higher z-index photos are rendered later in the DOM */}
               {displayImages.map((src, index) => {
                 const position = positions[index];
@@ -157,8 +161,8 @@ export function PhotoGallery({ images, animationDelay = 0.2 }: PhotoGalleryProps
                     }}
                   >
                     <Photo
-                      width={220}
-                      height={220}
+                      width={isMobile ? 140 : 220}
+                      height={isMobile ? 140 : 220}
                       src={src}
                       alt={`Location image ${index + 1}`}
                       direction={position.direction}
@@ -184,9 +188,9 @@ export function PhotoGallery({ images, animationDelay = 0.2 }: PhotoGalleryProps
           >
             <button
               onClick={closeLightbox}
-              className="absolute top-4 right-4 text-white/80 hover:text-white transition-colors z-[10000]"
+              className="absolute top-2 right-2 sm:top-4 sm:right-4 text-white/80 hover:text-white transition-colors z-[10000] p-2 min-h-11 min-w-11"
             >
-              <X size={32} />
+              <X size={24} className="sm:w-8 sm:h-8" />
             </button>
 
             {displayImages.length > 1 && (
@@ -196,18 +200,18 @@ export function PhotoGallery({ images, animationDelay = 0.2 }: PhotoGalleryProps
                     e.stopPropagation();
                     goToPrev();
                   }}
-                  className="absolute left-4 text-white/80 hover:text-white transition-colors z-[10000]"
+                  className="absolute left-2 sm:left-4 text-white/80 hover:text-white transition-colors z-[10000] p-2 min-h-11 min-w-11"
                 >
-                  <ChevronLeft size={48} />
+                  <ChevronLeft size={36} className="sm:w-12 sm:h-12" />
                 </button>
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
                     goToNext();
                   }}
-                  className="absolute right-4 text-white/80 hover:text-white transition-colors z-[10000]"
+                  className="absolute right-2 sm:right-4 text-white/80 hover:text-white transition-colors z-[10000] p-2 min-h-11 min-w-11"
                 >
-                  <ChevronRight size={48} />
+                  <ChevronRight size={36} className="sm:w-12 sm:h-12" />
                 </button>
               </>
             )}
@@ -218,7 +222,7 @@ export function PhotoGallery({ images, animationDelay = 0.2 }: PhotoGalleryProps
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
               transition={{ duration: 0.3 }}
-              className="relative max-w-7xl max-h-[90vh] w-full h-full flex items-center justify-center px-16"
+              className="relative max-w-7xl max-h-[90vh] w-full h-full flex items-center justify-center px-12 sm:px-16"
               onClick={(e) => e.stopPropagation()}
             >
               <Image
@@ -230,7 +234,7 @@ export function PhotoGallery({ images, animationDelay = 0.2 }: PhotoGalleryProps
               />
             </motion.div>
 
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white/60 text-sm z-[10000]">
+            <div className="absolute bottom-2 sm:bottom-4 left-1/2 -translate-x-1/2 text-white/60 text-xs sm:text-sm z-[10000]">
               {selectedIndex + 1} / {displayImages.length}
             </div>
           </motion.div>

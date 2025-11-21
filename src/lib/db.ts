@@ -263,7 +263,6 @@ export async function saveChatMessages(
     processing_time_ms?: number;
   }>
 ) {
-  console.log('[DB] saveChatMessages called - sessionId:', sessionId, 'messageCount:', messages.length);
 
   if (isDevelopmentMode()) {
     const db = getLocalDb();
@@ -285,23 +284,18 @@ export async function saveChatMessages(
         }))
       );
     }
-    console.log('[DB] Successfully saved messages to local SQLite');
     return { error: null };
   }
 
-  console.log('[DB] Saving to Supabase (production mode)');
   const supabase = await createSupabaseClient();
 
   // Delete existing messages
-  console.log('[DB] Deleting existing messages for session:', sessionId);
   const deleteResult = await supabase.from("chat_messages").delete().eq("session_id", sessionId);
   if (deleteResult.error) {
-    console.error('[DB] Error deleting messages:', deleteResult.error);
   }
 
   // Insert new messages
   if (messages.length > 0) {
-    console.log('[DB] Inserting', messages.length, 'messages');
     const messagesToInsert = messages.map((msg) => ({
       id: msg.id,
       session_id: sessionId,
@@ -309,18 +303,14 @@ export async function saveChatMessages(
       content: msg.content,
       processing_time_ms: msg.processing_time_ms,
     }));
-    console.log('[DB] First message to insert:', JSON.stringify(messagesToInsert[0]));
 
     const { error } = await supabase.from("chat_messages").insert(messagesToInsert);
     if (error) {
-      console.error('[DB] Error inserting messages:', error);
     } else {
-      console.log('[DB] Successfully inserted messages to Supabase');
     }
     return { error };
   }
 
-  console.log('[DB] No messages to save');
   return { error: null };
 }
 

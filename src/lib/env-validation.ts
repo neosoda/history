@@ -75,11 +75,9 @@ export function logEnvironmentStatus(): void {
   
   if (validation.valid) {
   } else {
-    validation.errors.forEach(error => console.error(`  - ${error}`));
   }
   
   if (validation.warnings.length > 0) {
-    validation.warnings.forEach(warning => console.warn(`  - ${warning}`));
   }
 }
 
@@ -87,7 +85,6 @@ export function logEnvironmentStatus(): void {
 if (process.env.NODE_ENV !== 'development') {
   const validation = validatePaymentEnvironment();
   if (!validation.valid) {
-    validation.errors.forEach(error => console.error(`  - ${error}`));
     // Don't throw in production to avoid complete app failure, but log critically
   }
 }

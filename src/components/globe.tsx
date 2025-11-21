@@ -25,7 +25,6 @@ export interface GlobeRef {
 
 // Suppress Mapbox abort errors globally - these are harmless and occur during normal operations
 if (typeof window !== 'undefined') {
-  // Override console.error to filter out AbortError
   const originalError = console.error;
   console.error = (...args: any[]) => {
     const firstArg = args[0];
@@ -265,7 +264,6 @@ export const Globe = forwardRef<GlobeRef, GlobeProps>(function Globe({ onLocatio
             });
           }
         } catch (error) {
-          console.error('Error reverse geocoding:', error);
           // Fallback: use coordinates
           onLocationClick({
             name: `Location (${lat.toFixed(2)}, ${lng.toFixed(2)})`,
@@ -285,7 +283,6 @@ export const Globe = forwardRef<GlobeRef, GlobeProps>(function Globe({ onLocatio
       });
 
     } catch (err) {
-      console.error('Error initializing map:', err);
       setError('Failed to initialize map');
       setIsLoading(false);
     }
@@ -366,7 +363,6 @@ export const Globe = forwardRef<GlobeRef, GlobeProps>(function Globe({ onLocatio
             });
           }
         } catch (error) {
-          console.error('Error reverse geocoding:', error);
           // Fallback: use coordinates
           onLocationClick({
             name: `Location (${lat.toFixed(2)}, ${lng.toFixed(2)})`,

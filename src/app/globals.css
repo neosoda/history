@@ -123,6 +123,16 @@
   html {
     @apply transition-colors duration-300;
   }
+
+  /* Safe area insets for notched devices */
+  @supports (padding: max(0px)) {
+    body {
+      padding-left: max(0px, env(safe-area-inset-left));
+      padding-right: max(0px, env(safe-area-inset-right));
+      padding-top: max(0px, env(safe-area-inset-top));
+      padding-bottom: max(0px, env(safe-area-inset-bottom));
+    }
+  }
 }
 
 /* Hide scrollbar for carousel */
@@ -197,5 +207,29 @@
 /* Hide Mapbox logo */
 .mapboxgl-ctrl-logo {
   display: none !important;
+}
+
+/* Force all prose elements to respect container width */
+.prose * {
+  max-width: 100%;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+  hyphens: auto;
+}
+
+.prose table {
+  display: block;
+  overflow-x: auto;
+  width: 100%;
+}
+
+.prose pre {
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+.prose code {
+  word-break: break-all;
 }
 

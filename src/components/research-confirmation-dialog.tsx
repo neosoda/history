@@ -77,7 +77,7 @@ export function ResearchConfirmationDialog({
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4">
         {/* Backdrop */}
         <motion.div
           initial={{ opacity: 0 }}
@@ -95,31 +95,31 @@ export function ResearchConfirmationDialog({
           className="relative bg-background rounded-xl shadow-2xl max-w-md w-full border"
         >
           {/* Header */}
-          <div className="flex items-center justify-between p-4 border-b">
-            <div>
-              <h2 className="text-lg font-semibold">
+          <div className="flex items-center justify-between p-3 sm:p-4 border-b gap-2">
+            <div className="min-w-0 flex-1">
+              <h2 className="text-base sm:text-lg font-semibold truncate">
                 Research {location.name}
               </h2>
-              <p className="text-xs text-muted-foreground mt-0.5">
+              <p className="text-[10px] sm:text-xs text-muted-foreground mt-0.5">
                 Choose a focus or leave blank for general history
               </p>
             </div>
             <button
               onClick={onCancel}
-              className="p-1 hover:bg-accent rounded-lg transition-colors"
+              className="p-1.5 sm:p-2 hover:bg-accent rounded-lg transition-colors flex-shrink-0 min-h-11 min-w-11 flex items-center justify-center"
             >
               <X className="h-4 w-4 text-muted-foreground" />
             </button>
           </div>
 
           {/* Content */}
-          <div className="p-4 space-y-3">
+          <div className="p-3 sm:p-4 space-y-2.5 sm:space-y-3">
             {/* Preset Pills */}
             <div>
-              <label className="block text-xs font-medium text-muted-foreground mb-2">
+              <label className="block text-[10px] sm:text-xs font-medium text-muted-foreground mb-1.5 sm:mb-2">
                 Quick presets (optional)
               </label>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-1.5 sm:gap-2">
                 {PRESETS.map((preset) => (
                   <button
                     key={preset.id}
@@ -127,7 +127,7 @@ export function ResearchConfirmationDialog({
                       setSelectedPreset(preset.id);
                       setCustomInstructions('');
                     }}
-                    className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-all border ${
+                    className={`px-2.5 sm:px-3 py-1.5 text-[10px] sm:text-xs font-medium rounded-lg transition-all border min-h-8 ${
                       selectedPreset === preset.id && !customInstructions
                         ? 'bg-primary text-primary-foreground border-primary shadow-sm'
                         : 'bg-card text-card-foreground border-border hover:bg-accent hover:text-accent-foreground'
@@ -143,10 +143,10 @@ export function ResearchConfirmationDialog({
             <div>
               <button
                 onClick={() => setShowCustom(!showCustom)}
-                className="w-full flex items-center justify-between text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
+                className="w-full flex items-center justify-between text-[10px] sm:text-xs font-medium text-muted-foreground hover:text-foreground transition-colors min-h-9"
               >
                 <span>Custom instructions</span>
-                <ChevronDown className={`h-3 w-3 transition-transform ${showCustom ? 'rotate-180' : ''}`} />
+                <ChevronDown className={`h-3 w-3 transition-transform flex-shrink-0 ${showCustom ? 'rotate-180' : ''}`} />
               </button>
 
               <AnimatePresence>
@@ -165,7 +165,7 @@ export function ResearchConfirmationDialog({
                         if (e.target.value) setSelectedPreset('');
                       }}
                       placeholder="e.g., Focus on indigenous peoples before colonization..."
-                      className="min-h-[80px] text-sm resize-none mt-2"
+                      className="min-h-[70px] sm:min-h-[80px] text-xs sm:text-sm resize-none mt-1.5 sm:mt-2"
                     />
                   </motion.div>
                 )}
@@ -174,21 +174,22 @@ export function ResearchConfirmationDialog({
           </div>
 
           {/* Footer */}
-          <div className="p-4 border-t flex gap-2 justify-between items-center">
+          <div className="p-3 sm:p-4 border-t flex gap-2 justify-between items-center">
             <Button
               variant="ghost"
               onClick={onCancel}
               size="sm"
+              className="min-h-11 text-xs sm:text-sm"
             >
               Cancel
             </Button>
             <Button
               onClick={handleConfirm}
               size="default"
-              className="px-6 font-semibold"
+              className="px-4 sm:px-6 font-semibold min-h-11 text-xs sm:text-sm"
             >
-              <Sparkles className="h-4 w-4 mr-2" />
-              Start Research
+              <Sparkles className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1.5 sm:mr-2" />
+              <span className="truncate">Start Research</span>
             </Button>
           </div>
         </motion.div>

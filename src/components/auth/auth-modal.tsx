@@ -122,19 +122,19 @@ export function AuthModal({ open, onClose, onSignUpSuccess }: AuthModalProps) {
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="max-w-xs border-0 shadow-2xl bg-card p-8">
-        <DialogHeader className="text-center pb-6">
-          <DialogTitle className="text-xl font-normal text-card-foreground">
+      <DialogContent className="max-w-xs w-[90vw] border-0 shadow-2xl bg-card p-4 sm:p-8">
+        <DialogHeader className="text-center pb-4 sm:pb-6">
+          <DialogTitle className="text-lg sm:text-xl font-normal text-card-foreground">
             History.
           </DialogTitle>
         </DialogHeader>
 
         {/* Success Message */}
         {showSuccess ? (
-          <div className="space-y-6 text-center py-8">
-            <div className="mx-auto w-16 h-16 bg-green-500/10 rounded-full flex items-center justify-center">
+          <div className="space-y-4 sm:space-y-6 text-center py-4 sm:py-8">
+            <div className="mx-auto w-12 h-12 sm:w-16 sm:h-16 bg-green-500/10 rounded-full flex items-center justify-center">
               <svg
-                className="w-8 h-8 text-green-600"
+                className="w-6 h-6 sm:w-8 sm:h-8 text-green-600"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -148,34 +148,34 @@ export function AuthModal({ open, onClose, onSignUpSuccess }: AuthModalProps) {
               </svg>
             </div>
             <div>
-              <h3 className="text-lg font-medium text-foreground mb-2">
+              <h3 className="text-base sm:text-lg font-medium text-foreground mb-2">
                 Check your inbox
               </h3>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-xs sm:text-sm text-muted-foreground">
                 We sent a confirmation email to
               </p>
-              <p className="text-sm font-medium text-foreground mt-1">
+              <p className="text-xs sm:text-sm font-medium text-foreground mt-1 break-all px-2">
                 {userEmail}
               </p>
             </div>
             <button
               onClick={handleClose}
-              className="w-full p-3 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
+              className="w-full min-h-11 p-2.5 sm:p-3 text-sm sm:text-base bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
             >
               Got it
             </button>
           </div>
         ) : (
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             {/* Unified Auth Form */}
-            <form onSubmit={handleAuth} className="space-y-4">
+            <form onSubmit={handleAuth} className="space-y-3 sm:space-y-4">
             <input
               type="email"
               placeholder="Email"
               value={authData.email}
               onChange={(e) => setAuthData(prev => ({ ...prev, email: e.target.value }))}
               required
-              className="w-full p-3 border-0 border-b border-border bg-transparent focus:border-foreground focus:outline-none transition-colors placeholder:text-muted-foreground text-foreground"
+              className="w-full p-2.5 sm:p-3 text-sm sm:text-base border-0 border-b border-border bg-transparent focus:border-foreground focus:outline-none transition-colors placeholder:text-muted-foreground text-foreground"
             />
             <input
               type="password"
@@ -183,24 +183,24 @@ export function AuthModal({ open, onClose, onSignUpSuccess }: AuthModalProps) {
               value={authData.password}
               onChange={(e) => setAuthData(prev => ({ ...prev, password: e.target.value }))}
               required
-              className="w-full p-3 border-0 border-b border-border bg-transparent focus:border-foreground focus:outline-none transition-colors placeholder:text-muted-foreground text-foreground"
+              className="w-full p-2.5 sm:p-3 text-sm sm:text-base border-0 border-b border-border bg-transparent focus:border-foreground focus:outline-none transition-colors placeholder:text-muted-foreground text-foreground"
             />
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full p-3 mt-6 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors disabled:opacity-50"
+              className="w-full min-h-11 p-2.5 sm:p-3 mt-4 sm:mt-6 text-sm sm:text-base bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors disabled:opacity-50"
             >
               {isLoading ? 'Please wait...' : 'Continue'}
             </button>
           </form>
 
           {/* Divider with better text */}
-          <div className="relative text-center py-4">
+          <div className="relative text-center py-3 sm:py-4">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-border"></div>
             </div>
             <div className="relative flex justify-center">
-              <span className="bg-card px-3 text-xs text-muted-foreground">
+              <span className="bg-card px-2 sm:px-3 text-[10px] sm:text-xs text-muted-foreground">
                 or continue with
               </span>
             </div>
@@ -211,7 +211,7 @@ export function AuthModal({ open, onClose, onSignUpSuccess }: AuthModalProps) {
             whileTap={{ scale: 0.98 }}
             onClick={handleGoogleSignIn}
             disabled={isLoading || googleLoading}
-            className="w-full p-3 border border-border rounded-md hover:bg-accent transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full min-h-11 p-2.5 sm:p-3 border border-border rounded-md hover:bg-accent transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <AnimatePresence mode="wait">
               {googleLoading ? (
@@ -226,9 +226,9 @@ export function AuthModal({ open, onClose, onSignUpSuccess }: AuthModalProps) {
                     animate={{ rotate: 360 }}
                     transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
                   >
-                    <FaGoogle className="h-4 w-4" />
+                    <FaGoogle className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                   </motion.div>
-                  <span className="text-sm text-foreground">Connecting...</span>
+                  <span className="text-xs sm:text-sm text-foreground">Connecting...</span>
                 </motion.div>
               ) : (
                 <motion.div
@@ -238,8 +238,8 @@ export function AuthModal({ open, onClose, onSignUpSuccess }: AuthModalProps) {
                   exit={{ opacity: 0 }}
                   className="flex items-center justify-center gap-2"
                 >
-                  <FaGoogle className="h-4 w-4" />
-                  <span className="text-sm text-foreground">Google</span>
+                  <FaGoogle className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                  <span className="text-xs sm:text-sm text-foreground">Google</span>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -252,7 +252,7 @@ export function AuthModal({ open, onClose, onSignUpSuccess }: AuthModalProps) {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
-                className="text-center text-sm text-red-600"
+                className="text-center text-xs sm:text-sm text-red-600"
               >
                 {error}
               </motion.div>

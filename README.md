@@ -1,82 +1,96 @@
 # History
 
-> Discover the stories behind every place on Earth
+> I can't stop doomscrolling Google Maps so I built AI that researches anywhere on Earth
 
-An interactive 3D globe that lets you explore the fascinating history of any location on the planet. Born from a love of "doom-scrolling" Google Maps and learning about random islands, untouched places, and interesting geographical areas - History brings deep historical research to your fingertips.
+An interactive 3D globe that lets you explore the fascinating history of any location on the planet. Born from opening Google Maps in satellite view at 2am and clicking on random shit - obscure atolls in the Pacific that look like someone dropped a pixel, unnamed mountains in Kyrgyzstan, Arctic settlements with 9 people. Places so remote they don't have Wikipedia pages.
 
 ![History](public/history.png)
 
-## What is History?
+## The Problem
 
-History is an open-source application that combines:
-- **Interactive 3D Globe** - Navigate a beautiful satellite view of Earth powered by Mapbox GL
-- **AI-Powered Deep Research** - Click anywhere to get comprehensive historical analysis via the Valyu DeepResearch API
-- **Instant Discovery** - Learn about remote islands, ancient cities, geographical wonders, and historical sites
+I have a problem. I'll lose 6 hours to doomscrolling Google Maps. Just clicking. Finding volcanic islands that look photoshopped. Fjords that defy physics. Tiny dots of land in the middle of nowhere. And every single time I think: **what IS this place? Who found it? Why does it exist? What happened here?**
 
-Perfect for:
-- Geography enthusiasts who love exploring maps
-- Discovering the stories behind remote islands and untouched places
-- Learning about historical events tied to specific locations
-- Understanding the geological and cultural significance of geographical areas
-- Satisfying your curiosity about any place on Earth
+Then you try to research it and it's hell. 47 Wikipedia tabs. A poorly-translated Kazakh government PDF from 2003. A travel blog from 1987. A single Reddit comment from 2014 that says "I think my uncle went there once." You piece it together like a conspiracy theorist and still don't get the full story.
 
-## Why I Built This
+**The information exists somewhere.** Historical databases. Academic archives. Colonial records. Exploration logs from the 1800s. But it's scattered everywhere and takes forever to find.
 
-I love doom-scrolling Google Maps - clicking on random islands in the Pacific, exploring untouched wilderness areas, finding weird geographical features, and wondering about their stories. But finding detailed historical information about these places meant searching through dozens of sources, Wikipedia rabbit holes, and academic papers.
+## The Solution
 
-**History solves this.** Click anywhere on the globe, and within seconds, get a comprehensive research report about that location's history, significance, and stories. It's like having a personal historian who knows about every corner of Earth.
+Click anywhere on a globe. Get actual research. It searches hundreds of sources for up to 10 minutes and gives you the full story. With citations so you know it's not making shit up.
+
+Not ChatGPT summarizing from training data. **Actual research.** It searches:
+- Historical databases and archives
+- Academic papers and journals
+- Colonial records and exploration logs
+- Archaeological surveys
+- Wikipedia and structured knowledge bases
+- Real-time web sources
+
+**Example: Tristan da Cunha** (most remote inhabited island on Earth, population 245)
+
+Click on it and you get:
+- Discovery by Portuguese explorers in 1506
+- British annexation in 1816 (strategic location during Napoleonic Wars)
+- Volcanic eruption in 1961 that evacuated the entire population
+- Current economy (crayfish export, philately)
+- Cultural evolution of the tiny community
+- Full timeline with sources
+
+What would take hours of manual research happens automatically. And you can verify everything.
+
+## Why This Exists
+
+Because I've spent literal months of my life doomscrolling Google Maps clicking on random islands at 3am and I want to actually understand them. Not skim a 4-paragraph Wikipedia stub. Not guess based on the name. **Proper historical research. Fast.**
+
+The databases exist. The archives are digitized. The APIs are built. Someone just needed to connect them to a globe and make it accessible.
+
+**This is what AI should be doing.** Not writing emails. Augmenting genuine human curiosity about the world.
 
 ## Key Features
 
+### Real Research Infrastructure
+- **Valyu DeepResearch API** - Access to academic databases, archives, historical records
+- **Runs for up to 10 minutes** - Searches hundreds of sources
+- **Full citations** - Every claim linked to verifiable sources
+- **Live progress tracking** - Watch the research unfold in real-time, see every source it queries
+
 ### Interactive Globe
 - **3D Satellite Visualization** - Stunning Mapbox satellite imagery with globe projection
-- **Smooth Navigation** - Rotate, zoom, and explore with intuitive controls
-- **Auto-Rotation** - The globe gently spins when idle
-- **Click Anywhere** - Click any location to start researching its history
+- **Click literally anywhere** - Any country, island, mountain, or geographical feature
 - **Random Discovery** - "I'm Feeling Lucky" button for random location exploration
 - **Multiple Map Styles** - Satellite, streets, outdoors, and more
 
-### Deep Research
-- **Valyu DeepResearch API** - Powered by advanced AI research capabilities
-- **Comprehensive Analysis** - Historical events, cultural heritage, key figures, and timelines
-- **Source Citations** - Transparent sources with links to references
-- **Real-time Progress** - Watch the research unfold with live tool calls and results
-- **Reasoning Traces** - See how the AI thinks through the research process
-- **Multiple Data Sources** - Aggregates information from historical databases and archives
-
-### Save & Organize
+### Save & Share
 - **Research History** - Save and revisit your discoveries (signed-in users)
-- **Location Metadata** - Coordinates, names, and research IDs stored for each query
-- **Sidebar Navigation** - Easy access to past research sessions
-- **Shareable Links** - Share specific research via URL
+- **Shareable Links** - Generate public links to research
+- **Mobile responsive** - Works on phone/tablet/desktop
 
-### Beautiful UI
-- **Transparent Overlays** - Research interface that doesn't block the globe
-- **Smooth Animations** - Framer Motion powered transitions
-- **Dark Mode Support** - Beautiful in both light and dark themes
-- **Responsive Design** - Works on desktop, tablet, and mobile
-- **Activity Feed** - Live updates showing research progress
+### Works Anonymously
+- **1 free query** - No signup required to try it
+- **Sign up for more** - 3 free queries per day, or upgrade for unlimited
 
 ## Technology Stack
 
+### Research
+- **[Valyu DeepResearch API](https://platform.valyu.ai)** - Comprehensive search across databases, archives, academic sources
+
 ### Frontend
-- **[Next.js 15](https://nextjs.org)** - React framework with App Router
+- **[Next.js 15](https://nextjs.org)** + **[React 19](https://react.dev)** - Modern web framework
 - **[Mapbox GL JS](https://www.mapbox.com/mapbox-gljs)** - Interactive 3D globe visualization
-- **[React 19](https://react.dev)** - UI components and state management
-- **[Tailwind CSS](https://tailwindcss.com)** - Styling and responsive design
-- **[Framer Motion](https://www.framer.com/motion/)** - Smooth animations
+- **[Tailwind CSS](https://tailwindcss.com)** + **[Framer Motion](https://www.framer.com/motion/)** - Beautiful UI with smooth animations
 - **[React Markdown](https://github.com/remarkjs/react-markdown)** - Rendering research reports
 
 ### Backend
-- **[Valyu DeepResearch API](https://valyu.ai)** - AI-powered historical research
 - **[Supabase](https://supabase.com)** - Authentication and database (production mode)
 - **[SQLite](https://www.sqlite.org/)** - Local database (development mode)
-- **[Polar](https://polar.sh)** - Subscription billing and monetization
+- **[Polar](https://polar.sh)** - Subscription billing
 - **[Drizzle ORM](https://orm.drizzle.team/)** - Type-safe database queries
 
 ### Infrastructure
 - **[Vercel](https://vercel.com)** - Deployment and hosting
-- **TypeScript** - Type safety throughout the codebase
+- **TypeScript** - Type safety throughout
+
+Fully open-source. Self-hostable. Model-agnostic.
 
 ## Quick Start
 
@@ -97,7 +111,7 @@ I love doom-scrolling Google Maps - clicking on random islands in the Pacific, e
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/history.git
+   git clone https://github.com/yorkeccak/history.git
    cd history
    ```
 
@@ -372,6 +386,17 @@ History is fully open-source. Contributions are welcome and appreciated.
 - Advanced search and filtering
 - Accessibility improvements
 
+## Who This Is For
+
+If you also spend hours clicking random islands on Google Maps, you'll understand why this needed to exist.
+
+Perfect for:
+- People who doomscroll maps like me
+- History researchers who need quick location context
+- Travel planners researching destinations
+- Students learning world geography
+- Anyone curious about literally any place on Earth
+
 ## Known Issues & Limitations
 
 - Mapbox free tier limited to 50k loads/month
@@ -385,8 +410,9 @@ This project is open-source and available under the MIT License.
 
 ## Support & Questions
 
-- **Issues**: [Open an issue](https://github.com/yourusername/history/issues) on GitHub
-- **Discussions**: [Join the discussion](https://github.com/yourusername/history/discussions)
+- **Issues**: [Open an issue](https://github.com/yorkeccak/history/issues) on GitHub
+- **Discussions**: [Join the discussion](https://github.com/yorkeccak/history/discussions)
+- **Hosted Version**: Try it at [history.valyu.ai](https://history.valyu.ai)
 
 ## Roadmap
 
@@ -406,7 +432,7 @@ Future features under consideration:
 
 ## Inspiration & Acknowledgments
 
-This project was born from countless hours spent exploring Google Maps, clicking on random islands, mountains, and remote places, and wanting to know their stories. Special thanks to:
+This project was born from countless hours spent exploring Google Maps, clicking on random islands, mountains, and remote places at 2am, and wanting to know their stories. Special thanks to:
 
 - **[Valyu](https://valyu.ai)** - For building an incredible DeepResearch API that makes this possible
 - **[Mapbox](https://mapbox.com)** - For beautiful, performant globe visualization
@@ -416,6 +442,6 @@ This project was born from countless hours spent exploring Google Maps, clicking
 
 ---
 
-**Built for geography enthusiasts, history buffs, and curious minds everywhere.**
+**Built for geography enthusiasts, history buffs, map doomscrollers, and curious minds everywhere.**
 
 *Explore. Discover. Learn.*

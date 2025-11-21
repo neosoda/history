@@ -11,7 +11,6 @@ export class PolarEventTracker {
     // Only initialize Polar in production
     if (!this.isDevelopment) {
       if (!process.env.POLAR_ACCESS_TOKEN) {
-        console.error('[PolarEventTracker] Missing POLAR_ACCESS_TOKEN - event tracking disabled');
         return;
       }
 
@@ -19,9 +18,7 @@ export class PolarEventTracker {
         accessToken: process.env.POLAR_ACCESS_TOKEN,
       });
 
-      console.log('[PolarEventTracker] Initialized successfully');
     } else {
-      console.log('[PolarEventTracker] Development mode - event tracking disabled');
     }
   }
 
@@ -198,13 +195,11 @@ export class PolarEventTracker {
   ) {
     // Skip in development
     if (this.isDevelopment || !this.polar) {
-      console.log('[PolarEventTracker] Skipping deep research tracking in development');
       return;
     }
 
     // Input validation
     if (!userId || !taskId) {
-      console.error('[PolarEventTracker] Missing userId or taskId for deep research tracking');
       return;
     }
 
@@ -212,7 +207,6 @@ export class PolarEventTracker {
       // Fixed $0.25 charge per deep research run
       const costDollars = 0.25;
 
-      console.log(`[PolarEventTracker] Tracking deep research for user ${userId}, task ${taskId}, cost: $${costDollars}`);
 
       // Send event to Polar
       await this.polar.events.ingest({
@@ -229,9 +223,7 @@ export class PolarEventTracker {
         }]
       });
 
-      console.log(`[PolarEventTracker] Successfully tracked deep research event for user ${userId}`);
     } catch (error) {
-      console.error('[PolarEventTracker] Failed to track deep research event:', error);
     }
   }
 

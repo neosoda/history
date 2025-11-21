@@ -17,6 +17,8 @@ import { Sidebar } from '@/components/sidebar';
 import BottomBar from '@/components/bottom-bar';
 import { SignupPrompt } from '@/components/signup-prompt';
 import { ResearchConfirmationDialog } from '@/components/research-confirmation-dialog';
+import { SettingsModal } from '@/components/user/settings-modal';
+import { SubscriptionModal } from '@/components/user/subscription-modal';
 
 function HomeContent() {
   const { user, loading } = useAuthStore();
@@ -36,6 +38,9 @@ function HomeContent() {
   const [customInstructions, setCustomInstructions] = useState<string | undefined>(undefined);
   const [globeTheme, setGlobeTheme] = useState<GlobeTheme>('satellite-streets-v12');
   const globeRef = useRef<any>(null);
+  const [showMobileSettings, setShowMobileSettings] = useState(false);
+  const [showMobileSubscription, setShowMobileSubscription] = useState(false);
+  const [showMobileHistory, setShowMobileHistory] = useState(false);
 
   // Handle rate limit errors
   const handleRateLimitError = useCallback((resetTime: string) => {
@@ -79,7 +84,6 @@ function HomeContent() {
   }, [notification]);
 
   const handleLocationClick = useCallback((location: { name: string; lat: number; lng: number }, taskId?: string) => {
-    console.log('Location clicked:', location);
     track('location_clicked', { location: location.name });
 
     // If this is loading existing research (has taskId), skip rate limit check
@@ -143,7 +147,8 @@ function HomeContent() {
       const fetchTaskData = async () => {
         try {
           const response = await fetch('/api/research/tasks');
-          const { tasks } = await response.json();
+          const data = await response.json();
+          const tasks = data?.tasks || [];
           const task = tasks.find((t: any) => t.deepresearchId === researchId);
 
           if (task) {
@@ -152,7 +157,6 @@ function HomeContent() {
               lat: task.locationLat,
               lng: task.locationLng,
             });
-            console.log('Loading research from URL:', researchId, task.locationName);
           } else {
             // Fallback if task not found
             setSelectedLocation({
@@ -160,10 +164,8 @@ function HomeContent() {
               lat: 0,
               lng: 0,
             });
-            console.log('Loading research from URL (task not found):', researchId);
           }
         } catch (error) {
-          console.error('Failed to fetch task data:', error);
           // Fallback on error
           setSelectedLocation({
             name: 'Loading research...',
@@ -219,7 +221,7 @@ function HomeContent() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="flex justify-center pt-12 pb-4 pointer-events-auto"
+            className="flex justify-center pt-6 sm:pt-8 md:pt-12 pb-3 sm:pb-4 pointer-events-auto px-4"
           >
             <div className="text-center">
               <motion.div
@@ -228,7 +230,7 @@ function HomeContent() {
                 transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
                 className="relative inline-block group cursor-pointer"
               >
-                <h1 className="text-7xl font-light tracking-tight mb-4 relative inline-block transition-transform duration-300 ease-out group-hover:-rotate-[5deg]">
+                <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light tracking-tight mb-3 sm:mb-4 relative inline-block transition-transform duration-300 ease-out group-hover:-rotate-[5deg]">
                   <span className="font-serif italic bg-gradient-to-br from-primary-foreground via-primary-foreground/95 to-primary-foreground/90 bg-clip-text text-transparent drop-shadow-lg">
                     History
                   </span>
@@ -240,15 +242,15 @@ function HomeContent() {
                   />
                 </h1>
 
-                {/* By Valyu Logo - Slides out to the right - CSS-only animation */}
-                <div className="absolute left-full top-1/2 -translate-y-1/2 flex items-center gap-2.5 ml-4 whitespace-nowrap opacity-0 -translate-x-5 transition-all duration-300 ease-out group-hover:opacity-100 group-hover:translate-x-0 pointer-events-none">
-                  <span className="text-lg text-primary-foreground/70 drop-shadow-md font-light">By</span>
+                {/* By Valyu Logo - Hidden on mobile, slides out on desktop */}
+                <div className="hidden sm:flex absolute left-full top-1/2 -translate-y-1/2 items-center gap-2.5 ml-4 whitespace-nowrap opacity-0 -translate-x-5 transition-all duration-300 ease-out group-hover:opacity-100 group-hover:translate-x-0 pointer-events-none">
+                  <span className="text-base md:text-lg text-primary-foreground/70 drop-shadow-md font-light">By</span>
                   <Image
                     src="/valyu.svg"
                     alt="Valyu"
                     width={140}
                     height={140}
-                    className="h-10 w-auto opacity-90 drop-shadow-md invert brightness-0 contrast-200"
+                    className="h-8 md:h-10 w-auto opacity-90 drop-shadow-md invert brightness-0 contrast-200"
                     priority
                   />
                 </div>
@@ -257,7 +259,7 @@ function HomeContent() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.6, delay: 0.4 }}
-                className="text-base text-primary-foreground/90 font-light tracking-wide drop-shadow-md"
+                className="text-sm sm:text-base text-primary-foreground/90 font-light tracking-wide drop-shadow-md px-4"
               >
                 Discover the stories behind every place on Earth
               </motion.p>
@@ -269,16 +271,17 @@ function HomeContent() {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="absolute top-8 right-8 pointer-events-auto"
+            className="absolute top-4 sm:top-6 md:top-8 right-4 sm:right-6 md:right-8 pointer-events-auto"
           >
             <motion.button
               whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.95 }}
               onClick={handleFeelingLucky}
-              className="group relative px-6 py-3 text-sm font-semibold bg-card/90 backdrop-blur-xl text-card-foreground border border-border rounded-full transition-all shadow-xl hover:shadow-2xl hover:bg-card hover:border-border/80 flex items-center gap-2.5"
+              className="group relative px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 text-xs sm:text-sm font-semibold bg-card/90 backdrop-blur-xl text-card-foreground border border-border rounded-full transition-all shadow-xl hover:shadow-2xl hover:bg-card hover:border-border/80 flex items-center gap-1.5 sm:gap-2 md:gap-2.5 min-h-11"
             >
-              <Shuffle className="h-4 w-4 group-hover:rotate-180 transition-transform duration-500" />
-              <span>Random Location</span>
+              <Shuffle className="h-3.5 w-3.5 sm:h-4 sm:w-4 group-hover:rotate-180 transition-transform duration-500" />
+              <span className="hidden sm:inline">Random Location</span>
+              <span className="sm:hidden">Random</span>
             </motion.button>
           </motion.div>
         </header>
@@ -289,7 +292,12 @@ function HomeContent() {
         </div>
 
         {/* Bottom bar */}
-        <BottomBar />
+        <BottomBar
+          onShowAuth={() => setShowAuthModal(true)}
+          onShowSettings={() => setShowMobileSettings(true)}
+          onShowSubscription={() => setShowMobileSubscription(true)}
+          onShowHistory={() => setShowMobileHistory(true)}
+        />
       </div>
 
       {/* Research interface overlay */}
@@ -353,6 +361,16 @@ function HomeContent() {
           setNotification({ type: 'success', message });
           setShowAuthModal(false);
         }}
+      />
+
+      <SettingsModal
+        open={showMobileSettings}
+        onClose={() => setShowMobileSettings(false)}
+      />
+
+      <SubscriptionModal
+        open={showMobileSubscription}
+        onClose={() => setShowMobileSubscription(false)}
       />
 
       <RateLimitDialog

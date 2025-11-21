@@ -197,27 +197,27 @@ export function RateLimitDialog({ open, onOpenChange, resetTime, onShowAuth }: R
     <AnimatePresence>
       {open && (
         <Dialog open={open} onOpenChange={onOpenChange}>
-          <DialogContent className="fixed left-[50%] top-[50%] z-50 w-[90vw] max-w-md translate-x-[-50%] translate-y-[-50%]">
+          <DialogContent className="fixed left-[50%] top-[50%] z-50 w-[92vw] sm:w-[90vw] max-w-md translate-x-[-50%] translate-y-[-50%] p-4 sm:p-6">
             <DialogTitle className="sr-only">Daily Rate Limit Reached</DialogTitle>
-            
-            <div className="text-center space-y-6">
+
+            <div className="text-center space-y-4 sm:space-y-6">
               {/* Header */}
               <div>
-                <h2 className="text-xl font-light text-foreground mb-2">
+                <h2 className="text-lg sm:text-xl font-light text-foreground mb-1 sm:mb-2">
                   Daily limit reached
                 </h2>
-                <p className="text-muted-foreground text-sm">
+                <p className="text-muted-foreground text-xs sm:text-sm">
                   Resets in <span className="font-medium">{formatResetTime(resetTime)}</span>
                 </p>
               </div>
 
               {/* Options */}
-              <div className="space-y-3">
+              <div className="space-y-2 sm:space-y-3">
                 {!user ? (
                   <Button
                     onClick={handleCreateAccount}
                     disabled={loading}
-                    className="w-full"
+                    className="w-full min-h-11 text-sm sm:text-base"
                   >
                     Create Account
                   </Button>
@@ -226,18 +226,18 @@ export function RateLimitDialog({ open, onOpenChange, resetTime, onShowAuth }: R
                     <Button
                       onClick={() => handleUpgrade('pay_per_use')}
                       disabled={loading}
-                      className="w-full"
+                      className="w-full min-h-11 text-sm sm:text-base"
                     >
-                      <ChartLine className="mr-2 h-4 w-4" />
-                      Can&apos;t wait? Pay Per Use
+                      <ChartLine className="mr-1.5 sm:mr-2 h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                      <span className="truncate">Can&apos;t wait? Pay Per Use</span>
                     </Button>
                     <Button
                       onClick={() => handleUpgrade('unlimited')}
                       disabled={loading}
                       variant="outline"
-                      className="w-full"
+                      className="w-full min-h-11 text-sm sm:text-base"
                     >
-                      <CreditCard className="mr-2 h-4 w-4" />
+                      <CreditCard className="mr-1.5 sm:mr-2 h-3.5 w-3.5 sm:h-4 sm:w-4" />
                       Unlimited - $50/month
                     </Button>
                   </div>
@@ -245,14 +245,14 @@ export function RateLimitDialog({ open, onOpenChange, resetTime, onShowAuth }: R
 
                 {/* Enterprise Option */}
                 {user && process.env.NEXT_PUBLIC_APP_MODE !== 'development' && (
-                  <div className="mt-4 p-4 bg-muted rounded-lg border border-border">
-                    <div className="flex items-start gap-3 mb-3">
-                      <Building2 className="h-5 w-5 text-muted-foreground mt-0.5" />
-                      <div>
-                        <h4 className="font-semibold text-sm text-foreground mb-1">
+                  <div className="mt-3 sm:mt-4 p-3 sm:p-4 bg-muted rounded-lg border border-border">
+                    <div className="flex items-start gap-2 sm:gap-3 mb-2 sm:mb-3">
+                      <Building2 className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground mt-0.5 flex-shrink-0" />
+                      <div className="min-w-0">
+                        <h4 className="font-semibold text-xs sm:text-sm text-foreground mb-1">
                           Need enterprise deployment?
                         </h4>
-                        <p className="text-xs text-muted-foreground">
+                        <p className="text-[10px] sm:text-xs text-muted-foreground">
                           Deploy Valyu&apos;s infrastructure in your organization with custom data integrations and AI agents
                         </p>
                       </div>
@@ -263,15 +263,15 @@ export function RateLimitDialog({ open, onOpenChange, resetTime, onShowAuth }: R
                         track('Enterprise CTA Clicked', { source: 'rate_limit_dialog' });
                       }}
                       variant="outline"
-                      className="w-full text-sm"
+                      className="w-full min-h-11 text-xs sm:text-sm"
                     >
-                      <Building2 className="mr-2 h-4 w-4" />
+                      <Building2 className="mr-1.5 sm:mr-2 h-3.5 w-3.5 sm:h-4 sm:w-4" />
                       Book a Demo
                     </Button>
                   </div>
                 )}
 
-                <div className="flex gap-2">
+                <div className="flex gap-1.5 sm:gap-2">
                   <Button
                     onClick={() => {
                       track('GitHub CTA Click', {
@@ -281,31 +281,31 @@ export function RateLimitDialog({ open, onOpenChange, resetTime, onShowAuth }: R
                       window.open('https://github.com/yorkeccak/history/', '_blank');
                     }}
                     variant="ghost"
-                    className="flex-1 text-sm"
+                    className="flex-1 min-h-11 text-xs sm:text-sm px-2 sm:px-3"
                   >
-                    <Github className="mr-2 h-4 w-4" />
-                    Host Yourself
+                    <Github className="mr-1 sm:mr-2 h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0" />
+                    <span className="truncate">Host Yourself</span>
                   </Button>
                   <Button
                     onClick={handleBuildYourOwn}
                     variant="ghost"
-                    className="flex-1 text-sm"
+                    className="flex-1 min-h-11 text-xs sm:text-sm px-2 sm:px-3"
                   >
-                    <Code className="mr-2 h-4 w-4" />
-                    Build with Valyu
+                    <Code className="mr-1 sm:mr-2 h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0" />
+                    <span className="truncate">Build with Valyu</span>
                   </Button>
                 </div>
               </div>
 
               {/* Simple code example */}
-              <div className="bg-muted rounded-lg p-4 text-left">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs font-medium text-muted-foreground">API Example</span>
+              <div className="bg-muted rounded-lg p-3 sm:p-4 text-left">
+                <div className="flex items-center justify-between mb-1.5 sm:mb-2">
+                  <span className="text-[10px] sm:text-xs font-medium text-muted-foreground">API Example</span>
                   <Button
                     onClick={() => handleCopy(codeSnippet)}
                     variant="ghost"
                     size="sm"
-                    className="h-6 px-2"
+                    className="h-7 sm:h-8 px-2 min-h-11"
                   >
                     {copied ? (
                       <Check className="h-3 w-3 text-green-600" />
@@ -314,7 +314,7 @@ export function RateLimitDialog({ open, onOpenChange, resetTime, onShowAuth }: R
                     )}
                   </Button>
                 </div>
-                <pre className="text-xs font-mono text-foreground overflow-x-auto">
+                <pre className="text-[10px] sm:text-xs font-mono text-foreground overflow-x-auto">
                   {codeSnippet}
                 </pre>
               </div>

@@ -198,13 +198,13 @@ export function Sidebar({
 
   return (
     <>
-      {/* Chevron Toggle Button - Left Edge, Centered */}
+      {/* Chevron Toggle Button - Left Edge, Centered - Hidden on mobile */}
       {!isOpen && (
         <motion.button
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           onClick={toggleSidebar}
-          className="fixed left-0 top-1/2 -translate-y-1/2 z-50 w-10 h-16 flex items-center justify-center bg-card border-r-2 border-t-2 border-b-2 border-border hover:border-border/80 rounded-r-2xl transition-all duration-200 shadow-lg hover:shadow-xl hover:w-12 group"
+          className="hidden sm:fixed left-0 top-1/2 -translate-y-1/2 z-50 w-10 h-16 sm:flex items-center justify-center bg-card border-r-2 border-t-2 border-b-2 border-border hover:border-border/80 rounded-r-2xl transition-all duration-200 shadow-lg hover:shadow-xl hover:w-12 group"
           title="Open Menu"
         >
           <svg
@@ -223,7 +223,7 @@ export function Sidebar({
         </motion.button>
       )}
 
-      {/* macOS Dock-Style Navigation - Left Side */}
+      {/* macOS Dock-Style Navigation - Left Side - Hidden on mobile */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -235,7 +235,7 @@ export function Sidebar({
               damping: 30,
               stiffness: 300
             }}
-            className="fixed left-6 top-1/2 -translate-y-1/2 z-40 bg-card/80 backdrop-blur-2xl border border-border rounded-[32px] shadow-2xl py-4 px-3"
+            className="hidden sm:fixed left-6 top-1/2 -translate-y-1/2 z-40 bg-card/80 backdrop-blur-2xl border border-border rounded-[32px] shadow-2xl py-4 px-3 sm:block"
           >
             <div className="flex flex-col items-center gap-2">
               {/* Always Open Toggle */}
@@ -548,7 +548,7 @@ export function Sidebar({
         )}
       </AnimatePresence>
 
-      {/* Research History Panel */}
+      {/* Research History Panel - Hidden on mobile */}
       <AnimatePresence>
         {showHistory && (user || isDevelopment) && (
           <>
@@ -561,7 +561,7 @@ export function Sidebar({
               onClick={() => setShowHistory(false)}
             />
 
-            {/* Panel */}
+            {/* Panel - Responsive positioning */}
             <motion.div
               initial={{ x: -280 }}
               animate={{ x: 0 }}
@@ -571,28 +571,42 @@ export function Sidebar({
                 damping: 30,
                 stiffness: 300
               }}
-              className="fixed left-20 top-4 bottom-4 w-80 bg-card rounded-3xl z-50 shadow-xl ml-2 flex flex-col border border-border overflow-hidden"
+              className="fixed left-0 sm:left-20 top-0 sm:top-4 bottom-0 sm:bottom-4 w-full sm:w-80 bg-card sm:rounded-3xl z-50 shadow-xl sm:ml-2 flex flex-col border-r sm:border border-border overflow-hidden"
             >
               {/* Header */}
-              <div className="p-4 border-b border-border flex-shrink-0">
+              <div className="p-3 sm:p-4 border-b border-border flex-shrink-0">
                 <div className="flex items-center justify-between">
-                  <h3 className="font-semibold text-card-foreground">Research History</h3>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={handleNewResearch}
-                    className="h-8 w-8 p-0"
-                    title="New Research"
-                  >
-                    <Plus className="h-4 w-4" />
-                  </Button>
+                  <h3 className="text-base sm:text-lg font-semibold text-card-foreground">Research History</h3>
+                  <div className="flex items-center gap-1 sm:gap-2">
+                    {/* Close button on mobile */}
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setShowHistory(false)}
+                      className="h-9 w-9 p-0 sm:hidden min-h-11 min-w-11"
+                      title="Close"
+                    >
+                      <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={handleNewResearch}
+                      className="h-9 w-9 p-0 min-h-11 min-w-11"
+                      title="New Research"
+                    >
+                      <Plus className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </div>
               </div>
 
               {/* Research Tasks List */}
               <div className="flex-1 overflow-y-auto">
                 {loadingTasks ? (
-                  <div className="space-y-2 p-4">
+                  <div className="space-y-2 p-3 sm:p-4">
                     {[...Array(5)].map((_, i) => (
                       <div
                         key={i}
@@ -601,13 +615,13 @@ export function Sidebar({
                     ))}
                   </div>
                 ) : tasks.length === 0 ? (
-                  <div className="flex items-center justify-center h-full p-4">
-                    <p className="text-sm text-muted-foreground text-center">
+                  <div className="flex items-center justify-center h-full p-3 sm:p-4">
+                    <p className="text-xs sm:text-sm text-muted-foreground text-center">
                       No research history yet.<br />Click anywhere on the globe to start researching!
                     </p>
                   </div>
                 ) : (
-                  <div className="space-y-1.5 py-2 px-4">
+                  <div className="space-y-1.5 py-2 px-3 sm:px-4">
                     {tasks.map((task: ResearchTask) => {
                       const StatusIcon = task.status === 'completed' ? CheckCircle2 : task.status === 'running' ? Loader : task.status === 'failed' ? AlertCircle : Clock;
                       const statusColor = task.status === 'completed' ? 'text-green-600' : task.status === 'running' ? 'text-blue-600' : task.status === 'failed' ? 'text-red-600' : 'text-muted-foreground';
@@ -617,18 +631,18 @@ export function Sidebar({
                         <div
                           key={task.id}
                           onClick={() => handleTaskSelect(task)}
-                          className="flex items-start gap-2.5 p-3 rounded-xl hover:bg-accent group cursor-pointer transition-colors"
+                          className="flex items-start gap-2 sm:gap-2.5 p-2.5 sm:p-3 rounded-xl hover:bg-accent active:bg-accent group cursor-pointer transition-colors min-h-[60px]"
                         >
                           <MapPin className="h-4 w-4 text-muted-foreground flex-shrink-0 mt-0.5" />
                           <div className="flex-1 min-w-0">
-                            <div className="text-sm font-medium text-foreground break-words">
+                            <div className="text-xs sm:text-sm font-medium text-foreground break-words">
                               {task.locationName}
                             </div>
-                            <div className="text-xs text-muted-foreground mt-0.5">
+                            <div className="text-[10px] sm:text-xs text-muted-foreground mt-0.5">
                               {new Date(task.createdAt).toLocaleDateString()}
                             </div>
-                            <div className={`inline-flex items-center gap-1 mt-1.5 px-2 py-0.5 rounded-full text-[10px] font-medium ${statusBg} ${statusColor}`}>
-                              <StatusIcon className={`h-3 w-3 ${task.status === 'running' ? 'animate-spin' : ''}`} />
+                            <div className={`inline-flex items-center gap-1 mt-1.5 px-1.5 sm:px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-medium ${statusBg} ${statusColor}`}>
+                              <StatusIcon className={`h-2.5 w-2.5 sm:h-3 sm:w-3 ${task.status === 'running' ? 'animate-spin' : ''}`} />
                               <span className="capitalize">{task.status}</span>
                             </div>
                           </div>
@@ -659,7 +673,7 @@ export function Sidebar({
         onClose={() => setShowEnterpriseModal(false)}
       />
 
-      {/* Map Styles Panel */}
+      {/* Map Styles Panel - Hidden on mobile */}
       <AnimatePresence>
         {showMapStyles && (
           <>
@@ -675,10 +689,20 @@ export function Sidebar({
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: -400, opacity: 0 }}
               transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-              className="fixed left-24 top-1/2 -translate-y-1/2 z-50 w-80 bg-popover/95 backdrop-blur-xl border border-border rounded-2xl shadow-2xl p-6"
+              className="fixed left-0 sm:left-24 top-1/2 -translate-y-1/2 z-50 w-full sm:w-80 max-w-sm bg-popover/95 backdrop-blur-xl border-r sm:border border-border sm:rounded-2xl shadow-2xl p-4 sm:p-6"
             >
-              <h3 className="text-lg font-semibold mb-4 text-popover-foreground">Map Style</h3>
-              <div className="space-y-2">
+              <div className="flex items-center justify-between mb-3 sm:mb-4">
+                <h3 className="text-base sm:text-lg font-semibold text-popover-foreground">Map Style</h3>
+                <button
+                  onClick={() => setShowMapStyles(false)}
+                  className="sm:hidden p-2 hover:bg-accent rounded-lg min-h-11 min-w-11"
+                >
+                  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              <div className="space-y-1.5 sm:space-y-2">
                 {[
                   { value: 'satellite-streets-v12', label: 'Satellite Streets', description: 'Satellite imagery with labels' },
                   { value: 'satellite-v9', label: 'Satellite', description: 'Pure satellite imagery' },
@@ -695,14 +719,14 @@ export function Sidebar({
                       onGlobeThemeChange?.(option.value);
                       setShowMapStyles(false);
                     }}
-                    className={`w-full text-left px-4 py-3 rounded-xl transition-all ${
+                    className={`w-full text-left px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl transition-all min-h-12 ${
                       globeTheme === option.value
                         ? 'bg-primary/10 border-l-2 border-primary'
-                        : 'hover:bg-accent'
+                        : 'hover:bg-accent active:bg-accent'
                     }`}
                   >
-                    <div className="font-medium text-sm text-popover-foreground">{option.label}</div>
-                    <div className="text-xs text-muted-foreground">{option.description}</div>
+                    <div className="font-medium text-xs sm:text-sm text-popover-foreground">{option.label}</div>
+                    <div className="text-[10px] sm:text-xs text-muted-foreground">{option.description}</div>
                   </button>
                 ))}
               </div>

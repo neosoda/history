@@ -66,31 +66,31 @@ export function SettingsModal({ open, onClose }: SettingsModalProps) {
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-md">
+      <DialogContent className="max-w-md w-[92vw]">
         <DialogHeader>
-          <DialogTitle>Account Settings</DialogTitle>
+          <DialogTitle className="text-base sm:text-lg">Account Settings</DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-6">
+        <div className="space-y-4 sm:space-y-6">
           {/* Current User Info */}
-          <div className="flex items-center gap-4 p-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
-            <Avatar className="h-12 w-12">
+          <div className="flex items-center gap-3 sm:gap-4 p-3 sm:p-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
+            <Avatar className="h-10 w-10 sm:h-12 sm:w-12 flex-shrink-0">
               <AvatarImage src={user.user_metadata?.avatar_url} />
               <AvatarFallback>
                 {user.email?.[0]?.toUpperCase()}
               </AvatarFallback>
             </Avatar>
-            <div>
-              <p className="text-sm font-medium">{user.email?.split('@')[0]}</p>
-              <p className="text-xs text-gray-500">{user.email}</p>
+            <div className="min-w-0 flex-1">
+              <p className="text-xs sm:text-sm font-medium truncate">{user.email?.split('@')[0]}</p>
+              <p className="text-[10px] sm:text-xs text-gray-500 truncate">{user.email}</p>
             </div>
           </div>
 
           {/* Theme Selection */}
-          <div className="space-y-3">
-            <div className="flex items-center gap-2">
-              <Monitor className="h-4 w-4 text-gray-500" />
-              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+          <div className="space-y-2 sm:space-y-3">
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <Monitor className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-gray-500 flex-shrink-0" />
+              <label className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">
                 Theme
               </label>
             </div>
@@ -98,60 +98,60 @@ export function SettingsModal({ open, onClose }: SettingsModalProps) {
           </div>
 
           {/* Email Update Form */}
-          <form onSubmit={handleEmailUpdate} className="space-y-4">
+          <form onSubmit={handleEmailUpdate} className="space-y-3 sm:space-y-4">
             <div>
-              <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">
+              <label className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 sm:mb-2 block">
                 Change Email Address
               </label>
               <div className="relative">
-                <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                <Mail className="absolute left-2.5 sm:left-3 top-2.5 sm:top-3 h-3.5 w-3.5 sm:h-4 sm:w-4 text-gray-400" />
                 <Input
                   type="email"
                   value={newEmail}
                   onChange={(e) => setNewEmail(e.target.value)}
                   placeholder="Enter new email address"
-                  className="pl-10"
+                  className="pl-8 sm:pl-10 text-xs sm:text-sm min-h-11"
                   required
                 />
               </div>
             </div>
 
             {message && (
-              <div className={`flex items-center gap-2 p-3 rounded-lg text-sm ${
-                message.type === 'success' 
+              <div className={`flex items-start gap-1.5 sm:gap-2 p-2.5 sm:p-3 rounded-lg text-xs sm:text-sm ${
+                message.type === 'success'
                   ? 'bg-green-50 text-green-700 dark:bg-green-900/20 dark:text-green-400'
                   : 'bg-red-50 text-red-700 dark:bg-red-900/20 dark:text-red-400'
               }`}>
                 {message.type === 'success' ? (
-                  <CheckCircle className="h-4 w-4" />
+                  <CheckCircle className="h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0 mt-0.5" />
                 ) : (
-                  <AlertCircle className="h-4 w-4" />
+                  <AlertCircle className="h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0 mt-0.5" />
                 )}
-                {message.text}
+                <span className="flex-1">{message.text}</span>
               </div>
             )}
 
-            <div className="flex gap-3 pt-4">
-              <Button 
-                type="button" 
-                variant="outline" 
+            <div className="flex gap-2 sm:gap-3 pt-2 sm:pt-4">
+              <Button
+                type="button"
+                variant="outline"
                 onClick={onClose}
-                className="flex-1"
+                className="flex-1 min-h-11 text-xs sm:text-sm"
               >
                 Cancel
               </Button>
-              <Button 
-                type="submit" 
+              <Button
+                type="submit"
                 disabled={loading || !newEmail.trim()}
-                className="flex-1"
+                className="flex-1 min-h-11 text-xs sm:text-sm"
               >
                 {loading ? 'Updating...' : 'Update Email'}
               </Button>
             </div>
           </form>
 
-          <div className="text-xs text-gray-500 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-            <strong>Note:</strong> You&apos;ll receive confirmation emails at both your current and new email addresses. 
+          <div className="text-[10px] sm:text-xs text-gray-500 p-2.5 sm:p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+            <strong>Note:</strong> You&apos;ll receive confirmation emails at both your current and new email addresses.
             You must confirm the change from both addresses for security.
           </div>
         </div>

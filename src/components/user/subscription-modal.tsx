@@ -176,33 +176,33 @@ export function SubscriptionModal({ open, onClose }: SubscriptionModalProps) {
   return (
     <>
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="!max-w-5xl sm:!max-w-5xl md:!max-w-5xl lg:!max-w-5xl !w-[95vw] sm:!w-[90vw] md:!w-[85vw] lg:!w-[1000px] bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700">
-        <DialogHeader className="space-y-3 pb-6">
-          <DialogTitle className="text-2xl font-semibold text-gray-900 dark:text-gray-100 text-center">
+      <DialogContent className="!max-w-md sm:!max-w-2xl md:!max-w-4xl !w-[96vw] sm:!w-[90vw] md:!w-[85vw] bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 max-h-[90vh] overflow-y-auto">
+        <DialogHeader className="space-y-2 sm:space-y-3 pb-4 sm:pb-6">
+          <DialogTitle className="text-xl sm:text-2xl font-semibold text-gray-900 dark:text-gray-100 text-center px-2">
             Unlock Professional-Grade Biomedical Research
           </DialogTitle>
-          <p className="text-sm text-gray-600 dark:text-gray-400 text-center max-w-lg mx-auto">
+          <p className="text-sm text-gray-600 dark:text-gray-400 text-center max-w-lg mx-auto px-2">
             Access institutional-quality research tools that save hours of analysis time. Choose the plan that fits your workflow.
           </p>
         </DialogHeader>
 
         <div className="space-y-4">
           {/* Value Props Banner */}
-          <div className="grid grid-cols-3 gap-3 mb-6">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3 mb-4 sm:mb-6">
             <div className="flex flex-col items-center text-center p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-700">
-              <Clock className="h-5 w-5 text-slate-700 dark:text-slate-400 mb-1.5" />
-              <p className="text-xs font-semibold text-gray-900 dark:text-gray-100">Save 100+ hrs/month</p>
-              <p className="text-[10px] text-gray-600 dark:text-gray-400">On research & analysis</p>
+              <Clock className="h-5 w-5 sm:h-6 sm:w-6 text-slate-700 dark:text-slate-400 mb-1.5" />
+              <p className="text-sm sm:text-xs font-semibold text-gray-900 dark:text-gray-100">Save 100+ hrs/month</p>
+              <p className="text-xs sm:text-[10px] text-gray-600 dark:text-gray-400">On research & analysis</p>
             </div>
             <div className="flex flex-col items-center text-center p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-700">
-              <TrendingUp className="h-5 w-5 text-slate-700 dark:text-slate-400 mb-1.5" />
-              <p className="text-xs font-semibold text-gray-900 dark:text-gray-100">Instant insights</p>
-              <p className="text-[10px] text-gray-600 dark:text-gray-400">From multiple sources</p>
+              <TrendingUp className="h-5 w-5 sm:h-6 sm:w-6 text-slate-700 dark:text-slate-400 mb-1.5" />
+              <p className="text-sm sm:text-xs font-semibold text-gray-900 dark:text-gray-100">Instant insights</p>
+              <p className="text-xs sm:text-[10px] text-gray-600 dark:text-gray-400">From multiple sources</p>
             </div>
             <div className="flex flex-col items-center text-center p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-700">
-              <Shield className="h-5 w-5 text-slate-700 dark:text-slate-400 mb-1.5" />
-              <p className="text-xs font-semibold text-gray-900 dark:text-gray-100">Data accuracy</p>
-              <p className="text-[10px] text-gray-600 dark:text-gray-400">Verified sources only</p>
+              <Shield className="h-5 w-5 sm:h-6 sm:w-6 text-slate-700 dark:text-slate-400 mb-1.5" />
+              <p className="text-sm sm:text-xs font-semibold text-gray-900 dark:text-gray-100">Data accuracy</p>
+              <p className="text-xs sm:text-[10px] text-gray-600 dark:text-gray-400">Verified sources only</p>
             </div>
           </div>
 
@@ -216,7 +216,7 @@ export function SubscriptionModal({ open, onClose }: SubscriptionModalProps) {
           )}
 
           {/* Plans Grid */}
-          <div className={`grid gap-4 ${(process.env.NEXT_PUBLIC_APP_MODE === 'development' || process.env.NEXT_PUBLIC_ENTERPRISE !== 'true') ? 'md:grid-cols-2' : 'md:grid-cols-3'}`}>
+          <div className={`grid gap-3 sm:gap-4 ${(process.env.NEXT_PUBLIC_APP_MODE === 'development' || process.env.NEXT_PUBLIC_ENTERPRISE !== 'true') ? 'grid-cols-1 sm:grid-cols-2' : 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3'}`}>
             {/* Pay Per Use - For Occasional Users */}
             <motion.div
               className="relative group cursor-pointer"
@@ -266,8 +266,9 @@ export function SubscriptionModal({ open, onClose }: SubscriptionModalProps) {
                   </div>
                   <p className="text-xs text-gray-500 dark:text-gray-400 mb-4">No monthly commitment required</p>
 
-                  <button className="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600 text-white font-medium py-2.5 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 group">
-                    <span>Start with Pay-As-You-Go</span>
+                  <button className="w-full min-h-12 bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600 text-white font-medium py-2.5 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 group text-sm sm:text-base">
+                    <span className="hidden sm:inline">Start with Pay-As-You-Go</span>
+                    <span className="sm:hidden">Pay-As-You-Go</span>
                     <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
                   </button>
                 </div>
@@ -334,7 +335,7 @@ export function SubscriptionModal({ open, onClose }: SubscriptionModalProps) {
                   <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">100 queries included (~$0.20 each)</p>
                   <p className="text-xs text-emerald-600 dark:text-emerald-400 font-medium mb-4">🎉 1 week free trial</p>
 
-                  <button className="w-full bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-700 dark:hover:bg-emerald-600 text-white font-semibold py-2.5 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 group shadow-lg">
+                  <button className="w-full min-h-12 bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-700 dark:hover:bg-emerald-600 text-white font-semibold py-2.5 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 group shadow-lg text-sm sm:text-base">
                     <span>Start Free Trial</span>
                     <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
                   </button>

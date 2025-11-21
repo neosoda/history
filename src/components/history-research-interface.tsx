@@ -300,7 +300,6 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (error) {
-      console.error('Failed to share:', error);
     } finally {
       setSharing(false);
     }
@@ -336,10 +335,8 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
 
       if (images && images.length > 0) {
         setHeroImages(images);
-        console.log('[HeroImage] Selected', images.length, 'images');
 
         if (reasoning) {
-          console.log('[HeroImage] Selection reasoning:', reasoning);
         }
 
         // Store images in localStorage with taskId for persistence
@@ -347,15 +344,12 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
           try {
             localStorage.setItem(`research_images_${taskId}`, JSON.stringify(images));
           } catch (err) {
-            console.error('[HeroImage] Failed to cache images:', err);
           }
         }
       } else {
-        console.log('[HeroImage] No images available');
         setHeroImages([]);
       }
     } catch (error) {
-      console.error('[HeroImage] Failed to generate:', error);
       setHeroImages([]);
     } finally {
       setIsGeneratingImage(false);
@@ -374,9 +368,7 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
 
       // Debug: Check message structure
       if (statusData.messages && statusData.messages.length > 0) {
-        console.log('[POLL] Total messages:', statusData.messages.length);
         statusData.messages.forEach((msg: any, idx: number) => {
-          console.log(`[POLL] Message ${idx}: role=${msg.role}, content items=${msg.content?.length || 0}`);
         });
       }
 
@@ -387,6 +379,18 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
           current: statusData.current_step || 0,
           total: statusData.total_steps || 10,
         });
+
+        // Extract location from query if displayLocation not set properly
+        if (statusData.query && (!displayLocation || displayLocation.name === 'Loading research...')) {
+          const locationMatch = statusData.query.match(/Location:\s*(.+)$/m);
+          if (locationMatch && locationMatch[1]) {
+            setDisplayLocation({
+              name: locationMatch[1].trim(),
+              lat: displayLocation?.lat || 0,
+              lng: displayLocation?.lng || 0
+            });
+          }
+        }
 
         // Update messages array if provided - create new array reference to trigger re-render
         if (statusData.messages && Array.isArray(statusData.messages) && statusData.messages.length > 0) {
@@ -409,13 +413,11 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
 
         return { completed: false };
       } else if (statusData.status === 'completed') {
-        console.log('[Polling] Task completed, processing data...');
 
         // Extract content - prioritize output field
         let extractedContent = '';
         if (statusData.output) {
           extractedContent = statusData.output;
-          console.log('[Polling] Got content from output field:', extractedContent.length, 'chars');
         } else if (statusData.messages && Array.isArray(statusData.messages) && statusData.messages.length > 0) {
           // Fallback: extract content from last message
           const lastMessage = statusData.messages[statusData.messages.length - 1];
@@ -424,7 +426,19 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
               .filter((item: any) => item.type === 'text')
               .map((item: any) => item.text)
               .join('\n\n');
-            console.log('[Polling] Got content from messages:', extractedContent.length, 'chars');
+          }
+        }
+
+        // Extract location from query if displayLocation not set properly
+        if (statusData.query && (!displayLocation || displayLocation.name === 'Loading research...')) {
+          // Parse location from query (format: "Research the ... \n\nLocation: Location Name")
+          const locationMatch = statusData.query.match(/Location:\s*(.+)$/m);
+          if (locationMatch && locationMatch[1]) {
+            setDisplayLocation({
+              name: locationMatch[1].trim(),
+              lat: displayLocation?.lat || 0,
+              lng: displayLocation?.lng || 0
+            });
           }
         }
 
@@ -447,7 +461,6 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
         }
 
         // Set status to completed LAST, after all content is ready
-        console.log('[Polling] Setting status to completed with content:', !!extractedContent);
         setStatus('completed');
         return { completed: true };
       } else if (statusData.status === 'failed') {
@@ -456,7 +469,6 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
 
       return { completed: false };
     } catch (err) {
-      console.error('Polling error:', err);
       throw err;
     }
   };
@@ -464,7 +476,6 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
   // Load existing research if initialTaskId is provided
   useEffect(() => {
     if (initialTaskId && !taskId) {
-      console.log('Loading existing research:', initialTaskId);
       setTaskId(initialTaskId);
       setShouldContinuePolling(true);
 
@@ -474,10 +485,8 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
         if (cachedImages) {
           const images = JSON.parse(cachedImages);
           setHeroImages(images);
-          console.log('[HeroImage] Loaded', images.length, 'cached images');
         }
       } catch (err) {
-        console.error('[HeroImage] Failed to load cached images:', err);
       }
     }
   }, [initialTaskId, taskId]);
@@ -498,7 +507,6 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
 
     // Prevent duplicate research runs for the same location
     if (researchInitiatedRef.current) {
-      console.log('[Research] Already initiated for this location, skipping duplicate run');
       return;
     }
 
@@ -569,7 +577,6 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
                 switch (data.type) {
                   case 'task_created':
                     setTaskId(data.taskId);
-                    console.log('Task created:', data.taskId);
                     // Notify parent to update URL
                     if (onTaskCreated && data.taskId) {
                       onTaskCreated(data.taskId);
@@ -579,7 +586,6 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
                     setStatus(data.status);
                     break;
                   case 'continue_polling':
-                    console.log('Switching to client-side polling for task:', data.taskId);
                     setShouldContinuePolling(true);
                     setTaskId(data.taskId);
                     break;
@@ -643,17 +649,23 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
                     setStatus('error');
                     break;
                   case 'done':
-                    setStatus('completed');
+                    // Only set status to completed if we have content
+                    // This prevents the UI from showing "completed" without the actual report
+                    setContent(prevContent => {
+                      if (prevContent) {
+                        setStatus('completed');
+                      } else {
+                      }
+                      return prevContent;
+                    });
                     break;
                 }
               } catch (e) {
-                console.error('Error parsing SSE data:', e, 'Line:', line);
               }
             }
           }
         }
       } catch (err) {
-        console.error('Research error:', err);
 
         // Handle rate limit errors by showing signup prompt instead of error state
         if ((err as any).isRateLimit) {
@@ -678,21 +690,18 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
     let pollingInterval: NodeJS.Timeout;
 
     const startPolling = async () => {
-      console.log('Starting client-side polling for task:', taskId);
 
       const poll = async () => {
         try {
           const result = await pollTaskStatus(taskId);
 
           if (result.completed) {
-            console.log('Task completed via client polling');
             setShouldContinuePolling(false);
             if (pollingInterval) {
               clearInterval(pollingInterval);
             }
           }
         } catch (err) {
-          console.error('Client polling error:', err);
           setError(err instanceof Error ? err.message : 'Polling error');
           setStatus('error');
           setShouldContinuePolling(false);
@@ -843,26 +852,26 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
   return (
     <div className="fixed inset-0 bg-background/70 backdrop-blur-md z-50 flex">
       {/* Header */}
-      <div className="absolute top-0 left-0 right-0 h-16 border-b border-border/30 bg-background/30 backdrop-blur-xl flex items-center justify-between px-6 z-10">
-        <div className="flex items-center gap-3">
-          <MapPin className="h-5 w-5 text-primary" />
-          <div>
-            <h2 className="text-lg font-semibold">{displayLocation.name}</h2>
+      <div className="absolute top-0 left-0 right-0 h-14 sm:h-16 border-b border-border/30 bg-background/30 backdrop-blur-xl flex items-center justify-between px-3 sm:px-6 z-10">
+        <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+          <MapPin className="h-4 w-4 sm:h-5 sm:w-5 text-primary flex-shrink-0" />
+          <div className="min-w-0 flex-1">
+            <h2 className="text-sm sm:text-lg font-semibold truncate">{displayLocation.name}</h2>
             {displayLocation.lat !== 0 && displayLocation.lng !== 0 && (
-              <p className="text-xs text-muted-foreground">
+              <p className="text-[10px] sm:text-xs text-muted-foreground">
                 {displayLocation.lat.toFixed(4)}, {displayLocation.lng.toFixed(4)}
               </p>
             )}
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
           {user && status === 'completed' && (
             <Button
               variant="ghost"
               size="sm"
               onClick={handleShare}
               disabled={sharing}
-              className="gap-2"
+              className="gap-1.5 sm:gap-2 min-h-11 px-2 sm:px-3"
             >
               {sharing ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -871,19 +880,19 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
               ) : (
                 <Share2 className="h-4 w-4" />
               )}
-              {copied ? 'Copied!' : 'Share'}
+              <span className="hidden sm:inline">{copied ? 'Copied!' : 'Share'}</span>
             </Button>
           )}
-          <Button variant="ghost" size="icon" onClick={onClose}>
+          <Button variant="ghost" size="icon" onClick={onClose} className="min-h-11 min-w-11">
             <X className="h-5 w-5" />
           </Button>
         </div>
       </div>
 
       {/* Content */}
-      <div className="flex-1 mt-16 overflow-hidden">
+      <div className="flex-1 mt-14 sm:mt-16 overflow-hidden">
         <ScrollArea className="h-full">
-          <div className="max-w-4xl mx-auto p-6 space-y-6">
+          <div className="max-w-4xl mx-auto p-3 sm:p-6 space-y-4 sm:space-y-6 overflow-x-hidden">
             {/* Status */}
             {status === 'queued' && (
               <div className="flex items-center justify-center py-12">
@@ -903,12 +912,12 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
             {(status === 'running' || status === 'completed') && (
               <div className="space-y-4">
                 {/* Location Title */}
-                <div className="text-center py-6">
-                  <h1 className="text-5xl font-light tracking-tight font-serif italic text-foreground/95">
+                <div className="text-center py-3 sm:py-6">
+                  <h1 className="text-3xl sm:text-4xl md:text-5xl font-light tracking-tight font-serif italic text-foreground/95 px-2">
                     {displayLocation.name}<AnimatedDots isActive={status === 'running'} />
                   </h1>
                   {displayLocation.lat !== 0 && displayLocation.lng !== 0 && (
-                    <p className="text-sm text-muted-foreground/70 mt-2 font-light tracking-wide">
+                    <p className="text-xs sm:text-sm text-muted-foreground/70 mt-1 sm:mt-2 font-light tracking-wide">
                       {displayLocation.lat.toFixed(4)}, {displayLocation.lng.toFixed(4)}
                     </p>
                   )}
@@ -916,12 +925,12 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
 
                 {/* Hero Images Gallery */}
                 {isGeneratingImage ? (
-                  <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-                    <Skeleton className="h-48 w-full rounded-lg" />
-                    <Skeleton className="h-48 w-full rounded-lg" />
-                    <Skeleton className="h-48 w-full rounded-lg" />
-                    <Skeleton className="h-48 w-full rounded-lg" />
-                    <Skeleton className="h-48 w-full rounded-lg" />
+                  <div className="grid grid-cols-2 md:grid-cols-5 gap-2 sm:gap-3">
+                    <Skeleton className="h-32 sm:h-48 w-full rounded-lg" />
+                    <Skeleton className="h-32 sm:h-48 w-full rounded-lg" />
+                    <Skeleton className="h-32 sm:h-48 w-full rounded-lg" />
+                    <Skeleton className="h-32 sm:h-48 w-full rounded-lg" />
+                    <Skeleton className="h-32 sm:h-48 w-full rounded-lg" />
                   </div>
                 ) : (
                   <PhotoGallery images={heroImages} />
@@ -929,21 +938,21 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
 
                 {/* Report skeleton while waiting for first content */}
                 {timeline.length === 0 && status === 'running' && (
-                  <div className="space-y-6">
-                    <div className="bg-background/60 backdrop-blur-sm rounded-lg p-6 border shadow-sm space-y-3">
-                      <Skeleton className="h-8 w-3/4" />
-                      <Skeleton className="h-4 w-full" />
-                      <Skeleton className="h-4 w-full" />
-                      <Skeleton className="h-4 w-5/6" />
-                      <div className="pt-2" />
-                      <Skeleton className="h-6 w-2/3" />
-                      <Skeleton className="h-4 w-full" />
-                      <Skeleton className="h-4 w-full" />
-                      <Skeleton className="h-4 w-4/5" />
+                  <div className="space-y-4 sm:space-y-6">
+                    <div className="bg-background/60 backdrop-blur-sm rounded-lg p-3 sm:p-6 border shadow-sm space-y-2 sm:space-y-3">
+                      <Skeleton className="h-6 sm:h-8 w-3/4" />
+                      <Skeleton className="h-3 sm:h-4 w-full" />
+                      <Skeleton className="h-3 sm:h-4 w-full" />
+                      <Skeleton className="h-3 sm:h-4 w-5/6" />
+                      <div className="pt-1 sm:pt-2" />
+                      <Skeleton className="h-5 sm:h-6 w-2/3" />
+                      <Skeleton className="h-3 sm:h-4 w-full" />
+                      <Skeleton className="h-3 sm:h-4 w-full" />
+                      <Skeleton className="h-3 sm:h-4 w-4/5" />
                     </div>
-                    <div className="flex items-center justify-center py-4">
+                    <div className="flex items-center justify-center py-3 sm:py-4">
                       <div className="text-center">
-                        <p className="text-sm font-light text-foreground/60">
+                        <p className="text-xs sm:text-sm font-light text-foreground/60">
                           Generating report...
                         </p>
                       </div>
@@ -953,8 +962,8 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
 
                 {/* Activity Feed - Show only during running */}
                 {timeline.length > 0 && status === 'running' && (
-                  <div className="space-y-4" key={`timeline-${messages.length}-${timeline.length}`}>
-                    <div className="text-xs font-light text-muted-foreground/60 uppercase tracking-wider">
+                  <div className="space-y-3 sm:space-y-4" key={`timeline-${messages.length}-${timeline.length}`}>
+                    <div className="text-[10px] sm:text-xs font-light text-muted-foreground/60 uppercase tracking-wider">
                       Research Trace
                     </div>
                     {timeline.map((item, idx) => (
@@ -978,7 +987,7 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3 }}
-                className="space-y-4"
+                className="space-y-3 sm:space-y-4"
               >
                 {status === 'completed' && (
                   <>
@@ -986,10 +995,10 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
                       initial={{ opacity: 0, scale: 0.95 }}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ duration: 0.3 }}
-                      className="flex items-center justify-between gap-2 text-sm font-semibold text-green-700 bg-green-500/10 rounded-lg px-4 py-3 border border-green-500/20 shadow-sm"
+                      className="flex items-center justify-between gap-2 text-xs sm:text-sm font-semibold text-green-700 bg-green-500/10 rounded-lg px-3 sm:px-4 py-2.5 sm:py-3 border border-green-500/20 shadow-sm"
                     >
-                      <div className="flex items-center gap-2">
-                        <CheckCircle2 className="h-5 w-5" />
+                      <div className="flex items-center gap-1.5 sm:gap-2">
+                        <CheckCircle2 className="h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0" />
                         <span>Research Complete</span>
                       </div>
                       {messages && messages.length > 0 && (
@@ -997,17 +1006,26 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
                           type="button"
                           variant="outline"
                           size="sm"
-                          className="h-7 gap-1.5 bg-background hover:bg-accent border-green-500/30"
+                          className="h-8 sm:h-9 gap-1 sm:gap-1.5 bg-background hover:bg-accent border-green-500/30 px-2 sm:px-3 flex-shrink-0"
                           onClick={() => setShowReasoningDialog(true)}
                         >
-                          <Brain className="h-3.5 w-3.5" />
-                          <span className="text-xs">View Reasoning</span>
+                          <Brain className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+                          <span className="text-[10px] sm:text-xs">View Reasoning</span>
                         </Button>
                       )}
                     </motion.div>
                     {content && (
-                      <div className="prose prose-sm dark:prose-invert max-w-none bg-background/60 backdrop-blur-sm rounded-lg p-6 border shadow-sm prose-headings:font-semibold prose-h1:text-2xl prose-h2:text-xl prose-h3:text-lg prose-p:leading-relaxed prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-code:text-sm prose-code:bg-muted prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-pre:bg-muted prose-pre:border">
-                        <ReactMarkdown remarkPlugins={[remarkGfm]}>{content}</ReactMarkdown>
+                      <div className="prose prose-sm dark:prose-invert max-w-none bg-background/60 backdrop-blur-sm rounded-lg p-3 sm:p-6 border shadow-sm prose-headings:font-semibold prose-headings:break-words prose-h1:text-xl sm:prose-h1:text-2xl prose-h2:text-lg sm:prose-h2:text-xl prose-h3:text-base sm:prose-h3:text-lg prose-p:text-sm sm:prose-p:text-base prose-p:leading-relaxed prose-p:break-words prose-a:text-primary prose-a:no-underline prose-a:break-words hover:prose-a:underline prose-code:text-xs sm:prose-code:text-sm prose-code:bg-muted prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:break-all prose-pre:bg-muted prose-pre:border prose-pre:text-xs sm:prose-pre:text-sm prose-pre:overflow-x-auto prose-li:break-words prose-td:break-words prose-th:break-words">
+                        <ReactMarkdown
+                          remarkPlugins={[remarkGfm]}
+                          components={{
+                            a: ({ node, ...props }) => (
+                              <a {...props} target="_blank" rel="noopener noreferrer" />
+                            )
+                          }}
+                        >
+                          {content}
+                        </ReactMarkdown>
                       </div>
                     )}
                   </>
@@ -1017,9 +1035,9 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
 
             {/* Images */}
             {images.length > 0 && (
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold">Research Images</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-3 sm:space-y-4">
+                <h3 className="text-base sm:text-lg font-semibold">Research Images</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
                   {images.map((image, index) => (
                     <div key={index} className="border rounded-lg overflow-hidden">
                       <img
@@ -1043,12 +1061,12 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
 
             {/* Sources Summary */}
             {sources.length > 0 && status === 'completed' && (
-              <div className="space-y-4">
+              <div className="space-y-3 sm:space-y-4">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-semibold">All Sources</h3>
-                  <span className="text-sm text-muted-foreground">{sources.length} total</span>
+                  <h3 className="text-base sm:text-lg font-semibold">All Sources</h3>
+                  <span className="text-xs sm:text-sm text-muted-foreground">{sources.length} total</span>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 sm:gap-3">
                   {sources.map((source, index) => {
                     return (
                       <a
@@ -1097,40 +1115,40 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3, delay: 0.1 }}
-                  className="grid grid-cols-3 gap-4 p-5 bg-gradient-to-br from-primary/5 to-primary/10 rounded-lg border border-primary/20 shadow-sm"
+                  className="grid grid-cols-3 gap-2 sm:gap-4 p-3 sm:p-5 bg-gradient-to-br from-primary/5 to-primary/10 rounded-lg border border-primary/20 shadow-sm"
                 >
                   <div className="text-center">
                     <motion.p
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
                       transition={{ duration: 0.3, delay: 0.2 }}
-                      className="text-3xl font-bold text-primary mb-1"
+                      className="text-xl sm:text-3xl font-bold text-primary mb-0.5 sm:mb-1"
                     >
                       {metrics.wordsRead.toLocaleString()}
                     </motion.p>
-                    <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Words Read</p>
+                    <p className="text-[9px] sm:text-xs font-medium text-muted-foreground uppercase tracking-wide">Words Read</p>
                   </div>
                   <div className="text-center">
                     <motion.p
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
                       transition={{ duration: 0.3, delay: 0.3 }}
-                      className="text-3xl font-bold text-primary mb-1"
+                      className="text-xl sm:text-3xl font-bold text-primary mb-0.5 sm:mb-1"
                     >
                       {metrics.sourcesRead}
                     </motion.p>
-                    <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Sources</p>
+                    <p className="text-[9px] sm:text-xs font-medium text-muted-foreground uppercase tracking-wide">Sources</p>
                   </div>
                   <div className="text-center">
                     <motion.p
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
                       transition={{ duration: 0.3, delay: 0.4 }}
-                      className="text-3xl font-bold text-primary mb-1"
+                      className="text-xl sm:text-3xl font-bold text-primary mb-0.5 sm:mb-1"
                     >
                       {metrics.hoursActuallySaved.toFixed(1)}h
                     </motion.p>
-                    <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Time Saved</p>
+                    <p className="text-[9px] sm:text-xs font-medium text-muted-foreground uppercase tracking-wide">Time Saved</p>
                   </div>
                 </motion.div>
               );

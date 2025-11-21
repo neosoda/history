@@ -149,21 +149,29 @@ Return ONLY the short search query (3-5 words max).`,
               content: [
                 {
                   type: 'text',
-                  text: `Select 4-5 images that are related to: ${locationName}
+                  text: `Select 3-5 high-quality, visually appealing images for: ${locationName}
 
 ${preset ? `Topic focus: ${preset}` : ''}
 
-Be VERY LENIENT - accept most images that show:
-- The location or region
-- Related landmarks, buildings, or scenery
-- Historical or modern views
-- People, culture, or events from the area
+ACCEPT images showing:
+- Actual photographs of the location, landmarks, or landscapes
+- Historical sites, buildings, natural features
+- Cultural scenes, people, or events from the area
+- Clear, high-resolution photography
+- Authentic documentary or travel photography
 
-Only reject if:
-- Completely unrelated location
-- Extremely low quality/broken
+REJECT immediately:
+- News channel logos (BBC, CNN, etc.) or broadcast graphics
+- Blurry, pixelated, or low-quality images
+- Screenshots of websites or text overlays
+- Generic stock photos or flags without context
+- Logos, icons, or graphic design elements
+- Images with heavy watermarks or text
+- Unrelated locations or subjects
 
-Select as many relevant images as possible (2-4). Return indices (0-based).`,
+Prioritize authentic, documentary-style photographs that capture the essence and beauty of the location.
+
+Select 3-5 of the BEST images. Return indices (0-based).`,
                 },
                 ...selectedUrls.map((url) => ({
                   type: 'image' as const,
