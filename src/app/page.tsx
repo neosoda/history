@@ -82,24 +82,30 @@ function HomeContent() {
     console.log('Location clicked:', location);
     track('location_clicked', { location: location.name });
 
-    // For signed-in users, check rate limit
-    if (user && !allowed) {
-      handleRateLimitError(resetTime?.toISOString() || new Date().toISOString());
-      return;
-    }
-
-    // Show confirmation dialog if this is a new research (no taskId)
-    // Anonymous users are allowed to click and see the dialog
-    if (!taskId) {
-      setConfirmLocation(location);
-      setShowConfirmDialog(true);
-    } else {
-      // If taskId exists, it's loading existing research - skip confirmation
+    // If this is loading existing research (has taskId), skip rate limit check
+    if (taskId) {
       setSelectedLocation(location);
       const params = new URLSearchParams(window.location.search);
       params.set('research', taskId);
       window.history.pushState({}, '', `?${params.toString()}`);
+      return;
     }
+
+    // Check rate limit for ALL users (anonymous and signed-in)
+    if (!allowed) {
+      // For anonymous users, show signup prompt with rate limit context
+      if (!user) {
+        setShowSignupPrompt(true);
+        return;
+      }
+      // For signed-in users, show rate limit error
+      handleRateLimitError(resetTime?.toISOString() || new Date().toISOString());
+      return;
+    }
+
+    // Rate limit OK - show confirmation dialog
+    setConfirmLocation(location);
+    setShowConfirmDialog(true);
   }, [allowed, user, resetTime, handleRateLimitError]);
 
   const handleConfirmResearch = useCallback((instructions?: string) => {
