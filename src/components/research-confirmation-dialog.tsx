@@ -55,6 +55,21 @@ const PRESETS = [
     label: 'Economy',
     prompt: 'Focus on the economic history and trade of this location, including major industries, trade routes, economic developments, and the evolution of commerce.',
   },
+  {
+    id: 'news',
+    label: 'News',
+    prompt: 'Research current and recent news events at this location, including significant political developments, social movements, disasters, celebrations, and noteworthy incidents.',
+  },
+  {
+    id: 'geology',
+    label: 'Geology',
+    prompt: 'Focus on the geological history and features of this location, including rock formations, tectonic activity, volcanic history, erosion patterns, mineral deposits, and the geological forces that shaped the landscape.',
+  },
+  {
+    id: 'culinary',
+    label: 'Culinary',
+    prompt: 'Research the culinary history and food culture of this location, including traditional dishes, cooking techniques, local ingredients, food-related traditions, and the evolution of cuisine over time.',
+  },
 ];
 
 export function ResearchConfirmationDialog({
