@@ -145,7 +145,7 @@ export function SubscriptionModal({ open, onClose }: SubscriptionModalProps) {
                     </div>
                     <div className="flex items-center gap-2 text-sm">
                       <Check className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-                      <span className="text-gray-700 dark:text-gray-300">Pay only $0.25 per query</span>
+                      <span className="text-gray-700 dark:text-gray-300">Pay only $0.10 per query</span>
                     </div>
                   </>
                 )}
@@ -250,7 +250,7 @@ export function SubscriptionModal({ open, onClose }: SubscriptionModalProps) {
                   </div>
                   <div className="flex items-start gap-2">
                     <Check className="h-4 w-4 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" />
-                    <p className="text-sm text-gray-700 dark:text-gray-300"><span className="font-medium">Pay only $0.25 per research</span> – No subscription needed</p>
+                    <p className="text-sm text-gray-700 dark:text-gray-300"><span className="font-medium">Pay only $0.10 per research</span> – No subscription needed</p>
                   </div>
                   <div className="flex items-start gap-2">
                     <Check className="h-4 w-4 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" />
@@ -261,7 +261,7 @@ export function SubscriptionModal({ open, onClose }: SubscriptionModalProps) {
                 {/* Pricing */}
                 <div className="pt-4 border-t border-gray-100 dark:border-gray-800">
                   <div className="flex items-baseline gap-2 mb-1">
-                    <span className="text-2xl font-bold text-gray-900 dark:text-gray-100">$0.25</span>
+                    <span className="text-2xl font-bold text-gray-900 dark:text-gray-100">$0.10</span>
                     <span className="text-gray-500 dark:text-gray-400">/research</span>
                   </div>
                   <p className="text-xs text-gray-500 dark:text-gray-400 mb-4">No monthly commitment required</p>
@@ -322,18 +322,18 @@ export function SubscriptionModal({ open, onClose }: SubscriptionModalProps) {
                   </div>
                   <div className="flex items-start gap-2">
                     <Check className="h-4 w-4 text-emerald-600 dark:text-emerald-400 mt-0.5 flex-shrink-0" />
-                    <p className="text-sm text-gray-700 dark:text-gray-300"><span className="font-medium">Best value</span> – Just $0.20 per research</p>
+                    <p className="text-sm text-gray-700 dark:text-gray-300"><span className="font-medium">Best value</span> – Just $0.10 per research</p>
                   </div>
                 </div>
 
                 {/* Pricing */}
                 <div className="pt-4 border-t border-emerald-100 dark:border-emerald-900/30">
                   <div className="flex items-baseline gap-2 mb-1">
-                    <span className="text-3xl font-bold text-gray-900 dark:text-gray-100">$20</span>
+                    <span className="text-3xl font-bold text-gray-900 dark:text-gray-100">$10</span>
                     <span className="text-gray-500 dark:text-gray-400">/month</span>
                   </div>
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">100 queries included (~$0.20 each)</p>
-                  <p className="text-xs text-emerald-600 dark:text-emerald-400 font-medium mb-4">🎉 1 week free trial</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">100 queries included (~$0.10 each)</p>
+                  <p className="text-xs text-emerald-600 dark:text-emerald-400 font-medium mb-4">🎉 3 day free trial</p>
 
                   <button className="w-full min-h-12 bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-700 dark:hover:bg-emerald-600 text-white font-semibold py-2.5 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 group shadow-lg text-sm sm:text-base">
                     <span>Start Free Trial</span>

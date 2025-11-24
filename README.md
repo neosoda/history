@@ -260,14 +260,14 @@ NEXT_PUBLIC_APP_MODE=production
 - Full access to research history
 - Save and share research
 
-### Subscription Plan ($20/month)
-- **100 queries per month** - Approximately $0.20 per query
-- 1 week free trial included
+### Subscription Plan
+- Monthly recurring with queries included
+- Free trial period
 - Priority support
 - Resets on the 1st of each month
 
 ### Pay-Per-Use Plan
-- **$0.25 per query** - Unlimited usage
+- Unlimited usage
 - No monthly commitment
 - Only pay for what you use
 - Billed via Polar usage metering
@@ -304,12 +304,12 @@ NEXT_PUBLIC_APP_MODE=production
 1. Go to [polar.sh](https://polar.sh)
 2. Create an account
 3. Set up two products:
-   - **Subscription Product**: $20/month recurring
+   - **Subscription Product**: Monthly recurring with free trial
    - **Pay-Per-Use Product**: Usage-based billing
 4. Create a meter for pay-per-use:
    - Event name: `deep_research`
    - Aggregation: `count`
-   - Pricing: $0.25 per unit
+   - Set your desired pricing per unit
 5. Add product IDs and webhook secret to `.env.local`
 
 ## Database Schema

@@ -124,8 +124,8 @@ export function SignupPrompt({ open, onClose, onSignUp, rateLimitContext }: Sign
                           </h3>
                           <p className="text-[10px] sm:text-xs text-muted-foreground">
                             {context === 'subscription'
-                              ? '$0.25 per query - unlimited access, only pay for what you use'
-                              : '$20/month for 100 queries (~$0.20 each) with 1 week free trial'}
+                              ? '$0.10 per query - unlimited access, only pay for what you use'
+                              : '$10/month for 100 queries (~$0.10 each) with 3 day free trial'}
                           </p>
                         </div>
                       </div>
