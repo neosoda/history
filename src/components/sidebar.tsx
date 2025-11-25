@@ -189,6 +189,7 @@ export function Sidebar({
         window.open(redirectUrl, '_blank');
       }
     } catch (error) {
+      // Fail silently - non-critical operation
     }
   };
 

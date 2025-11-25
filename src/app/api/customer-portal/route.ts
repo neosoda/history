@@ -45,11 +45,6 @@ export async function GET(req: NextRequest) {
 
     // Allow any user with a Polar customer ID to access billing portal
     // This includes active, cancelled, and unlimited users for plan management
-    console.log('[Customer Portal] User billing data:', {
-      tier: userData.subscription_tier,
-      status: userData.subscription_status,
-      polar_customer_id: userData.polar_customer_id
-    });
 
     // Create customer session for billing portal access
     const polar = new Polar({ 
@@ -57,21 +52,15 @@ export async function GET(req: NextRequest) {
       server: process.env.NEXT_PUBLIC_APP_MODE === 'development' ? 'sandbox' : 'production'
     });
 
-    console.log('[Customer Portal] Creating session for customer:', userData.polar_customer_id);
-
     const session = await polar.customerSessions.create({
       customerId: userData.polar_customer_id
     });
-
-    console.log('[Customer Portal] ✅ Created session, redirecting to:', session.customerPortalUrl);
 
     return NextResponse.json({
       redirectUrl: session.customerPortalUrl
     });
 
   } catch (error: any) {
-    console.error('[Customer Portal] Error creating session:', error);
-    
     return NextResponse.json({
       error: 'Failed to access billing portal. Please try again later.'
     }, { status: 500 });

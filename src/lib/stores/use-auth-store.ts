@@ -198,6 +198,7 @@ export const useAuthStore = create<AuthStore>()(
                   const errorData = await response.json();
                 }
               } catch (error) {
+                // Fail silently - non-critical operation
               }
             }
           }

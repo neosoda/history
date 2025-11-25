@@ -114,6 +114,7 @@ export function EnterpriseContactModal({ open, onClose }: EnterpriseContactModal
         }, 3000);
       }
     } catch (error) {
+      // Fail silently - non-critical operation
     } finally {
       setIsSubmitting(false);
     }

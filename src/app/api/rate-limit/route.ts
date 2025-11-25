@@ -35,8 +35,7 @@ export async function GET(request: NextRequest) {
     if (user) {
       // Authenticated user - use database-based rate limiting
       rateLimitResult = await checkUserRateLimit(user.id);
-      console.log('[Rate Limit API] Authenticated user rate limit result:', rateLimitResult);
-      
+
       // Get user's polar customer ID for billing portal access
       const { data: userData } = await supabase
         .from('users')
@@ -62,8 +61,6 @@ export async function GET(request: NextRequest) {
       });
     }
   } catch (error) {
-    console.error('[Rate Limit API] GET error:', error);
-    
     // Fallback to safe defaults
     return NextResponse.json({
       allowed: true,
@@ -137,7 +134,7 @@ export async function POST(request: NextRequest) {
               anonymousUsage.used = parseInt(count) || 0;
             }
           } catch (e) {
-            console.log('[Rate Limit API] Error decoding cookie:', e);
+            // Fail silently
           }
         }
         
@@ -149,8 +146,6 @@ export async function POST(request: NextRequest) {
           });
         }
 
-        console.log(`[Rate Limit API] Transferring ${anonymousUsage.used} queries to user ${user.id}`);
-        
         // Use the server-side supabase client that already has the service role key
         const today = new Date().toISOString().split('T')[0];
 
@@ -172,8 +167,6 @@ export async function POST(request: NextRequest) {
               last_request_at: new Date().toISOString(),
             })
             .eq('user_id', user.id);
-
-          console.log(`[Rate Limit API] Updated user ${user.id}: ${existingRecord.usage_count} + ${anonymousUsage.used} = ${newUsageCount}`);
         } else {
           // Create new record with transferred usage
           await supabase
@@ -185,8 +178,6 @@ export async function POST(request: NextRequest) {
               last_request_at: new Date().toISOString(),
               tier: 'free',
             });
-
-          console.log(`[Rate Limit API] Created new record for user ${user.id} with ${anonymousUsage.used} usage`);
         }
 
         // Return success response and let client clear cookies
@@ -196,9 +187,8 @@ export async function POST(request: NextRequest) {
           userId: user.id,
           transferred: anonymousUsage.used
         });
-        
+
       } catch (error) {
-        console.error('[Rate Limit API] Error transferring usage:', error);
         return NextResponse.json(
           { error: 'Failed to transfer anonymous usage' },
           { status: 500 }
@@ -216,8 +206,6 @@ export async function POST(request: NextRequest) {
       });
     }
   } catch (error) {
-    console.error('[Rate Limit API] POST error:', error);
-    
     return NextResponse.json(
       { error: 'Failed to process rate limit request' },
       { status: 500 }

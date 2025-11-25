@@ -33,7 +33,7 @@ export async function GET(
       parsedTask.locationImages = images;
       parsedTask.location_images = images;
     } catch (err) {
-      console.error('[Share] Failed to parse location_images:', err);
+      // Fail silently
     }
   }
 

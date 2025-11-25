@@ -27,10 +27,6 @@ export async function POST(req: Request) {
       location?: { name: string; lat: number; lng: number }
     } = await req.json();
 
-    console.log("[Chat API] ========== NEW REQUEST ==========");
-    console.log("[Chat API] Received sessionId:", sessionId);
-    console.log("[Chat API] Location:", location);
-    console.log("[Chat API] Number of messages:", messages.length);
 
     // Determine if this is a user-initiated message (should count towards rate limit)
     const lastMessage = messages[messages.length - 1];
@@ -38,27 +34,18 @@ export async function POST(req: Request) {
     const userMessageCount = messages.filter(m => m.role === 'user').length;
     const isUserInitiated = isUserMessage && userMessageCount === 1;
 
-    console.log("[Chat API] Rate limit check:", {
-      isUserMessage,
-      userMessageCount,
-      isUserInitiated,
-      totalMessages: messages.length
-    });
 
     // Check app mode and configure accordingly
     const isDevelopment = isDevelopmentMode();
-    console.log("[Chat API] App mode:", isDevelopment ? 'development' : 'production');
 
     // Get authenticated user
     const { data: { user } } = await db.getUser();
-    console.log("[Chat API] Authenticated user:", user?.id || 'anonymous');
 
     // Validate access for authenticated users
     if (user && !isDevelopment) {
       const accessValidation = await validateAccess(user.id);
 
       if (!accessValidation.hasAccess && accessValidation.requiresPaymentSetup) {
-        console.log("[Chat API] Access validation failed - payment required");
         return new Response(
           JSON.stringify({
             error: "PAYMENT_REQUIRED",
@@ -69,10 +56,6 @@ export async function POST(req: Request) {
           { status: 402, headers: { 'Content-Type': 'application/json' } }
         );
       }
-
-      if (accessValidation.hasAccess) {
-        console.log("[Chat API] Access validated for tier:", accessValidation.tier);
-      }
     }
 
     // Check rate limit for user-initiated messages
@@ -80,10 +63,8 @@ export async function POST(req: Request) {
       if (!user) {
         const cookieHeader = req.headers.get('cookie') || '';
         const rateLimitStatus = await checkAnonymousRateLimit(cookieHeader);
-        console.log("[Chat API] Anonymous rate limit status:", rateLimitStatus);
 
         if (!rateLimitStatus.allowed) {
-          console.log("[Chat API] Anonymous rate limit exceeded");
           return new Response(
             JSON.stringify({
               error: "RATE_LIMIT_EXCEEDED",
@@ -104,7 +85,6 @@ export async function POST(req: Request) {
         }
       } else {
         const rateLimitResult = await checkUserRateLimit(user.id);
-        console.log("[Chat API] User rate limit status:", rateLimitResult);
 
         if (!rateLimitResult.allowed) {
           return new Response(JSON.stringify({
@@ -118,8 +98,6 @@ export async function POST(req: Request) {
           });
         }
       }
-    } else if (isUserInitiated && isDevelopment) {
-      console.log("[Chat API] Development mode: Rate limiting disabled");
     }
 
     // Track processing start time
@@ -127,7 +105,6 @@ export async function POST(req: Request) {
 
     // Save user message immediately (before processing starts)
     if (user && sessionId && messages.length > 0) {
-      console.log('[Chat API] Saving user message immediately before processing');
       const lastMessage = messages[messages.length - 1];
       if (lastMessage.role === 'user') {
         const { randomUUID } = await import('crypto');
@@ -149,7 +126,6 @@ export async function POST(req: Request) {
         await db.updateChatSession(sessionId, user.id, {
           last_message_at: new Date()
         });
-        console.log('[Chat API] User message saved');
       }
     }
 
@@ -173,12 +149,10 @@ export async function POST(req: Request) {
     if (user) {
       const { data: userData } = await db.getUserProfile(user.id);
       userTier = userData?.subscription_tier || userData?.subscriptionTier || 'free';
-      console.log("[Chat API] User tier:", userTier);
     }
 
     // Select DeepResearch model based on tier
     const model = userTier === 'unlimited' || userTier === 'pay_per_use' ? 'heavy' : 'lite';
-    console.log("[Chat API] Using DeepResearch model:", model);
 
     // Create DeepResearch task
     const taskResponse = await fetch(`${DEEPRESEARCH_API_URL}/tasks`, {
@@ -203,7 +177,6 @@ export async function POST(req: Request) {
 
     const taskData = await taskResponse.json();
     const taskId = taskData.deepresearch_id;
-    console.log("[Chat API] Created DeepResearch task:", taskId);
 
     // Track usage for pay-per-use customers via Polar events
     if (!isDevelopment && user) {
@@ -213,7 +186,6 @@ export async function POST(req: Request) {
         const tier = userData?.subscription_tier || userData?.subscriptionTier || 'free';
 
         if (tier === 'pay_per_use') {
-          console.log("[Chat API] Tracking pay-per-use deep research event for user:", user.id);
           const eventTracker = new PolarEventTracker();
           await eventTracker.trackDeepResearch(
             user.id,
@@ -227,7 +199,6 @@ export async function POST(req: Request) {
           );
         }
       } catch (error) {
-        console.error("[Chat API] Failed to track deep research event:", error);
         // Don't fail the request if event tracking fails
       }
     }
@@ -247,9 +218,7 @@ export async function POST(req: Request) {
         };
 
         await db.createResearchTask(taskRecord);
-        console.log("[Chat API] Research task saved to database");
       } catch (error) {
-        console.error("[Chat API] Failed to save research task:", error);
         // Don't fail the request if database save fails
       }
     }
@@ -331,7 +300,6 @@ export async function POST(req: Request) {
             }
 
             const statusData = await statusResponse.json();
-            console.log("[Chat API] Task status:", statusData.status);
 
             if (statusData.status === 'running') {
               // Update database status to running on first detection
@@ -341,9 +309,8 @@ export async function POST(req: Request) {
                   await db.updateResearchTaskByDeepResearchId(taskId, {
                     status: 'running',
                   });
-                  console.log("[Chat API] Research task status updated to running");
                 } catch (error) {
-                  console.error("[Chat API] Failed to update research task status to running:", error);
+                  // Fail silently
                 }
               }
 
@@ -441,9 +408,8 @@ export async function POST(req: Request) {
                     status: 'completed',
                     completed_at: new Date(),
                   });
-                  console.log("[Chat API] Research task status updated to completed");
                 } catch (error) {
-                  console.error("[Chat API] Failed to update research task status:", error);
+                  // Fail silently
                 }
               }
 
@@ -463,9 +429,8 @@ export async function POST(req: Request) {
                     status: 'failed',
                     completed_at: new Date(),
                   });
-                  console.log("[Chat API] Research task status updated to failed");
                 } catch (error) {
-                  console.error("[Chat API] Failed to update research task status:", error);
+                  // Fail silently
                 }
               }
 
@@ -486,7 +451,6 @@ export async function POST(req: Request) {
             );
           }
         } catch (error) {
-          console.error("[Chat API] Streaming error:", error);
           controller.enqueue(
             encoder.encode(
               `data: ${JSON.stringify({
@@ -504,18 +468,16 @@ export async function POST(req: Request) {
     // Increment rate limit after successful validation
     let anonymousCookieValue: string | undefined;
     if (isUserInitiated && !isDevelopment) {
-      console.log("[Chat API] Incrementing rate limit for user-initiated message");
       try {
         const cookieHeader = req.headers.get('cookie') || '';
         const rateLimitResult = await incrementRateLimit(user?.id, cookieHeader);
-        console.log("[Chat API] Rate limit incremented:", rateLimitResult);
 
         // Store cookie value for anonymous users to set in response
         if (!user && rateLimitResult.cookieValue) {
           anonymousCookieValue = rateLimitResult.cookieValue;
         }
       } catch (error) {
-        console.error("[Chat API] Failed to increment rate limit:", error);
+        // Fail silently
       }
     }
 
@@ -541,18 +503,11 @@ export async function POST(req: Request) {
 
     return new Response(stream, { headers });
   } catch (error) {
-    console.error("[Chat API] Error:", error);
-
     const errorMessage = error instanceof Error
       ? error.message
       : typeof error === 'string'
         ? error
         : 'An unexpected error occurred';
-
-    console.error("[Chat API] Error details:", {
-      message: errorMessage,
-      stack: error instanceof Error ? error.stack : undefined,
-    });
 
     return new Response(
       JSON.stringify({

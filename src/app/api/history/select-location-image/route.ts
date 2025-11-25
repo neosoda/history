@@ -55,18 +55,15 @@ export async function POST(req: NextRequest) {
     const openaiApiKey = process.env.OPENAI_API_KEY;
 
     if (!openaiApiKey) {
-      console.log('[LocationImage] OpenAI API key not configured');
       return NextResponse.json({ images: [], source: 'none', reason: 'OpenAI API key not configured' });
     }
 
     if (!valyuApiKey) {
-      console.log('[LocationImage] Valyu API key not configured');
       return NextResponse.json({ images: [], source: 'none', reason: 'Valyu API key not configured' });
     }
 
     // Simple search query: just location name
     const searchQuery = locationName;
-    console.log('[LocationImage] Search query:', searchQuery);
 
     // Search Valyu API
     try {
@@ -74,7 +71,6 @@ export async function POST(req: NextRequest) {
       const response = await valyu.search(searchQuery, { maxNumResults: 10 });
 
       if (!response || !response.results || response.results.length === 0) {
-        console.log('[LocationImage] No results from Valyu');
         return NextResponse.json({ images: [], source: 'none', reason: 'No search results' });
       }
 
@@ -94,8 +90,6 @@ export async function POST(req: NextRequest) {
           }
         }
       });
-
-      console.log('[LocationImage] Found', imageUrls.length, 'top images from', response.results.length, 'results');
 
       if (imageUrls.length === 0) {
         return NextResponse.json({ images: [], source: 'none', reason: 'No image URLs in results' });
@@ -140,8 +134,6 @@ Select the 3-5 BEST quality images that show ${locationName}. Return indices (0-
           schema: LocationImageSelectionSchema as any,
         });
       } catch (error: any) {
-        console.error('[LocationImage] AI selection failed:', error.message);
-
         // Fallback: validate and return first 3 images
         const validUrls = await filterValidImageUrls(urlsForSelection.slice(0, 5));
         return NextResponse.json({
@@ -154,7 +146,6 @@ Select the 3-5 BEST quality images that show ${locationName}. Return indices (0-
       const selection = result.object as any;
 
       if (!selection || selection.selectedImageIndices.length === 0) {
-        console.log('[LocationImage] No images selected:', selection?.reasoning);
         return NextResponse.json({ images: [], source: 'none', reason: selection?.reasoning || 'No images selected' });
       }
 
@@ -163,17 +154,12 @@ Select the 3-5 BEST quality images that show ${locationName}. Return indices (0-
         .filter((idx: number) => idx >= 0 && idx < urlsForSelection.length)
         .map((idx: number) => urlsForSelection[idx]);
 
-      console.log('[LocationImage] AI selected', selectedUrls.length, 'images, validating...');
-
       // Now validate only the selected images
       const validUrls = await filterValidImageUrls(selectedUrls);
-      console.log('[LocationImage] Validated', validUrls.length, 'of', selectedUrls.length, 'selected images');
 
       if (validUrls.length === 0) {
         return NextResponse.json({ images: [], source: 'none', reason: 'Selected images failed validation' });
       }
-
-      console.log('[LocationImage] Reasoning:', selection.reasoning);
 
       return NextResponse.json({
         images: validUrls,
@@ -181,11 +167,9 @@ Select the 3-5 BEST quality images that show ${locationName}. Return indices (0-
         reasoning: selection.reasoning,
       });
     } catch (error: any) {
-      console.error('[LocationImage] Valyu error:', error);
       return NextResponse.json({ images: [], source: 'none', reason: error.message || 'Valyu API error' });
     }
   } catch (error: any) {
-    console.error('[LocationImage] Error:', error);
     return NextResponse.json({ images: [], source: 'none', reason: error.message || 'Unknown error' });
   }
 }

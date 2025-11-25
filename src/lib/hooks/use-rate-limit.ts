@@ -170,6 +170,7 @@ export function useRateLimit(): UseRateLimitReturn {
         queryClient.invalidateQueries({ queryKey: ['rateLimit'] });
       }
     } catch (error) {
+      // Fail silently - non-critical operation
     }
   };
 

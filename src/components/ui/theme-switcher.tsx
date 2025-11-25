@@ -79,6 +79,7 @@ export const ThemeSwitcher = ({
             })
           });
         } catch (error) {
+          // Event tracking errors should not affect user experience
         }
       }
 

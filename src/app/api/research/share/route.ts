@@ -27,7 +27,7 @@ export async function POST(req: Request) {
         location_images: JSON.stringify(images),
       });
     } catch (err) {
-      console.error('[Share] Failed to save images:', err);
+      // Fail silently
     }
   }
 

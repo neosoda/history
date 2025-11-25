@@ -29,26 +29,7 @@ export interface GlobeRef {
 
 // Suppress Mapbox abort errors globally - these are harmless and occur during normal operations
 if (typeof window !== 'undefined') {
-  const originalError = console.error;
-  console.error = (...args: any[]) => {
-    const firstArg = args[0];
-
-    // Check if it's an Error object with AbortError
-    if (firstArg instanceof Error &&
-        (firstArg.name === 'AbortError' || firstArg.message.includes('aborted'))) {
-      return;
-    }
-
-    // Check if it's a string containing abort-related messages
-    const message = firstArg?.toString() || '';
-    if (message.includes('AbortError') || message.includes('signal is aborted')) {
-      return;
-    }
-
-    originalError.apply(console, args);
-  };
-
-  // Also add global error event listener to catch unhandled errors
+  // Add global error event listener to catch unhandled Mapbox AbortErrors
   const handleError = (event: ErrorEvent) => {
     if (event.error?.name === 'AbortError' || event.message?.includes('aborted')) {
       event.preventDefault();

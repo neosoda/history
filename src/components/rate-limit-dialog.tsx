@@ -163,6 +163,7 @@ export function RateLimitDialog({ open, onOpenChange, resetTime, onShowAuth }: R
         window.location.href = checkoutUrl;
       }
     } catch (error) {
+      // Fail silently - non-critical operation
     } finally {
       setLoading(false);
     }

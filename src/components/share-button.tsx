@@ -36,6 +36,7 @@ export function ShareButton({ query, className }: ShareButtonProps) {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
+      // Fail silently - non-critical operation
     }
   };
 

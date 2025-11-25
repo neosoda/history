@@ -70,6 +70,7 @@ export function SubscriptionModal({ open, onClose }: SubscriptionModalProps) {
         window.location.href = checkoutUrl;
       }
     } catch (error) {
+      // Fail silently - non-critical operation
     } finally {
       setLoading(false);
     }

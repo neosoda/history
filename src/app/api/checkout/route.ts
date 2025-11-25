@@ -42,13 +42,8 @@ export async function POST(req: NextRequest) {
       : process.env.POLAR_PAY_PER_USE_PRODUCT_ID;
 
     if (!productId) {
-      console.error(`[Checkout] Missing product ID for plan: ${plan}`);
       return NextResponse.json({ error: 'Product not configured' }, { status: 500 });
     }
-
-    console.log(`[Checkout] Attempting to create checkout with product ID: ${productId}`);
-    console.log(`[Checkout] Plan: ${plan}`);
-    console.log(`[Checkout] User: ${user.email}`);
 
     // Create checkout using External ID pattern
     const checkout = await polar.checkouts.create({
@@ -59,21 +54,12 @@ export async function POST(req: NextRequest) {
       metadata: { plan, userId: user.id }
     });
 
-    console.log(`[Checkout] Created checkout for ${plan} plan, user: ${user.email}`);
-    
-    return NextResponse.json({ 
+    return NextResponse.json({
       checkoutUrl: checkout.url,
-      plan 
+      plan
     });
 
   } catch (error: any) {
-    console.error('[Checkout] Error creating checkout:', error);
-    console.error('[Checkout] Error details:', {
-      message: error.message,
-      statusCode: error.statusCode,
-      body: error.body,
-      detail: error.detail
-    });
 
     // Return more specific error message
     if (error.statusCode === 422) {

@@ -62,6 +62,7 @@ export function extractCitationsFromToolResults(toolResults: any[]): CitationMap
         });
       }
     } catch (error) {
+      // Fail silently - non-critical operation
     }
   });
 

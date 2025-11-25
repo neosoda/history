@@ -58,7 +58,6 @@ export async function GET(req: Request) {
           });
         }
       } catch (error) {
-        console.error('[Poll API] Failed to update database status:', error);
         // Don't fail the request if database update fails
       }
     }
@@ -74,7 +73,6 @@ export async function GET(req: Request) {
       }
     );
   } catch (error) {
-    console.error('[Poll API] Error:', error);
     return new Response(
       JSON.stringify({
         error: error instanceof Error ? error.message : 'Unknown error',

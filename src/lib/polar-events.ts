@@ -77,6 +77,7 @@ export class PolarEventTracker {
       });
 
     } catch (error) {
+      // Event tracking errors should not affect user experience
     }
   }
 
@@ -133,6 +134,7 @@ export class PolarEventTracker {
       });
 
     } catch (error) {
+      // Event tracking errors should not affect user experience
     }
   }
 
@@ -180,6 +182,7 @@ export class PolarEventTracker {
       });
 
     } catch (error) {
+      // Event tracking errors should not affect user experience
     }
   }
 
@@ -224,6 +227,7 @@ export class PolarEventTracker {
       });
 
     } catch (error) {
+      // Event tracking errors should not affect user experience
     }
   }
 

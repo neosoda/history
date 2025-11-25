@@ -68,7 +68,6 @@ interface HistoryResearchInterfaceProps {
   initialImages?: string[];
 }
 
-// Animated dots component
 const AnimatedDots = ({ isActive }: { isActive: boolean }) => {
   const [dots, setDots] = useState('');
 
@@ -91,7 +90,6 @@ const AnimatedDots = ({ isActive }: { isActive: boolean }) => {
   return <span className="inline-block w-6 text-left">{dots}</span>;
 };
 
-// Reusable timeline item renderer
 const TimelineItem = ({ item, idx, timeline, animated = true }: { item: any; idx: number; timeline: any[]; animated?: boolean }) => {
   const ItemWrapper: any = animated ? motion.div : 'div';
   const itemProps = animated ? {
@@ -272,7 +270,6 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
   const [isGeneratingImage, setIsGeneratingImage] = useState(false);
   const [downloadingPdf, setDownloadingPdf] = useState(false);
 
-  // Memoize Globe props to prevent unnecessary re-renders
   const globeInitialCenter = useMemo<[number, number] | undefined>(() => {
     if (displayLocation && displayLocation.lat !== 0 && displayLocation.lng !== 0) {
       return [displayLocation.lng, displayLocation.lat];
@@ -287,9 +284,7 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
     return undefined;
   }, [displayLocation]);
 
-  // Memoize empty callback for Globe to prevent re-initialization
   const handleGlobeLocationClick = useCallback(() => {
-    // No-op for mini globe - user can't click to select new locations
   }, []);
 
   const handleShare = async () => {
@@ -325,18 +320,12 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (error) {
+      // Fail silently - non-critical operation
     } finally {
       setSharing(false);
     }
   };
 
-  const handleCopyUrl = async () => {
-    if (shareUrl) {
-      await navigator.clipboard.writeText(shareUrl);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }
-  };
 
   const handleDownloadPdf = async () => {
     if (!taskId || !displayLocation) return;
@@ -356,10 +345,8 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
         throw new Error('Failed to generate PDF');
       }
 
-      // Get the PDF blob
       const blob = await response.blob();
 
-      // Create download link
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
@@ -367,17 +354,15 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
       document.body.appendChild(a);
       a.click();
 
-      // Cleanup
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
     } catch (error) {
-      // Silent fail - user will see button go back to normal state
+      // Fail silently - non-critical operation
     } finally {
       setDownloadingPdf(false);
     }
   };
 
-  // Generate hero images for location
   const generateHeroImage = useCallback(async () => {
     if (!location || isGeneratingImage) return;
 
@@ -400,14 +385,12 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
       if (images && images.length > 0) {
         setHeroImages(images);
 
-        if (reasoning) {
-        }
-
         // Store images in localStorage with taskId for persistence
         if (taskId) {
           try {
             localStorage.setItem(`research_images_${taskId}`, JSON.stringify(images));
           } catch (err) {
+            // Fail silently - non-critical operation
           }
         }
       } else {
@@ -420,7 +403,6 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
     }
   }, [location, isGeneratingImage, customInstructions, taskId]);
 
-  // Polling function for long-running tasks
   const pollTaskStatus = useCallback(async (taskId: string) => {
     try {
       const response = await fetch(`/api/chat/poll?taskId=${taskId}`);
@@ -429,12 +411,6 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
       }
 
       const statusData = await response.json();
-
-      // Debug: Check message structure
-      if (statusData.messages && statusData.messages.length > 0) {
-        statusData.messages.forEach((msg: any, idx: number) => {
-        });
-      }
 
       // Update progress
       if (statusData.status === 'running') {
@@ -536,13 +512,11 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
     }
   }, [displayLocation]);
 
-  // Load existing research if initialTaskId is provided
   useEffect(() => {
     if (initialTaskId && !taskId) {
       setTaskId(initialTaskId);
       setShouldContinuePolling(true);
 
-      // Try to load cached images
       try {
         const cachedImages = localStorage.getItem(`research_images_${initialTaskId}`);
         if (cachedImages) {
@@ -554,21 +528,17 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
     }
   }, [initialTaskId, taskId]);
 
-  // Track if research has been initiated to prevent duplicate runs
   const researchInitiatedRef = useRef(false);
   const previousLocationRef = useRef<string | null>(null);
 
   useEffect(() => {
-    if (!location || initialTaskId) return; // Skip if loading existing research
-
-    // Check if this is a new location (reset the ref if location changed)
+    if (!location || initialTaskId) return;
     const locationKey = `${location.name}_${location.lat}_${location.lng}`;
     if (previousLocationRef.current !== locationKey) {
       previousLocationRef.current = locationKey;
       researchInitiatedRef.current = false;
     }
 
-    // Prevent duplicate research runs for the same location
     if (researchInitiatedRef.current) {
       return;
     }
@@ -586,7 +556,6 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
       setShouldContinuePolling(false);
 
       try {
-        // Build the research prompt based on custom instructions or default
         const researchPrompt = customInstructions
           ? `${customInstructions}\n\nLocation: ${location.name}`
           : `Research the history of ${location.name}`;
@@ -722,6 +691,7 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
                     break;
                 }
               } catch (e) {
+                // Fail silently - non-critical operation
               }
             }
           }
@@ -730,9 +700,8 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
 
         // Handle rate limit errors by showing signup prompt instead of error state
         if ((err as any).isRateLimit) {
-          setStatus('idle'); // Reset to idle instead of error
-          onClose(); // Close the research interface
-          // The parent component should show the signup prompt
+          setStatus('idle');
+          onClose();
           return;
         }
 
@@ -742,9 +711,8 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
     };
 
     runResearch();
-  }, [location, initialTaskId]); // Add initialTaskId to deps so it doesn't re-run when loading from history
+  }, [location, initialTaskId]);
 
-  // Client-side polling effect for long-running tasks
   useEffect(() => {
     if (!shouldContinuePolling || !taskId) return;
 
@@ -770,8 +738,6 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
           }
         }
       };
-
-      // Poll immediately, then every 2 seconds
       await poll();
       pollingInterval = setInterval(poll, 2000);
     };
@@ -784,8 +750,6 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
       }
     };
   }, [shouldContinuePolling, taskId, pollTaskStatus]);
-
-  // Generate hero images when research starts running (only once)
   const [imageGenerationAttempted, setImageGenerationAttempted] = useState(false);
 
   useEffect(() => {
@@ -794,9 +758,6 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
       generateHeroImage();
     }
   }, [status, heroImages.length, isGeneratingImage, imageGenerationAttempted, generateHeroImage]);
-
-  // Build timeline from messages - interleave tool-calls with their results
-  // Use messagesVersion counter to force recalculation on every update
   const timeline = useMemo(() => {
     if (!messages || messages.length === 0) return [];
 
@@ -895,17 +856,6 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
     return items;
   }, [messages, messagesVersion]);
 
-  // Extract sources from tool results
-  const extractSourcesFromToolResult = (result: any): Source[] => {
-    if (!result?.output?.value?.sources) return [];
-    return result.output.value.sources.map((s: any) => ({
-      title: s.title || 'Untitled',
-      url: s.url || '#',
-      snippet: s.snippet || s.description || '',
-      doi: s.doi,
-      source: s.source,
-    }));
-  };
 
   if (!displayLocation) return null;
 
