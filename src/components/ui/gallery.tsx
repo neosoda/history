@@ -225,12 +225,15 @@ export function PhotoGallery({ images, animationDelay = 0.2 }: PhotoGalleryProps
               className="relative max-w-7xl max-h-[90vh] w-full h-full flex items-center justify-center px-12 sm:px-16"
               onClick={(e) => e.stopPropagation()}
             >
-              <Image
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
                 src={displayImages[selectedIndex]}
                 alt={`Location image ${selectedIndex + 1}`}
-                fill
-                className="object-contain"
-                sizes="100vw"
+                className="max-w-full max-h-full object-contain"
+                onError={(e) => {
+                  console.error('Image failed to load:', displayImages[selectedIndex]);
+                  (e.target as HTMLImageElement).style.display = 'none';
+                }}
               />
             </motion.div>
 
