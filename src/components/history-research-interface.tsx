@@ -373,10 +373,7 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           locationName: location.name,
-          historicalPeriod: customInstructions?.includes('ancient') ? 'ancient' :
-                           customInstructions?.includes('medieval') ? 'medieval' :
-                           customInstructions?.includes('war') ? 'conflict' : undefined,
-          preset: customInstructions,
+          valyuAccessToken,
         }),
       });
 

@@ -1,8 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { Valyu } from 'valyu-js';
 import { generateObject } from 'ai';
 import { openai } from '@ai-sdk/openai';
 import { z } from 'zod';
+import { isDevelopmentMode } from '@/lib/local-db/local-auth';
+
+const VALYU_APP_URL = process.env.VALYU_APP_URL || 'https://platform.valyu.ai';
+const VALYU_OAUTH_PROXY_URL = `${VALYU_APP_URL}/api/oauth/proxy`;
+const VALYU_API_KEY = process.env.VALYU_API_KEY;
 
 const LocationImageSelectionSchema = z.object({
   selectedImageIndices: z.array(z.number()).describe('Array of image indices to select (0-based), ordered by preference. Select 3-5 images.'),
@@ -46,20 +50,65 @@ async function filterValidImageUrls(urls: string[]): Promise<string[]> {
   return validUrls;
 }
 
+async function searchValyuViaProxy(query: string, valyuAccessToken: string): Promise<any> {
+  const response = await fetch(VALYU_OAUTH_PROXY_URL, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${valyuAccessToken}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      path: '/v1/search',
+      method: 'POST',
+      body: {
+        query,
+        max_num_results: 10,
+      },
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Valyu search failed: ${response.status}`);
+  }
+
+  return response.json();
+}
+
+async function searchValyuDirect(query: string): Promise<any> {
+  const response = await fetch('https://api.valyu.ai/v1/search', {
+    method: 'POST',
+    headers: {
+      'X-API-Key': VALYU_API_KEY!,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      query,
+      max_num_results: 10,
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Valyu search failed: ${response.status}`);
+  }
+
+  return response.json();
+}
+
 export async function POST(req: NextRequest) {
   try {
-    const { locationName, historicalPeriod, preset } = await req.json();
+    const { locationName, valyuAccessToken } = await req.json();
 
-    // Check API keys
-    const valyuApiKey = process.env.VALYU_API_KEY;
+    const isDevelopment = isDevelopmentMode();
+
+    // Check OpenAI API key
     const openaiApiKey = process.env.OPENAI_API_KEY;
-
     if (!openaiApiKey) {
       return NextResponse.json({ images: [], source: 'none', reason: 'OpenAI API key not configured' });
     }
 
-    if (!valyuApiKey) {
-      return NextResponse.json({ images: [], source: 'none', reason: 'Valyu API key not configured' });
+    // Require auth in production
+    if (!isDevelopment && !valyuAccessToken) {
+      return NextResponse.json({ images: [], source: 'none', reason: 'Authentication required' });
     }
 
     // Simple search query: just location name
@@ -67,16 +116,23 @@ export async function POST(req: NextRequest) {
 
     // Search Valyu API
     try {
-      const valyu = new Valyu(valyuApiKey, 'https://api.valyu.ai/v1');
-      const response = await valyu.search(searchQuery, { maxNumResults: 10 });
+      let searchResponse;
 
-      if (!response || !response.results || response.results.length === 0) {
+      if (valyuAccessToken) {
+        searchResponse = await searchValyuViaProxy(searchQuery, valyuAccessToken);
+      } else if (isDevelopment && VALYU_API_KEY) {
+        searchResponse = await searchValyuDirect(searchQuery);
+      } else {
+        return NextResponse.json({ images: [], source: 'none', reason: 'No Valyu credentials available' });
+      }
+
+      if (!searchResponse || !searchResponse.results || searchResponse.results.length === 0) {
         return NextResponse.json({ images: [], source: 'none', reason: 'No search results' });
       }
 
       // Extract TOP image from each result (not all images)
       const imageUrls: string[] = [];
-      response.results.forEach((result: any) => {
+      searchResponse.results.forEach((result: any) => {
         // Priority: get the first/main image from each result
         if (result.image_url) {
           if (typeof result.image_url === 'string') {
@@ -102,7 +158,7 @@ export async function POST(req: NextRequest) {
       let result;
       try {
         result = await generateObject({
-          model: openai('gpt-5'),
+          model: openai('gpt-4o'),
           messages: [
             {
               role: 'user',
