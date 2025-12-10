@@ -58,7 +58,7 @@ async function searchValyuViaProxy(query: string, valyuAccessToken: string): Pro
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      path: '/v1/search',
+      path: '/v1/deepsearch',
       method: 'POST',
       body: {
         query,
@@ -68,14 +68,14 @@ async function searchValyuViaProxy(query: string, valyuAccessToken: string): Pro
   });
 
   if (!response.ok) {
-    throw new Error(`Valyu search failed: ${response.status}`);
+    throw new Error(`Valyu deepsearch failed: ${response.status}`);
   }
 
   return response.json();
 }
 
 async function searchValyuDirect(query: string): Promise<any> {
-  const response = await fetch('https://api.valyu.ai/v1/search', {
+  const response = await fetch('https://api.valyu.ai/v1/deepsearch', {
     method: 'POST',
     headers: {
       'X-API-Key': VALYU_API_KEY!,
@@ -88,7 +88,7 @@ async function searchValyuDirect(query: string): Promise<any> {
   });
 
   if (!response.ok) {
-    throw new Error(`Valyu search failed: ${response.status}`);
+    throw new Error(`Valyu deepsearch failed: ${response.status}`);
   }
 
   return response.json();
