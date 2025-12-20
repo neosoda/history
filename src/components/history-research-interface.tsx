@@ -368,12 +368,16 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
 
     setIsGeneratingImage(true);
     try {
+      // Load token directly from localStorage (store may not be hydrated yet)
+      const valyuTokens = loadValyuTokens();
+      const token = valyuTokens?.accessToken;
+
       const response = await fetch('/api/history/select-location-image', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           locationName: location.name,
-          valyuAccessToken,
+          valyuAccessToken: token,
         }),
       });
 
