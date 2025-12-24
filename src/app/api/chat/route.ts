@@ -155,16 +155,16 @@ export async function POST(req: Request) {
       researchQuery = `Provide a comprehensive historical overview of this location, covering major events, cultural significance, and key developments throughout history.\n\nLocation: ${location.name}`;
     }
 
-    // Create DeepResearch task - always use 'lite' model (credits managed by Valyu)
+    // Create DeepResearch task - always use 'fast' model (credits managed by Valyu)
     const taskResponse = isDevelopment && !valyuAccessToken
       ? await callDeepResearchApiDev({
           input: researchQuery,
-          model: 'lite',
+          model: 'fast',
           output_formats: ['markdown']
         })
       : await callDeepResearchApi({
           input: researchQuery,
-          model: 'lite',
+          model: 'fast',
           output_formats: ['markdown']
         }, valyuAccessToken!);
 
