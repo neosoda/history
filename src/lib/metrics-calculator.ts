@@ -111,8 +111,8 @@ export function calculateMessageMetrics(messageParts: any[]): MessageMetrics {
       // CSV/spreadsheet creation
       if (toolName === 'createCSV' || toolName === 'generateSpreadsheet') {
         const rows = result?.rows?.length ||
-                    result?.data?.length ||
-                    (Array.isArray(result) ? result.length : 10);
+          result?.data?.length ||
+          (Array.isArray(result) ? result.length : 10);
 
         breakdown.csvCreationMinutes +=
           TIME_ESTIMATES.CSV_BASE +
@@ -181,14 +181,14 @@ export function formatTime(minutes: number): string {
 }
 
 export function formatCost(cost: number): string {
-  return '$' + cost.toLocaleString('en-US', {
+  return cost.toLocaleString('fr-FR', {
     minimumFractionDigits: 0,
     maximumFractionDigits: 0
-  });
+  }) + ' €';
 }
 
 export function formatNumber(num: number): string {
-  return num.toLocaleString('en-US');
+  return num.toLocaleString('fr-FR');
 }
 
 export function formatProcessingTime(ms: number): string {

@@ -23,7 +23,7 @@ export function SharePageClient({ task }: SharePageClientProps) {
     <div className="h-screen w-full bg-background">
       <HistoryResearchInterface
         location={{
-          name: task.locationName || task.location_name || 'Unknown Location',
+          name: task.locationName || task.location_name || 'Lieu inconnu',
           lat: task.locationLat || task.location_lat || 0,
           lng: task.locationLng || task.location_lng || 0,
         }}

@@ -41,13 +41,13 @@ export function TimeSavedBreakdownDialog({
   const [activeIndex, setActiveIndex] = useState<number | undefined>(undefined);
 
   const allTasks = [
-    { name: 'Literature Search', minutes: breakdown.sourceFindingMinutes, icon: Search, description: 'Finding relevant studies & sources' },
-    { name: 'Reading & Review', minutes: breakdown.sourceReadingMinutes, icon: BookOpen, description: 'Reviewing papers & documentation' },
-    { name: 'Scientific Writing', minutes: breakdown.writingMinutes, icon: FileText, description: 'Synthesizing findings' },
-    { name: 'Data Analysis', minutes: breakdown.analysisMinutes, icon: Brain, description: 'Statistical analysis & interpretation' },
-    { name: 'Table Generation', minutes: breakdown.csvCreationMinutes, icon: Table, description: 'Creating data tables' },
-    { name: 'Visualization', minutes: breakdown.chartCreationMinutes, icon: BarChart3, description: 'Creating figures & charts' },
-    { name: 'Computation', minutes: breakdown.dataProcessingMinutes, icon: Code, description: 'Data processing & calculations' },
+    { name: 'Recherche bibliographique', minutes: breakdown.sourceFindingMinutes, icon: Search, description: 'Recherche d\'études et de sources pertinentes' },
+    { name: 'Lecture et révision', minutes: breakdown.sourceReadingMinutes, icon: BookOpen, description: 'Examen des articles et de la documentation' },
+    { name: 'Rédaction scientifique', minutes: breakdown.writingMinutes, icon: FileText, description: 'Synthèse des résultats' },
+    { name: 'Analyse de données', minutes: breakdown.analysisMinutes, icon: Brain, description: 'Analyse statistique et interprétation' },
+    { name: 'Génération de tableaux', minutes: breakdown.csvCreationMinutes, icon: Table, description: 'Création de tableaux de données' },
+    { name: 'Visualisation', minutes: breakdown.chartCreationMinutes, icon: BarChart3, description: 'Création de figures et de graphiques' },
+    { name: 'Traitement de données', minutes: breakdown.dataProcessingMinutes, icon: Code, description: 'Traitement des données et calculs' },
   ];
 
   // Create a color mapping for each task based on its position in allTasks
@@ -74,8 +74,8 @@ export function TimeSavedBreakdownDialog({
       <DialogContent className="!max-w-5xl !max-h-[90vh] overflow-hidden">
         {/* Header */}
         <div className="pb-4 border-b border-gray-200 dark:border-gray-800">
-          <DialogTitle className="text-xl font-semibold text-gray-900 dark:text-gray-100">Research Time Analysis</DialogTitle>
-          <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Automated research workflow breakdown</p>
+          <DialogTitle className="text-xl font-semibold text-gray-900 dark:text-gray-100">Analyse du temps de recherche</DialogTitle>
+          <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Détail du flux de recherche automatisé</p>
         </div>
 
         {/* Summary Stats */}
@@ -85,10 +85,10 @@ export function TimeSavedBreakdownDialog({
               <div className="w-8 h-8 rounded-lg bg-sky-500/10 dark:bg-sky-500/20 flex items-center justify-center">
                 <Clock className="w-4 h-4 text-sky-600 dark:text-sky-400" />
               </div>
-              <div className="text-sm font-medium text-sky-900 dark:text-sky-300">Research Time Saved</div>
+              <div className="text-sm font-medium text-sky-900 dark:text-sky-300">Temps de recherche gagné</div>
             </div>
             <div className="text-3xl font-bold text-sky-950 dark:text-sky-100 mb-1">{formatTime(timeSavedMinutes)}</div>
-            <div className="text-xs text-sky-700 dark:text-sky-400">Equivalent to {workDays.toFixed(1)} full research days</div>
+            <div className="text-xs text-sky-700 dark:text-sky-400">Équivalent à {workDays.toFixed(1)} journées complètes de recherche</div>
           </div>
 
           <div className="relative overflow-hidden bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 dark:from-emerald-950/20 dark:via-teal-950/20 dark:to-cyan-950/20 border border-emerald-200 dark:border-emerald-900/50 rounded-xl p-4 shadow-sm">
@@ -96,10 +96,10 @@ export function TimeSavedBreakdownDialog({
               <div className="w-8 h-8 rounded-lg bg-emerald-500/10 dark:bg-emerald-500/20 flex items-center justify-center">
                 <DollarSign className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
               </div>
-              <div className="text-sm font-medium text-emerald-900 dark:text-emerald-300">Institutional Value</div>
+              <div className="text-sm font-medium text-emerald-900 dark:text-emerald-300">Valeur institutionnelle</div>
             </div>
             <div className="text-3xl font-bold text-emerald-950 dark:text-emerald-100 mb-1">{formatCost(moneySaved)}</div>
-            <div className="text-xs text-emerald-700 dark:text-emerald-400">Fully-loaded cost of senior researcher time (salary + benefits + overhead)</div>
+            <div className="text-xs text-emerald-700 dark:text-emerald-400">Coût complet du temps d'un chercheur senior (salaire + charges + frais généraux)</div>
           </div>
         </div>
 
@@ -140,7 +140,7 @@ export function TimeSavedBreakdownDialog({
                     {formatTime(allTasks[activeIndex].minutes)}
                   </div>
                   <div className="text-xs text-gray-500 dark:text-gray-400">
-                    {((allTasks[activeIndex].minutes / timeSavedMinutes) * 100).toFixed(1)}% of total
+                    {((allTasks[activeIndex].minutes / timeSavedMinutes) * 100).toFixed(1)}% du total
                   </div>
                 </>
               )}
@@ -161,37 +161,31 @@ export function TimeSavedBreakdownDialog({
                   key={idx}
                   onMouseEnter={() => isUsed ? setActiveIndex(idx) : undefined}
                   onMouseLeave={() => setActiveIndex(undefined)}
-                  className={`flex items-center gap-2 p-1.5 rounded-lg transition-all ${
-                    isUsed
+                  className={`flex items-center gap-2 p-1.5 rounded-lg transition-all ${isUsed
                       ? `cursor-pointer ${isActive ? 'bg-gray-100 dark:bg-gray-800' : 'hover:bg-gray-50 dark:hover:bg-gray-800/50'}`
                       : 'opacity-40 cursor-default'
-                  }`}
+                    }`}
                 >
                   <div
                     className="w-3 h-3 rounded-sm flex-shrink-0"
                     style={{ backgroundColor: isUsed ? taskColor : '#d1d5db' }}
                   />
-                  <div className={`w-5 h-5 rounded flex items-center justify-center flex-shrink-0 ${
-                    isUsed ? 'bg-gray-100 dark:bg-gray-800' : 'bg-gray-100/50 dark:bg-gray-800/50'
-                  }`}>
-                    <Icon className={`w-3 h-3 ${
-                      isUsed ? 'text-gray-700 dark:text-gray-300' : 'text-gray-400 dark:text-gray-600'
-                    }`} />
+                  <div className={`w-5 h-5 rounded flex items-center justify-center flex-shrink-0 ${isUsed ? 'bg-gray-100 dark:bg-gray-800' : 'bg-gray-100/50 dark:bg-gray-800/50'
+                    }`}>
+                    <Icon className={`w-3 h-3 ${isUsed ? 'text-gray-700 dark:text-gray-300' : 'text-gray-400 dark:text-gray-600'
+                      }`} />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className={`text-xs font-medium truncate ${
-                      isUsed ? 'text-gray-900 dark:text-gray-100' : 'text-gray-400 dark:text-gray-600'
-                    }`}>{task.name}</div>
+                    <div className={`text-xs font-medium truncate ${isUsed ? 'text-gray-900 dark:text-gray-100' : 'text-gray-400 dark:text-gray-600'
+                      }`}>{task.name}</div>
                   </div>
                   <div className="flex items-baseline gap-1.5 flex-shrink-0">
-                    <span className={`text-xs font-semibold tabular-nums ${
-                      isUsed ? 'text-gray-900 dark:text-gray-100' : 'text-gray-400 dark:text-gray-600'
-                    }`}>
+                    <span className={`text-xs font-semibold tabular-nums ${isUsed ? 'text-gray-900 dark:text-gray-100' : 'text-gray-400 dark:text-gray-600'
+                      }`}>
                       {isUsed ? formatTime(task.minutes) : '—'}
                     </span>
-                    <span className={`text-[10px] w-9 text-right tabular-nums ${
-                      isUsed ? 'text-gray-500 dark:text-gray-400' : 'text-gray-400 dark:text-gray-600'
-                    }`}>
+                    <span className={`text-[10px] w-9 text-right tabular-nums ${isUsed ? 'text-gray-500 dark:text-gray-400' : 'text-gray-400 dark:text-gray-600'
+                      }`}>
                       {isUsed ? `${percentage}%` : ''}
                     </span>
                   </div>
@@ -204,7 +198,7 @@ export function TimeSavedBreakdownDialog({
         {/* Footer */}
         <div className="pt-2 border-t border-gray-200 dark:border-gray-800">
           <p className="text-[10px] text-gray-500 dark:text-gray-500 text-center leading-relaxed">
-            Time estimates based on academic research benchmarks for senior biomedical researchers conducting systematic literature reviews, data synthesis, and manuscript preparation.
+            Estimations de temps basées sur les références de recherche académique pour les chercheurs biomédicaux seniors effectuant des revues systématiques de la littérature, de la synthèse de données et de la préparation de manuscrits.
           </p>
         </div>
       </DialogContent>

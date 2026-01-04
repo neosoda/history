@@ -105,26 +105,23 @@ const TimelineItem = ({ item, idx, timeline, animated = true }: { item: any; idx
 
     return (
       <ItemWrapper key={`text-${idx}`} {...itemProps}>
-        <div className={`overflow-hidden rounded-lg border backdrop-blur-sm shadow-sm ${
-          isReasoning
-            ? 'border-amber-200/40 bg-amber-50/30 dark:border-amber-900/40 dark:bg-amber-950/20'
-            : 'border-border/40 bg-background/90'
-        }`}>
-          <div className={`px-3 py-2 border-b ${
-            isReasoning
-              ? 'bg-amber-100/30 border-amber-200/30 dark:bg-amber-900/10 dark:border-amber-900/30'
-              : 'bg-muted/10 border-border/30'
+        <div className={`overflow-hidden rounded-lg border backdrop-blur-sm shadow-sm ${isReasoning
+          ? 'border-amber-200/40 bg-amber-50/30 dark:border-amber-900/40 dark:bg-amber-950/20'
+          : 'border-border/40 bg-background/90'
           }`}>
-            <div className={`flex items-center gap-2 ${
-              isReasoning ? 'text-foreground/70' : 'text-foreground/70'
+          <div className={`px-3 py-2 border-b ${isReasoning
+            ? 'bg-amber-100/30 border-amber-200/30 dark:bg-amber-900/10 dark:border-amber-900/30'
+            : 'bg-muted/10 border-border/30'
             }`}>
+            <div className={`flex items-center gap-2 ${isReasoning ? 'text-foreground/70' : 'text-foreground/70'
+              }`}>
               {isReasoning ? (
                 <Lightbulb className="h-3.5 w-3.5" />
               ) : (
                 <FileText className="h-3.5 w-3.5" />
               )}
               <span className="text-xs font-semibold">
-                {isReasoning ? 'Reasoning' : 'Model Response'}
+                {isReasoning ? 'Raisonnement' : 'Réponse du modèle'}
               </span>
             </div>
           </div>
@@ -151,21 +148,18 @@ const TimelineItem = ({ item, idx, timeline, animated = true }: { item: any; idx
 
     return (
       <ItemWrapper key={`tool-call-${idx}-${item.toolCallId}`} {...itemProps}>
-        <div className={`overflow-hidden rounded-lg border backdrop-blur-sm shadow-sm ${
-          hasResult
-            ? 'border-blue-200/40 bg-blue-50/20 dark:border-blue-900/40 dark:bg-blue-950/10'
-            : 'border-border/40 bg-muted/20'
-        }`}>
-          <div className={`px-3 py-2 border-b ${
-            hasResult
-              ? 'bg-blue-100/20 border-blue-200/30 dark:bg-blue-900/10 dark:border-blue-900/30'
-              : 'bg-muted/10 border-border/30'
+        <div className={`overflow-hidden rounded-lg border backdrop-blur-sm shadow-sm ${hasResult
+          ? 'border-blue-200/40 bg-blue-50/20 dark:border-blue-900/40 dark:bg-blue-950/10'
+          : 'border-border/40 bg-muted/20'
           }`}>
-            <div className={`flex items-center gap-2 ${
-              hasResult
-                ? 'text-foreground/80'
-                : 'text-foreground/60'
+          <div className={`px-3 py-2 border-b ${hasResult
+            ? 'bg-blue-100/20 border-blue-200/30 dark:bg-blue-900/10 dark:border-blue-900/30'
+            : 'bg-muted/10 border-border/30'
             }`}>
+            <div className={`flex items-center gap-2 ${hasResult
+              ? 'text-foreground/80'
+              : 'text-foreground/60'
+              }`}>
               {hasResult ? (
                 <CheckCircle2 className="h-3.5 w-3.5" />
               ) : (
@@ -204,7 +198,7 @@ const TimelineItem = ({ item, idx, timeline, animated = true }: { item: any; idx
           <div className="flex items-center gap-1.5">
             <CheckCircle2 className="h-3 w-3 text-green-600" />
             <div className="text-[10px] font-medium text-green-700 uppercase tracking-wide">
-              {sources.length > 0 ? `${sources.length} ${sources.length === 1 ? 'Source' : 'Sources'} Found` : 'Result'}
+              {sources.length > 0 ? `${sources.length} ${sources.length === 1 ? 'Source trouvée' : 'Sources trouvées'}` : 'Résultat'}
             </div>
           </div>
           {sources.length > 0 && (
@@ -222,7 +216,7 @@ const TimelineItem = ({ item, idx, timeline, animated = true }: { item: any; idx
                   )}
                   <div className="flex-1 min-w-0">
                     <div className="text-xs font-medium line-clamp-1 group-hover:text-primary transition-colors">
-                      {source.title || 'Untitled'}
+                      {source.title || 'Sans titre'}
                     </div>
                     {source.snippet && (
                       <div className="text-[10px] text-muted-foreground line-clamp-2 mt-0.5">
@@ -297,7 +291,7 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
       const task = tasks.find((t: any) => t.deepresearchId === taskId);
 
       if (!task) {
-        throw new Error('Task not found');
+        throw new Error('Tâche non trouvée');
       }
 
       const response = await fetch('/api/research/share', {
@@ -309,7 +303,7 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
         }),
       });
 
-      if (!response.ok) throw new Error('Failed to share');
+      if (!response.ok) throw new Error('Échec du partage');
 
       const data = await response.json();
       setShareUrl(data.shareUrl);
@@ -342,7 +336,7 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
       });
 
       if (!response.ok) {
-        throw new Error('Failed to generate PDF');
+        throw new Error('Échec de la génération du PDF');
       }
 
       const blob = await response.blob();
@@ -404,531 +398,446 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
     }
   }, [location, isGeneratingImage, customInstructions, taskId]);
 
-  const pollTaskStatus = useCallback(async (taskId: string) => {
+}, [valyuAccessToken]);
+
+useEffect(() => {
+  if (initialTaskId && !taskId) {
+    setTaskId(initialTaskId);
+    setShouldContinuePolling(true);
+
     try {
-      const headers: HeadersInit = {};
-      if (valyuAccessToken) {
-        headers['Authorization'] = `Bearer ${valyuAccessToken}`;
+      const cachedImages = localStorage.getItem(`research_images_${initialTaskId}`);
+      if (cachedImages) {
+        const images = JSON.parse(cachedImages);
+        setHeroImages(images);
       }
-      const response = await fetch(`/api/chat/poll?taskId=${taskId}`, { headers });
-      if (!response.ok) {
-        throw new Error('Failed to poll task status');
-      }
-
-      const statusData = await response.json();
-      console.log('[Poll Client] Status:', statusData.status, 'hasOutput:', !!statusData.output);
-
-      // Update progress
-      if (statusData.status === 'running') {
-        setStatus('running');
-        // Progress info is in statusData.progress object
-        const progress = statusData.progress || {};
-        setProgress({
-          current: progress.current_step || progress.step || 0,
-          total: progress.total_steps || progress.total || 10,
-        });
-
-        // Extract location from query if displayLocation not set properly
-        if (statusData.query && (!displayLocation || displayLocation.name === 'Loading research...')) {
-          const locationMatch = statusData.query.match(/Location:\s*(.+)$/m);
-          if (locationMatch && locationMatch[1]) {
-            setDisplayLocation({
-              name: locationMatch[1].trim(),
-              lat: displayLocation?.lat || 0,
-              lng: displayLocation?.lng || 0
-            });
-          }
-        }
-
-        // Update messages array if provided
-        if (statusData.messages && Array.isArray(statusData.messages) && statusData.messages.length > 0) {
-          setMessages([...statusData.messages]);
-          setMessagesVersion(v => v + 1);
-        }
-
-        // Update content/sources/images if provided during running state
-        if (statusData.output) {
-          setContent(statusData.output);
-        }
-
-        if (statusData.sources && Array.isArray(statusData.sources) && statusData.sources.length > 0) {
-          setSources(statusData.sources);
-        }
-
-        if (statusData.images && Array.isArray(statusData.images) && statusData.images.length > 0) {
-          setImages(statusData.images);
-        }
-
-        return { completed: false };
-      } else if (statusData.status === 'completed') {
-
-        // Extract content - prioritize output field
-        let extractedContent = '';
-        if (statusData.output) {
-          extractedContent = statusData.output;
-        } else if (statusData.messages && Array.isArray(statusData.messages) && statusData.messages.length > 0) {
-          // Fallback: extract content from last message
-          const lastMessage = statusData.messages[statusData.messages.length - 1];
-          if (lastMessage?.role === 'assistant' && Array.isArray(lastMessage.content)) {
-            extractedContent = lastMessage.content
-              .filter((item: any) => item.type === 'text')
-              .map((item: any) => item.text)
-              .join('\n\n');
-          }
-        }
-
-        // Extract location from query if displayLocation not set properly
-        if (statusData.query && (!displayLocation || displayLocation.name === 'Loading research...')) {
-          // Parse location from query (format: "Research the ... \n\nLocation: Location Name")
-          const locationMatch = statusData.query.match(/Location:\s*(.+)$/m);
-          if (locationMatch && locationMatch[1]) {
-            setDisplayLocation({
-              name: locationMatch[1].trim(),
-              lat: displayLocation?.lat || 0,
-              lng: displayLocation?.lng || 0
-            });
-          }
-        }
-
-        // Update all state in batch before changing status
-        // ALWAYS set content even if empty - component will handle empty state
-        setContent(extractedContent);
-
-        if (statusData.messages && Array.isArray(statusData.messages) && statusData.messages.length > 0) {
-          setMessages([...statusData.messages]);
-          setMessagesVersion(v => v + 1);
-        }
-
-        if (statusData.sources && Array.isArray(statusData.sources) && statusData.sources.length > 0) {
-          setSources(statusData.sources);
-        }
-
-        if (statusData.images && Array.isArray(statusData.images) && statusData.images.length > 0) {
-          setImages(statusData.images);
-        }
-
-        // Set status to completed LAST, after all content is ready
-        console.log('[Poll Client] Setting status to completed, content length:', extractedContent.length);
-        setStatus('completed');
-        return { completed: true };
-      } else if (statusData.status === 'failed') {
-        throw new Error(statusData.error || 'Research task failed');
-      }
-
-      return { completed: false };
     } catch (err) {
-      throw err;
     }
-  }, [displayLocation, valyuAccessToken]);
+  }
+}, [initialTaskId, taskId]);
 
-  useEffect(() => {
-    if (initialTaskId && !taskId) {
-      setTaskId(initialTaskId);
-      setShouldContinuePolling(true);
+const researchInitiatedRef = useRef(false);
+const previousLocationRef = useRef<string | null>(null);
 
-      try {
-        const cachedImages = localStorage.getItem(`research_images_${initialTaskId}`);
-        if (cachedImages) {
-          const images = JSON.parse(cachedImages);
-          setHeroImages(images);
+useEffect(() => {
+  if (!location || initialTaskId) return;
+  const locationKey = `${location.name}_${location.lat}_${location.lng}`;
+  if (previousLocationRef.current !== locationKey) {
+    previousLocationRef.current = locationKey;
+    researchInitiatedRef.current = false;
+  }
+
+  if (researchInitiatedRef.current) {
+    return;
+  }
+
+  const runResearch = async () => {
+    researchInitiatedRef.current = true;
+
+    setStatus('queued');
+    setContent('');
+    setSources([]);
+    setImages([]);
+    setError(null);
+    setMessages([]);
+    setTaskId(null);
+    setShouldContinuePolling(false);
+
+    try {
+      const researchPrompt = customInstructions
+        ? `${customInstructions}\n\nLocation: ${location.name}`
+        : `Rechercher l'histoire de ${location.name}`;
+
+      // Get Valyu access token if available
+      const valyuTokens = loadValyuTokens();
+      const valyuAccessToken = valyuTokens?.accessToken;
+
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          messages: [
+            {
+              role: 'user',
+              content: researchPrompt,
+            },
+          ],
+          location,
+          valyuAccessToken,
+        }),
+      });
+
+      if (!response.ok) {
+        // Handle auth required errors
+        if (response.status === 401) {
+          const errorData = await response.json();
+          if (errorData.error === 'AUTH_REQUIRED') {
+            // Show auth modal
+            window.dispatchEvent(new CustomEvent('show-auth-modal'));
+            setStatus('idle');
+            onClose();
+            return;
+          }
         }
-      } catch (err) {
+        // Handle credit errors
+        if (response.status === 402) {
+          const errorData = await response.json();
+          const creditError = new Error(errorData.message || 'Crédits insuffisants');
+          (creditError as any).isCredit = true;
+          throw creditError;
+        }
+        throw new Error('Échec du lancement de la recherche');
       }
-    }
-  }, [initialTaskId, taskId]);
 
-  const researchInitiatedRef = useRef(false);
-  const previousLocationRef = useRef<string | null>(null);
+      const reader = response.body?.getReader();
+      const decoder = new TextDecoder();
 
-  useEffect(() => {
-    if (!location || initialTaskId) return;
-    const locationKey = `${location.name}_${location.lat}_${location.lng}`;
-    if (previousLocationRef.current !== locationKey) {
-      previousLocationRef.current = locationKey;
-      researchInitiatedRef.current = false;
-    }
+      if (!reader) {
+        throw new Error('Pas de corps de réponse');
+      }
 
-    if (researchInitiatedRef.current) {
-      return;
-    }
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
 
-    const runResearch = async () => {
-      researchInitiatedRef.current = true;
+        const chunk = decoder.decode(value);
+        const lines = chunk.split('\n\n');
 
-      setStatus('queued');
-      setContent('');
-      setSources([]);
-      setImages([]);
-      setError(null);
-      setMessages([]);
-      setTaskId(null);
-      setShouldContinuePolling(false);
+        for (const line of lines) {
+          if (line.startsWith('data: ')) {
+            try {
+              const data = JSON.parse(line.slice(6));
 
-      try {
-        const researchPrompt = customInstructions
-          ? `${customInstructions}\n\nLocation: ${location.name}`
-          : `Research the history of ${location.name}`;
+              switch (data.type) {
+                case 'task_created':
+                  setTaskId(data.taskId);
+                  // Notify parent to update URL
+                  if (onTaskCreated && data.taskId) {
+                    onTaskCreated(data.taskId);
+                  }
+                  break;
+                case 'status':
+                  setStatus(data.status);
+                  break;
+                case 'continue_polling':
+                  setShouldContinuePolling(true);
+                  setTaskId(data.taskId);
+                  break;
+                case 'progress':
+                  setStatus('running');
+                  setProgress({
+                    current: data.current_step || 0,
+                    total: data.total_steps || 10,
+                  });
+                  break;
+                case 'message_update':
+                  // Handle individual message updates from streaming
+                  if (data.data && data.content_type) {
+                    setMessages((prev) => {
+                      const newMessages = [...prev];
 
-        // Get Valyu access token if available
-        const valyuTokens = loadValyuTokens();
-        const valyuAccessToken = valyuTokens?.accessToken;
+                      // Get the role from the message (assistant or tool)
+                      const messageRole = data.message_role || 'assistant';
 
-        const response = await fetch('/api/chat', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            messages: [
-              {
-                role: 'user',
-                content: researchPrompt,
-              },
-            ],
-            location,
-            valyuAccessToken,
-          }),
-        });
+                      // Find or create the last message with matching role
+                      let lastMessageIndex = -1;
+                      for (let i = newMessages.length - 1; i >= 0; i--) {
+                        if (newMessages[i].role === messageRole) {
+                          lastMessageIndex = i;
+                          break;
+                        }
+                      }
 
-        if (!response.ok) {
-          // Handle auth required errors
-          if (response.status === 401) {
-            const errorData = await response.json();
-            if (errorData.error === 'AUTH_REQUIRED') {
-              // Show auth modal
-              window.dispatchEvent(new CustomEvent('show-auth-modal'));
-              setStatus('idle');
-              onClose();
-              return;
-            }
-          }
-          // Handle credit errors
-          if (response.status === 402) {
-            const errorData = await response.json();
-            const creditError = new Error(errorData.message || 'Insufficient credits');
-            (creditError as any).isCredit = true;
-            throw creditError;
-          }
-          throw new Error('Failed to start research');
-        }
+                      if (lastMessageIndex === -1) {
+                        // Create new message with the appropriate role
+                        newMessages.push({
+                          role: messageRole as 'assistant' | 'tool',
+                          content: [data.data],
+                        });
+                      } else {
+                        // Append to existing message
+                        const existing = newMessages[lastMessageIndex];
+                        if (Array.isArray(existing.content)) {
+                          existing.content = [...existing.content, data.data];
+                        }
+                      }
 
-        const reader = response.body?.getReader();
-        const decoder = new TextDecoder();
-
-        if (!reader) {
-          throw new Error('No response body');
-        }
-
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
-
-          const chunk = decoder.decode(value);
-          const lines = chunk.split('\n\n');
-
-          for (const line of lines) {
-            if (line.startsWith('data: ')) {
-              try {
-                const data = JSON.parse(line.slice(6));
-
-                switch (data.type) {
-                  case 'task_created':
-                    setTaskId(data.taskId);
-                    // Notify parent to update URL
-                    if (onTaskCreated && data.taskId) {
-                      onTaskCreated(data.taskId);
-                    }
-                    break;
-                  case 'status':
-                    setStatus(data.status);
-                    break;
-                  case 'continue_polling':
-                    setShouldContinuePolling(true);
-                    setTaskId(data.taskId);
-                    break;
-                  case 'progress':
-                    setStatus('running');
-                    setProgress({
-                      current: data.current_step || 0,
-                      total: data.total_steps || 10,
+                      return newMessages;
                     });
-                    break;
-                  case 'message_update':
-                    // Handle individual message updates from streaming
-                    if (data.data && data.content_type) {
-                      setMessages((prev) => {
-                        const newMessages = [...prev];
-
-                        // Get the role from the message (assistant or tool)
-                        const messageRole = data.message_role || 'assistant';
-
-                        // Find or create the last message with matching role
-                        let lastMessageIndex = -1;
-                        for (let i = newMessages.length - 1; i >= 0; i--) {
-                          if (newMessages[i].role === messageRole) {
-                            lastMessageIndex = i;
-                            break;
-                          }
-                        }
-
-                        if (lastMessageIndex === -1) {
-                          // Create new message with the appropriate role
-                          newMessages.push({
-                            role: messageRole as 'assistant' | 'tool',
-                            content: [data.data],
-                          });
-                        } else {
-                          // Append to existing message
-                          const existing = newMessages[lastMessageIndex];
-                          if (Array.isArray(existing.content)) {
-                            existing.content = [...existing.content, data.data];
-                          }
-                        }
-
-                        return newMessages;
-                      });
-                      setMessagesVersion(v => v + 1);
-                    }
-                    break;
-                  case 'content':
-                    setContent(data.content || '');
-                    // Don't set status to completed yet - wait for 'done' event
-                    // This ensures all data (sources, images) are received before showing completed state
-                    break;
-                  case 'sources':
-                    setSources(data.sources || []);
-                    break;
-                  case 'images':
-                    setImages(data.images || []);
-                    break;
-                  case 'error':
-                    setError(data.error || 'Unknown error');
-                    setStatus('error');
-                    break;
-                  case 'done':
-                    // SSE stream is done - poll to get final status and content
-                    // Don't set status yet - let polling handle it to ensure we have content
-                    setShouldContinuePolling(true);
-                    break;
-                }
-              } catch (e) {
-                // Fail silently - non-critical operation
+                    setMessagesVersion(v => v + 1);
+                  }
+                  break;
+                case 'content':
+                  setContent(data.content || '');
+                  // Don't set status to completed yet - wait for 'done' event
+                  // This ensures all data (sources, images) are received before showing completed state
+                  break;
+                case 'sources':
+                  setSources(data.sources || []);
+                  break;
+                case 'images':
+                  setImages(data.images || []);
+                  break;
+                case 'error':
+                  setError(data.error || 'Erreur inconnue');
+                  setStatus('error');
+                  break;
+                case 'done':
+                  // SSE stream is done - poll to get final status and content
+                  // Don't set status yet - let polling handle it to ensure we have content
+                  setShouldContinuePolling(true);
+                  break;
               }
+            } catch (e) {
+              // Fail silently - non-critical operation
             }
           }
         }
-      } catch (err) {
-        // Handle credit errors by showing a user-friendly message
-        if ((err as any).isCredit) {
-          setError('Insufficient Valyu credits. Add credits at platform.valyu.ai');
-        } else {
-          setError(err instanceof Error ? err.message : 'Unknown error');
-        }
-        setStatus('error');
       }
-    };
+    } catch (err) {
+      // Handle credit errors by showing a user-friendly message
+      if ((err as any).isCredit) {
+        setError('Crédits Valyu insuffisants. Ajoutez des crédits sur platform.valyu.ai');
+      } else {
+        setError(err instanceof Error ? err.message : 'Erreur inconnue');
+      }
+      setStatus('error');
+    }
+  };
 
-    runResearch();
-  }, [location, initialTaskId]);
+  runResearch();
+}, [location, initialTaskId]);
 
-  useEffect(() => {
-    if (!shouldContinuePolling || !taskId) return;
+const pollTaskStatus = useCallback(async (taskId: string) => {
+  try {
+    const headers: HeadersInit = valyuAccessToken ? { 'Authorization': `Bearer ${valyuAccessToken}` } : {};
+    const response = await fetch(`/api/chat/poll?taskId=${taskId}`, { headers });
+    if (!response.ok) throw new Error('Erreur de polling');
 
-    let pollingInterval: NodeJS.Timeout;
+    const data = await response.json();
 
-    const startPolling = async () => {
-      const poll = async () => {
-        try {
-          const result = await pollTaskStatus(taskId);
+    if (data.status === 'running') {
+      setStatus('running');
+      if (data.progress) setProgress({ current: data.progress.current_step || 0, total: data.progress.total_steps || 10 });
+      if (data.output) setContent(data.output);
+      if (data.sources) setSources(data.sources);
+      return { completed: false };
+    } else if (data.status === 'completed') {
+      if (data.output) setContent(data.output);
+      if (data.sources) setSources(data.sources);
+      if (data.images) setImages(data.images);
+      setStatus('completed');
+      return { completed: true };
+    } else if (data.status === 'failed') {
+      throw new Error(data.error || 'La tâche a échoué');
+    }
+    return { completed: false };
+  } catch (err) {
+    console.error('[Poll] Error:', err);
+    throw err;
+  }
+}, [valyuAccessToken]);
 
-          if (result.completed) {
-            setShouldContinuePolling(false);
-            if (pollingInterval) {
-              clearInterval(pollingInterval);
-            }
-          }
-        } catch (err) {
-          setError(err instanceof Error ? err.message : 'Polling error');
-          setStatus('error');
+useEffect(() => {
+  if (!shouldContinuePolling || !taskId) return;
+
+  let pollingInterval: NodeJS.Timeout;
+
+  const startPolling = async () => {
+    const poll = async () => {
+      try {
+        const result = await pollTaskStatus(taskId);
+
+        if (result.completed) {
           setShouldContinuePolling(false);
           if (pollingInterval) {
             clearInterval(pollingInterval);
           }
         }
-      };
-      await poll();
-      pollingInterval = setInterval(poll, 2000);
-    };
-
-    startPolling();
-
-    return () => {
-      if (pollingInterval) {
-        clearInterval(pollingInterval);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Erreur de polling');
+        setStatus('error');
+        setShouldContinuePolling(false);
+        if (pollingInterval) {
+          clearInterval(pollingInterval);
+        }
       }
     };
-  }, [shouldContinuePolling, taskId, pollTaskStatus]);
-  const [imageGenerationAttempted, setImageGenerationAttempted] = useState(false);
+    await poll();
+    pollingInterval = setInterval(poll, 2000);
+  };
 
-  useEffect(() => {
-    if (status === 'running' && heroImages.length === 0 && !isGeneratingImage && !imageGenerationAttempted) {
-      setImageGenerationAttempted(true);
-      generateHeroImage();
+  startPolling();
+
+  return () => {
+    if (pollingInterval) {
+      clearInterval(pollingInterval);
     }
-  }, [status, heroImages.length, isGeneratingImage, imageGenerationAttempted, generateHeroImage]);
-  const timeline = useMemo(() => {
-    if (!messages || messages.length === 0) return [];
+  };
+}, [shouldContinuePolling, taskId, pollTaskStatus]);
+const [imageGenerationAttempted, setImageGenerationAttempted] = useState(false);
 
-    const items: any[] = [];
-    const toolResults = new Map<string, any>();
-    let messageIndex = 0;
+useEffect(() => {
+  if (status === 'running' && heroImages.length === 0 && !isGeneratingImage && !imageGenerationAttempted) {
+    setImageGenerationAttempted(true);
+    generateHeroImage();
+  }
+}, [status, heroImages.length, isGeneratingImage, imageGenerationAttempted, generateHeroImage]);
 
-    // First pass: collect all tool results by toolCallId
-    messages.forEach((message) => {
-      if (!message || !message.role) return;
+const timeline = useMemo(() => {
+  if (!messages || messages.length === 0) return [];
 
-      if (message.role === 'tool' && Array.isArray(message.content)) {
-        message.content.forEach((item: any) => {
-          if (item?.type === 'tool-result' && item.toolCallId) {
-            toolResults.set(item.toolCallId, {
+  const items: any[] = [];
+  const toolResults = new Map<string, any>();
+
+  // First pass: collect all tool results by toolCallId
+  messages.forEach((message) => {
+    if (!message || !message.role) return;
+
+    if (message.role === 'tool' && Array.isArray(message.content)) {
+      message.content.forEach((item: any) => {
+        if (item?.type === 'tool-result' && item.toolCallId) {
+          toolResults.set(item.toolCallId, {
+            type: 'tool-result' as const,
+            toolCallId: item.toolCallId,
+            output: item.output,
+          });
+        }
+      });
+    }
+  });
+
+  // Second pass: build timeline with tool-calls, tool-results, and text
+  const seenTexts = new Set<string>();
+
+  messages.forEach((message) => {
+    if (!message || !message.role) return;
+
+    if (message.role === 'assistant' && Array.isArray(message.content)) {
+      message.content.forEach((item: any) => {
+        if (!item || !item.type) return;
+
+        if (item.type === 'text' || item.type === 'reasoning') {
+          if (item.text) {
+            // Deduplicate text items by content
+            const textKey = `${item.type}:${item.text}`;
+            if (!seenTexts.has(textKey)) {
+              seenTexts.add(textKey);
+              items.push({
+                type: 'text' as const,
+                text: item.text,
+                contentType: item.type,
+                messageIndex,
+              });
+            }
+          }
+        } else if (item.type === 'tool-call') {
+          if (item.toolCallId && item.toolName) {
+            // Add the tool-call
+            items.push({
+              type: 'tool-call' as const,
+              toolCallId: item.toolCallId,
+              toolName: item.toolName,
+              input: item.input,
+              messageIndex,
+            });
+
+            // Immediately add its result if it exists
+            const result = toolResults.get(item.toolCallId);
+            if (result) {
+              items.push(result);
+            }
+          }
+        }
+      });
+      messageIndex++;
+    } else if (message.role === 'tool' && Array.isArray(message.content)) {
+      // Also process tool messages to show standalone tool results
+      message.content.forEach((item: any) => {
+        if (!item || !item.type) return;
+
+        if (item.type === 'tool-result' && item.toolCallId) {
+          // Only add if not already added via assistant message tool-call
+          const alreadyAdded = items.some(
+            (existingItem: any) =>
+              existingItem.type === 'tool-result' &&
+              existingItem.toolCallId === item.toolCallId
+          );
+
+          if (!alreadyAdded) {
+            items.push({
               type: 'tool-result' as const,
               toolCallId: item.toolCallId,
               output: item.output,
+              messageIndex,
             });
           }
-        });
-      }
-    });
+        }
+      });
+      messageIndex++;
+    }
+  });
 
-    // Second pass: build timeline with tool-calls, tool-results, and text
-    const seenTexts = new Set<string>();
-
-    messages.forEach((message) => {
-      if (!message || !message.role) return;
-
-      if (message.role === 'assistant' && Array.isArray(message.content)) {
-        message.content.forEach((item: any) => {
-          if (!item || !item.type) return;
-
-          if (item.type === 'text' || item.type === 'reasoning') {
-            if (item.text) {
-              // Deduplicate text items by content
-              const textKey = `${item.type}:${item.text}`;
-              if (!seenTexts.has(textKey)) {
-                seenTexts.add(textKey);
-                items.push({
-                  type: 'text' as const,
-                  text: item.text,
-                  contentType: item.type,
-                  messageIndex,
-                });
-              }
-            }
-          } else if (item.type === 'tool-call') {
-            if (item.toolCallId && item.toolName) {
-              // Add the tool-call
-              items.push({
-                type: 'tool-call' as const,
-                toolCallId: item.toolCallId,
-                toolName: item.toolName,
-                input: item.input,
-                messageIndex,
-              });
-
-              // Immediately add its result if it exists
-              const result = toolResults.get(item.toolCallId);
-              if (result) {
-                items.push(result);
-              }
-            }
-          }
-        });
-        messageIndex++;
-      } else if (message.role === 'tool' && Array.isArray(message.content)) {
-        // Also process tool messages to show standalone tool results
-        message.content.forEach((item: any) => {
-          if (!item || !item.type) return;
-
-          if (item.type === 'tool-result' && item.toolCallId) {
-            // Only add if not already added via assistant message tool-call
-            const alreadyAdded = items.some(
-              (existingItem: any) =>
-                existingItem.type === 'tool-result' &&
-                existingItem.toolCallId === item.toolCallId
-            );
-
-            if (!alreadyAdded) {
-              items.push({
-                type: 'tool-result' as const,
-                toolCallId: item.toolCallId,
-                output: item.output,
-                messageIndex,
-              });
-            }
-          }
-        });
-        messageIndex++;
-      }
-    });
-
-    return items;
-  }, [messages, messagesVersion]);
+  return items;
+}, [messages, messagesVersion]);
 
 
-  if (!displayLocation) return null;
+if (!displayLocation) return null;
 
-  return (
-    <div className="fixed inset-0 bg-background/70 backdrop-blur-md z-50 flex flex-col lg:flex-row overflow-hidden">
-      {/* Mini Globe - Desktop Left Side Collapsible */}
-      <AnimatePresence>
-        {showMiniGlobe && (
-          <motion.div
-            initial={{ width: 0 }}
-            animate={{ width: 384 }}
-            exit={{ width: 0 }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="hidden lg:block h-full border-r border-border/30 bg-background/20 backdrop-blur-sm overflow-hidden relative"
-          >
-            <div className="h-full p-4 flex flex-col">
-              <div className="flex items-center mb-2">
-                <div className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Location</div>
-              </div>
-              <div className="flex-1 rounded-lg overflow-hidden border border-border/50 shadow-xl">
-                <Globe
-                  onLocationClick={handleGlobeLocationClick}
-                  theme="satellite-streets-v12"
-                  initialCenter={globeInitialCenter}
-                  initialZoom={globeInitialCenter ? 4 : undefined}
-                  marker={globeMarker}
-                  disableInteraction={false}
-                />
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Mini Globe Toggle Button - Middle Left */}
-      <div className="hidden lg:flex absolute left-0 top-1/2 -translate-y-1/2 z-20" style={{ left: showMiniGlobe ? '384px' : '0px', transition: 'left 0.3s ease-in-out' }}>
-        <Button
-          variant="secondary"
-          size="sm"
-          onClick={() => setShowMiniGlobe(!showMiniGlobe)}
-          className="rounded-l-none rounded-r-lg h-16 w-6 px-0 border-l-0 shadow-md"
-          title={showMiniGlobe ? "Hide map" : "Show map"}
+return (
+  <div className="fixed inset-0 bg-background/70 backdrop-blur-md z-50 flex flex-col lg:flex-row overflow-hidden">
+    {/* Mini Globe - Desktop Left Side Collapsible */}
+    <AnimatePresence>
+      {showMiniGlobe && (
+        <motion.div
+          initial={{ width: 0 }}
+          animate={{ width: 384 }}
+          exit={{ width: 0 }}
+          transition={{ duration: 0.3, ease: "easeInOut" }}
+          className="hidden lg:block h-full border-r border-border/30 bg-background/20 backdrop-blur-sm overflow-hidden relative"
         >
-          {showMiniGlobe ? (
-            <ChevronLeft className="h-4 w-4" />
-          ) : (
-            <ChevronRight className="h-4 w-4" />
-          )}
-        </Button>
-      </div>
+          <div className="h-full p-4 flex flex-col">
+            <div className="flex items-center mb-2">
+              <div className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Emplacement</div>
+            </div>
+            <div className="flex-1 rounded-lg overflow-hidden border border-border/50 shadow-xl">
+              <Globe
+                onLocationClick={handleGlobeLocationClick}
+                theme="satellite-streets-v12"
+                initialCenter={globeInitialCenter}
+                initialZoom={globeInitialCenter ? 4 : undefined}
+                marker={globeMarker}
+                disableInteraction={false}
+              />
+            </div>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
 
-      {/* Main Content Area */}
-      <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Header */}
-        <div className="h-14 sm:h-16 border-b border-border/30 bg-background/30 backdrop-blur-xl flex items-center justify-between px-3 sm:px-6 z-10 flex-shrink-0">
+    {/* Mini Globe Toggle Button - Middle Left */}
+    <div className="hidden lg:flex absolute left-0 top-1/2 -translate-y-1/2 z-20" style={{ left: showMiniGlobe ? '384px' : '0px', transition: 'left 0.3s ease-in-out' }}>
+      <Button
+        variant="secondary"
+        size="sm"
+        onClick={() => setShowMiniGlobe(!showMiniGlobe)}
+        className="rounded-l-none rounded-r-lg h-16 w-6 px-0 border-l-0 shadow-md"
+        title={showMiniGlobe ? "Masquer la carte" : "Afficher la carte"}
+      >
+        {showMiniGlobe ? (
+          <ChevronLeft className="h-4 w-4" />
+        ) : (
+          <ChevronRight className="h-4 w-4" />
+        )}
+      </Button>
+    </div>
+
+    {/* Main Content Area */}
+    <div className="flex-1 flex flex-col overflow-hidden">
+      {/* Header */}
+      <div className="h-14 sm:h-16 border-b border-border/30 bg-background/30 backdrop-blur-xl flex items-center justify-between px-3 sm:px-6 z-10 flex-shrink-0">
         <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
           <MapPin className="h-4 w-4 sm:h-5 sm:w-5 text-primary flex-shrink-0" />
           <div className="min-w-0 flex-1 flex items-center">
@@ -974,17 +883,17 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
               ) : (
                 <Share2 className="h-4 w-4" />
               )}
-              <span className="hidden sm:inline">{copied ? 'Copied!' : 'Share'}</span>
+              <span className="hidden sm:inline">{copied ? 'Copié !' : 'Partager'}</span>
             </Button>
           )}
           <Button variant="ghost" size="icon" onClick={onClose} className="min-h-11 min-w-11">
             <X className="h-5 w-5" />
           </Button>
         </div>
-        </div>
+      </div>
 
-        {/* Content */}
-        <div className="flex-1 overflow-hidden">
+      {/* Content */}
+      <div className="flex-1 overflow-hidden">
         <ScrollArea className="h-full will-change-scroll" style={{ WebkitOverflowScrolling: 'touch' } as any}>
           <div className="max-w-4xl mx-auto p-3 sm:p-6 pb-safe space-y-4 sm:space-y-6 overflow-x-hidden transform-gpu">
             {/* Status */}
@@ -997,8 +906,8 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
                   >
                     <Clock className="h-8 w-8 text-yellow-500 mx-auto mb-4" />
                   </motion.div>
-                  <p className="text-sm font-medium mb-1">Research Queued</p>
-                  <p className="text-xs text-muted-foreground">Your request will begin shortly...</p>
+                  <p className="text-sm font-medium mb-1">Recherche en file d'attente</p>
+                  <p className="text-xs text-muted-foreground">Votre demande va commencer sous peu...</p>
                 </div>
               </div>
             )}
@@ -1047,7 +956,7 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
                     <div className="flex items-center justify-center py-3 sm:py-4">
                       <div className="text-center">
                         <p className="text-xs sm:text-sm font-light text-foreground/60">
-                          Generating report...
+                          Génération du rapport...
                         </p>
                       </div>
                     </div>
@@ -1058,7 +967,7 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
                 {timeline.length > 0 && status === 'running' && !content && (
                   <div className="space-y-3 sm:space-y-4" key={`timeline-${messages.length}-${timeline.length}`}>
                     <div className="text-[10px] sm:text-xs font-light text-muted-foreground/60 uppercase tracking-wider">
-                      Research Trace
+                      Trace de recherche
                     </div>
                     {timeline.map((item, idx) => (
                       <TimelineItem key={`timeline-${idx}`} item={item} idx={idx} timeline={timeline} animated={true} />
@@ -1070,7 +979,7 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
 
             {status === 'error' && (
               <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-6">
-                <h3 className="text-lg font-semibold text-destructive mb-2">Research Failed</h3>
+                <h3 className="text-lg font-semibold text-destructive mb-2">La recherche a échoué</h3>
                 <p className="text-sm text-muted-foreground">{error}</p>
               </div>
             )}
@@ -1093,7 +1002,7 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
                     >
                       <div className="flex items-center gap-1.5 sm:gap-2">
                         <CheckCircle2 className="h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0" />
-                        <span>Research Complete</span>
+                        <span>Recherche terminée</span>
                       </div>
                       {messages && messages.length > 0 && (
                         <Button
@@ -1104,7 +1013,7 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
                           onClick={() => setShowReasoningDialog(true)}
                         >
                           <Brain className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
-                          <span className="text-[10px] sm:text-xs">View Reasoning</span>
+                          <span className="text-[10px] sm:text-xs">Voir le raisonnement</span>
                         </Button>
                       )}
                     </motion.div>
@@ -1130,13 +1039,13 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
             {/* Images */}
             {images.length > 0 && (
               <div className="space-y-3 sm:space-y-4">
-                <h3 className="text-base sm:text-lg font-semibold">Research Images</h3>
+                <h3 className="text-base sm:text-lg font-semibold">Images de la recherche</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
                   {images.map((image, index) => (
                     <div key={index} className="border rounded-lg overflow-hidden">
                       <img
                         src={image.image_url}
-                        alt={image.title || `Research image ${index + 1}`}
+                        alt={image.title || `Image de recherche ${index + 1}`}
                         className="w-full h-auto"
                       />
                       {image.title && (
@@ -1157,8 +1066,8 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
             {sources.length > 0 && status === 'completed' && (
               <div className="space-y-3 sm:space-y-4">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-base sm:text-lg font-semibold">All Sources</h3>
-                  <span className="text-xs sm:text-sm text-muted-foreground">{sources.length} total</span>
+                  <h3 className="text-base sm:text-lg font-semibold">Toutes les sources</h3>
+                  <span className="text-xs sm:text-sm text-muted-foreground">{sources.length} au total</span>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-2 sm:gap-3">
                   {sources.map((source, index) => {
@@ -1220,7 +1129,7 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
                     >
                       {metrics.wordsRead.toLocaleString()}
                     </motion.p>
-                    <p className="text-[9px] sm:text-xs font-medium text-muted-foreground uppercase tracking-wide">Words Read</p>
+                    <p className="text-[9px] sm:text-xs font-medium text-muted-foreground uppercase tracking-wide">Mots lus</p>
                   </div>
                   <div className="text-center">
                     <motion.p
@@ -1242,48 +1151,48 @@ export function HistoryResearchInterface({ location, onClose, onTaskCreated, ini
                     >
                       {metrics.hoursActuallySaved.toFixed(1)}h
                     </motion.p>
-                    <p className="text-[9px] sm:text-xs font-medium text-muted-foreground uppercase tracking-wide">Time Saved</p>
+                    <p className="text-[9px] sm:text-xs font-medium text-muted-foreground uppercase tracking-wide">Temps gagné</p>
                   </div>
                 </motion.div>
               );
             })()}
           </div>
         </ScrollArea>
-        </div>
+      </div>
 
-        {/* Mini Globe - Mobile Bottom */}
-        <div className="lg:hidden h-48 border-t border-border/30 bg-background/20 backdrop-blur-sm flex-shrink-0">
-          <div className="h-full p-2">
-            <div className="h-full rounded-lg overflow-hidden border border-border/50 shadow-xl">
-              <Globe
-                onLocationClick={handleGlobeLocationClick}
-                theme="satellite-streets-v12"
-                initialCenter={globeInitialCenter}
-                initialZoom={globeInitialCenter ? 3 : undefined}
-                marker={globeMarker}
-                disableInteraction={false}
-              />
-            </div>
+      {/* Mini Globe - Mobile Bottom */}
+      <div className="lg:hidden h-48 border-t border-border/30 bg-background/20 backdrop-blur-sm flex-shrink-0">
+        <div className="h-full p-2">
+          <div className="h-full rounded-lg overflow-hidden border border-border/50 shadow-xl">
+            <Globe
+              onLocationClick={handleGlobeLocationClick}
+              theme="satellite-streets-v12"
+              initialCenter={globeInitialCenter}
+              initialZoom={globeInitialCenter ? 3 : undefined}
+              marker={globeMarker}
+              disableInteraction={false}
+            />
           </div>
         </div>
       </div>
-
-      {/* Reasoning Dialog */}
-      <ReasoningDialog
-        open={showReasoningDialog}
-        onOpenChange={setShowReasoningDialog}
-        stepCount={messages?.length}
-      >
-        {timeline.length > 0 ? (
-          timeline.map((item, idx) => (
-            <TimelineItem key={`dialog-timeline-${idx}`} item={item} idx={idx} timeline={timeline} animated={false} />
-          ))
-        ) : (
-          <div className="text-center py-8 text-muted-foreground">
-            No activity data available for this task.
-          </div>
-        )}
-      </ReasoningDialog>
     </div>
-  );
+
+    {/* Reasoning Dialog */}
+    <ReasoningDialog
+      open={showReasoningDialog}
+      onOpenChange={setShowReasoningDialog}
+      stepCount={messages?.length}
+    >
+      {timeline.length > 0 ? (
+        timeline.map((item, idx) => (
+          <TimelineItem key={`dialog-timeline-${idx}`} item={item} idx={idx} timeline={timeline} animated={false} />
+        ))
+      ) : (
+        <div className="text-center py-8 text-muted-foreground">
+          Aucune donnée d'activité disponible pour cette tâche.
+        </div>
+      )}
+    </ReasoningDialog>
+  </div>
+);
 }

@@ -33,12 +33,12 @@ export function ReasoningDialog({
             </div>
             <div className="min-w-0">
               <DialogTitle className="text-sm sm:text-base md:text-lg truncate">
-                AI Reasoning Process
+                Processus de raisonnement de l'IA
               </DialogTitle>
               <DialogDescription className="text-[10px] sm:text-xs mt-0.5 truncate">
                 {stepCount
-                  ? `Complete activity log with ${stepCount} steps`
-                  : "Complete activity log and tool usage"}
+                  ? `Journal d'activité complet avec ${stepCount} étapes`
+                  : "Journal d'activité complet et utilisation des outils"}
               </DialogDescription>
             </div>
           </div>

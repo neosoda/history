@@ -36,30 +36,28 @@ export function ModelCompatibilityDialog({
             <div className="p-2 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg">
               <AlertTriangle className="h-5 w-5 text-yellow-600 dark:text-yellow-500" />
             </div>
-            <DialogTitle>Model Compatibility Issue</DialogTitle>
+            <DialogTitle>Problème de compatibilité du modèle</DialogTitle>
           </div>
           <DialogDescription className="text-left">
             {isToolError && (
               <>
                 <p className="mb-2">
-                  <span className="font-semibold">{modelName || "This model"}</span> doesn&apos;t support
-                  tool calling (function calls).
+                  <span className="font-semibold">{modelName || "Ce modèle"}</span> ne supporte pas
+                  l'appel d'outils (appels de fonctions).
                 </p>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                  This means it won&apos;t be able to execute Python code, search the web, fetch biomedical
-                  data, or use other interactive tools. You can still have a conversation, but functionality
-                  will be limited to text responses only.
+                  Cela signifie qu'il ne pourra pas exécuter de code Python, effectuer des recherches sur le web, récupérer des données biomédicales ou utiliser d'autres outils interactifs. Vous pouvez toujours avoir une conversation, mais les fonctionnalités seront limitées aux réponses textuelles uniquement.
                 </p>
               </>
             )}
             {isThinkingError && (
               <>
                 <p className="mb-2">
-                  <span className="font-semibold">{modelName || "This model"}</span> doesn&apos;t support
-                  thinking mode (chain-of-thought reasoning).
+                  <span className="font-semibold">{modelName || "Ce modèle"}</span> ne supporte pas
+                  le mode réflexion (raisonnement en chaîne de pensée).
                 </p>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                  The model will still work normally, but won&apos;t show its reasoning steps.
+                  Le modèle fonctionnera toujours normalement, mais n'affichera pas ses étapes de raisonnement.
                 </p>
               </>
             )}
@@ -72,10 +70,10 @@ export function ModelCompatibilityDialog({
         </DialogHeader>
         <div className="flex flex-col gap-2 mt-4">
           <Button onClick={onContinue} className="w-full">
-            Continue Anyway
+            Continuer quand même
           </Button>
           <Button onClick={onClose} variant="outline" className="w-full">
-            Cancel
+            Annuler
           </Button>
         </div>
       </DialogContent>

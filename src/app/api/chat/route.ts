@@ -104,7 +104,7 @@ export async function POST(req: Request) {
       return new Response(
         JSON.stringify({
           error: "AUTH_REQUIRED",
-          message: "Sign in with Valyu to continue",
+          message: "Connectez-vous avec Valyu pour continuer",
           action: "sign_in"
         }),
         { status: 401, headers: { 'Content-Type': 'application/json' } }
@@ -120,21 +120,15 @@ export async function POST(req: Request) {
     // Save user message immediately (before processing starts)
     if (user && sessionId && messages.length > 0) {
       if (lastMessage.role === 'user') {
-        const { randomUUID } = await import('crypto');
-        const userMessageToSave = {
-          id: randomUUID(),
-          role: 'user' as const,
-          content: [{ type: 'text', text: typeof lastMessage.content === 'string' ? lastMessage.content : JSON.stringify(lastMessage.content) }],
-        };
-
-        const { data: existingMessages } = await db.getChatMessages(sessionId);
-        const allMessages = [...(existingMessages || []), userMessageToSave];
-
-        await saveChatMessages(sessionId, allMessages.map((msg: any) => ({
-          id: msg.id,
-          role: msg.role,
-          content: typeof msg.content === 'string' ? JSON.parse(msg.content) : msg.content,
-        })));
+        const userMessageId = crypto.randomUUID();
+        await db.addChatMessage(sessionId, {
+          id: userMessageId,
+          role: 'user',
+          content: [{
+            type: 'text',
+            text: typeof lastMessage.content === 'string' ? lastMessage.content : JSON.stringify(lastMessage.content)
+          }],
+        });
 
         await db.updateChatSession(sessionId, user.id, {
           last_message_at: new Date()
@@ -152,21 +146,21 @@ export async function POST(req: Request) {
     );
 
     if (isDefaultMessage) {
-      researchQuery = `Provide a comprehensive historical overview of this location, covering major events, cultural significance, and key developments throughout history.\n\nLocation: ${location.name}`;
+      researchQuery = `Fournissez un aperçu historique complet de ce lieu, couvrant les événements majeurs, l'importance culturelle et les développements clés à travers l'histoire.\n\nLieu : ${location.name}`;
     }
 
     // Create DeepResearch task - always use 'fast' model (credits managed by Valyu)
     const taskResponse = isDevelopment && !valyuAccessToken
       ? await callDeepResearchApiDev({
-          input: researchQuery,
-          model: 'fast',
-          output_formats: ['markdown']
-        })
+        input: researchQuery,
+        model: 'fast',
+        output_formats: ['markdown']
+      })
       : await callDeepResearchApi({
-          input: researchQuery,
-          model: 'fast',
-          output_formats: ['markdown']
-        }, valyuAccessToken!);
+        input: researchQuery,
+        model: 'fast',
+        output_formats: ['markdown']
+      }, valyuAccessToken!);
 
     if (!taskResponse.ok) {
       const errorData = await taskResponse.json().catch(() => ({}));
@@ -176,7 +170,7 @@ export async function POST(req: Request) {
         return new Response(
           JSON.stringify({
             error: "INSUFFICIENT_CREDITS",
-            message: "Insufficient Valyu credits. Add credits at platform.valyu.ai",
+            message: "Crédits Valyu insuffisants. Ajoutez des crédits sur platform.valyu.ai",
             action: "add_credits"
           }),
           { status: 402, headers: { 'Content-Type': 'application/json' } }
@@ -189,10 +183,10 @@ export async function POST(req: Request) {
     const taskData = await taskResponse.json();
     const taskId = taskData.deepsearch_id || taskData.deepresearch_id;
 
-    // Save research task to database
+    // Save research task to database with sessionId link
     if (!isDevelopment && user) {
       try {
-        const taskRecord = {
+        await db.createResearchTask({
           id: crypto.randomUUID(),
           user_id: user.id,
           deepresearch_id: taskId,
@@ -200,11 +194,10 @@ export async function POST(req: Request) {
           location_lat: location?.lat || 0,
           location_lng: location?.lng || 0,
           status: 'queued',
-        };
-
-        await db.createResearchTask(taskRecord);
+          session_id: sessionId,
+        });
       } catch (error) {
-        // Don't fail the request if database save fails
+        console.error('[Chat] Failed to create research task record:', error);
       }
     }
 
@@ -262,11 +255,11 @@ export async function POST(req: Request) {
 
           let completed = false;
           let pollCount = 0;
-          const maxPolls = 840; // 14 minutes
+          const maxServerPolls = 30; // Max 30 seconds of streaming from server
           let lastMessagesLength = 0;
           let hasSetRunning = false;
 
-          while (!completed && pollCount < maxPolls) {
+          while (!completed && pollCount < maxServerPolls) {
             await new Promise(resolve => setTimeout(resolve, 1000));
             pollCount++;
 
@@ -281,29 +274,18 @@ export async function POST(req: Request) {
             if (statusData.status === 'running') {
               if (!isDevelopment && !hasSetRunning) {
                 hasSetRunning = true;
-                try {
-                  await db.updateResearchTaskByDeepResearchId(taskId, {
-                    status: 'running',
-                  });
-                } catch (error) {
-                  // Fail silently
-                }
+                db.updateResearchTaskByDeepResearchId(taskId, { status: 'running' }).catch(() => { });
               }
 
-              // Progress info is in statusData.progress object
               const progress = statusData.progress || {};
-              const currentStep = progress.current_step || progress.step || 0;
-              const totalSteps = progress.total_steps || progress.total || 10;
-              const progressMessage = progress.message || `Researching... (${currentStep}/${totalSteps} steps)`;
-
               controller.enqueue(
                 encoder.encode(
                   `data: ${JSON.stringify({
                     type: 'progress',
                     status: 'running',
-                    message: progressMessage,
-                    current_step: currentStep,
-                    total_steps: totalSteps,
+                    message: progress.message || 'Researching...',
+                    current_step: progress.current_step || 0,
+                    total_steps: progress.total_steps || 10,
                   })}\n\n`
                 )
               );
@@ -311,102 +293,46 @@ export async function POST(req: Request) {
               lastMessagesLength = streamMessages(controller, encoder, statusData.messages, lastMessagesLength);
             } else if (statusData.status === 'completed') {
               completed = true;
-
               lastMessagesLength = streamMessages(controller, encoder, statusData.messages, lastMessagesLength);
-
-              const output = statusData.output || '';
-              const sources = statusData.sources || [];
-              const images = statusData.images || [];
 
               controller.enqueue(
                 encoder.encode(
                   `data: ${JSON.stringify({
                     type: 'content',
-                    content: output,
+                    content: statusData.output || '',
                   })}\n\n`
                 )
               );
 
-              if (sources.length > 0) {
-                controller.enqueue(
-                  encoder.encode(
-                    `data: ${JSON.stringify({
-                      type: 'sources',
-                      sources: sources,
-                    })}\n\n`
-                  )
-                );
+              if (statusData.sources?.length > 0) {
+                controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'sources', sources: statusData.sources })}\n\n`));
               }
 
-              if (images.length > 0) {
-                controller.enqueue(
-                  encoder.encode(
-                    `data: ${JSON.stringify({
-                      type: 'images',
-                      images: images,
-                    })}\n\n`
-                  )
-                );
-              }
-
-              // Save assistant message to database
-              if (user && sessionId) {
-                const processingEndTime = Date.now();
-                const processingTimeMs = processingEndTime - processingStartTime;
-
-                const { randomUUID } = await import('crypto');
-                const assistantMessage = {
-                  id: randomUUID(),
-                  role: 'assistant' as const,
-                  content: [{ type: 'text', text: output }],
-                  processing_time_ms: processingTimeMs,
-                };
-
-                const { data: existingMessages } = await db.getChatMessages(sessionId);
-                const allMessages = [...(existingMessages || []), assistantMessage];
-
-                await saveChatMessages(sessionId, allMessages.map((msg: any) => ({
-                  id: msg.id,
-                  role: msg.role,
-                  content: typeof msg.content === 'string' ? JSON.parse(msg.content) : msg.content,
-                  processing_time_ms: msg.processing_time_ms,
-                })));
-
-                await db.updateChatSession(sessionId, user.id, {
-                  last_message_at: new Date()
-                });
-              }
-
+              // Finalize in DB (the poll route will also do this, but we do it here if we're still connected)
               if (!isDevelopment) {
-                try {
-                  await db.updateResearchTaskByDeepResearchId(taskId, {
-                    status: 'completed',
-                    completed_at: new Date(),
-                  });
-                } catch (error) {
-                  // Fail silently
+                db.updateResearchTaskByDeepResearchId(taskId, {
+                  status: 'completed',
+                  completed_at: new Date(),
+                }).catch(() => { });
+
+                if (sessionId) {
+                  db.addChatMessage(sessionId, {
+                    id: `ai-${taskId}`,
+                    role: 'assistant',
+                    content: [{ type: 'text', text: statusData.output || '' }],
+                    processing_time_ms: Date.now() - processingStartTime,
+                  }).catch(() => { });
                 }
               }
 
-              controller.enqueue(
-                encoder.encode(
-                  `data: ${JSON.stringify({
-                    type: 'done',
-                  })}\n\n`
-                )
-              );
+              controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'done' })}\n\n`));
             } else if (statusData.status === 'failed') {
               if (!isDevelopment) {
-                try {
-                  await db.updateResearchTaskByDeepResearchId(taskId, {
-                    status: 'failed',
-                    completed_at: new Date(),
-                  });
-                } catch (error) {
-                  // Fail silently
-                }
+                db.updateResearchTaskByDeepResearchId(taskId, {
+                  status: 'failed',
+                  completed_at: new Date(),
+                }).catch(() => { });
               }
-
               throw new Error(statusData.error || 'Research task failed');
             }
           }

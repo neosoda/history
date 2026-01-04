@@ -53,22 +53,22 @@ export function SignupPrompt({ open, onClose, onSignUp }: SignupPromptProps) {
 
                 {/* Title */}
                 <h2 className="text-lg sm:text-2xl font-semibold text-center mb-2 text-foreground px-2">
-                  Sign in to Continue
+                  Connectez-vous pour continuer
                 </h2>
 
                 {/* Subtitle */}
                 <p className="text-center text-sm sm:text-base text-muted-foreground mb-4 sm:mb-6 px-2">
-                  Sign in with Valyu to run deep research queries
+                  Connectez-vous avec Valyu pour lancer des recherches approfondies
                 </p>
 
                 {/* Free Credits Badge */}
                 <div className="bg-green-500/10 border border-green-500/20 rounded-xl p-4 mb-6">
                   <div className="flex items-center justify-center gap-2 mb-1">
                     <Gift className="h-5 w-5 text-green-600 dark:text-green-400" />
-                    <span className="text-green-600 dark:text-green-400 font-bold">$10 Free Credits</span>
+                    <span className="text-green-600 dark:text-green-400 font-bold">10$ de crédits offerts</span>
                   </div>
                   <p className="text-center text-xs text-muted-foreground">
-                    New accounts get $10 in free search credits
+                    Les nouveaux comptes reçoivent 10$ de crédits de recherche offerts
                   </p>
                 </div>
 
@@ -80,10 +80,10 @@ export function SignupPrompt({ open, onClose, onSignUp }: SignupPromptProps) {
                     </div>
                     <div className="min-w-0 flex-1">
                       <h3 className="font-semibold text-xs sm:text-sm text-foreground">
-                        Unlimited Deep Research
+                        Recherche approfondie illimitée
                       </h3>
                       <p className="text-[10px] sm:text-xs text-muted-foreground">
-                        Run as many queries as you need with your Valyu credits
+                        Lancez autant de requêtes que nécessaire avec vos crédits Valyu
                       </p>
                     </div>
                   </div>
@@ -93,10 +93,10 @@ export function SignupPrompt({ open, onClose, onSignUp }: SignupPromptProps) {
                     </div>
                     <div className="min-w-0 flex-1">
                       <h3 className="font-semibold text-xs sm:text-sm text-foreground">
-                        Save Your Research
+                        Sauvegardez vos recherches
                       </h3>
                       <p className="text-[10px] sm:text-xs text-muted-foreground">
-                        Access your research history anytime, anywhere
+                        Accédez à votre historique à tout moment, n'importe où
                       </p>
                     </div>
                   </div>
@@ -109,7 +109,7 @@ export function SignupPrompt({ open, onClose, onSignUp }: SignupPromptProps) {
                   className="w-full min-h-11 sm:min-h-12 text-sm sm:text-base bg-black hover:bg-gray-800 text-white font-medium"
                 >
                   <span className="flex items-center justify-center gap-3">
-                    <span>Sign in with</span>
+                    <span>Se connecter avec</span>
                     <Image
                       src="/valyu.svg"
                       alt="Valyu"
@@ -122,7 +122,7 @@ export function SignupPrompt({ open, onClose, onSignUp }: SignupPromptProps) {
 
                 {/* Note */}
                 <p className="text-center text-[10px] sm:text-xs text-muted-foreground mt-3 sm:mt-4">
-                  Super frictionless. Create an account in seconds.
+                  Sans friction. Créez un compte en quelques secondes.
                 </p>
               </div>
             </div>

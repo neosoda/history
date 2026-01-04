@@ -9,7 +9,7 @@ const logos = [
   {
     name: "PubMed Literature",
     src: "/pubmed.svg",
-    description: "Access PubMed biomedical literature",
+    description: "Accédez à la littérature biomédicale de PubMed",
     snippets: [
       {
         language: "Python",
@@ -17,17 +17,17 @@ const logos = [
 
 valyu = Valyu(api_key="<your_api_key>")
 
-# Search for biomedical literature
+# Recherche de littérature biomédicale
 response = valyu.search(
-    "pembrolizumab efficacy in NSCLC",
+    "efficacité du pembrolizumab dans le NSCLC",
     included_sources=["valyu/valyu-pubmed"]
-    # or leave included_sources empty and we'll figure it out for you
+    # ou laissez included_sources vide et nous le trouverons pour vous
 )
 
-# Access the results
+# Accéder aux résultats
 for result in response.results:
-    print(f"Title: {result.title}")
-    print(f"Content: {result.content[:200]}...")`,
+    print(f"Titre : {result.title}")
+    print(f"Contenu : {result.content[:200]}...")`,
       },
       {
         language: "TypeScript",
@@ -35,14 +35,14 @@ for result in response.results:
 
 const valyu = new Valyu({ apiKey: '<your_api_key>' });
 
-// Search for biomedical literature
+// Recherche de littérature biomédicale
 const response = await valyu.search({
-    query: 'pembrolizumab efficacy in NSCLC',
+    query: 'efficacité du pembrolizumab dans le NSCLC',
     includedSources: ['valyu/valyu-pubmed'],
-    // or leave included_sources empty and we'll figure it out for you
+    // ou laissez included_sources vide et nous le trouverons pour vous
 });
 
-// Access the results
+// Accéder aux résultats
 response.results.forEach(result => {
 });`,
       },
@@ -52,8 +52,8 @@ response.results.forEach(result => {
   -H "x-api-key: <your_api_key>" \\
   -H "Content-Type: application/json" \\
   -d '{
-    "query": "pembrolizumab efficacy in NSCLC",
-    "included_sources": ["valyu/valyu-pubmed"] # or leave this empty and we'll figure it out for you
+    "query": "efficacité du pembrolizumab dans le NSCLC",
+    "included_sources": ["valyu/valyu-pubmed"] # ou laissez vide et nous le trouverons pour vous
   }'`,
       },
     ],
@@ -61,7 +61,7 @@ response.results.forEach(result => {
   {
     name: "arXiv Papers",
     src: "/arxiv.svg",
-    description: "Search academic papers from arXiv",
+    description: "Recherchez des articles académiques sur arXiv",
     snippets: [
       {
         language: "Python",
@@ -69,17 +69,17 @@ response.results.forEach(result => {
 
 valyu = Valyu(api_key="<your_api_key>")
 
-# Search for academic papers
+# Recherche d'articles académiques
 response = valyu.search(
-    "transformer architecture attention mechanism",
-    included_sources=["valyu/valyu-arxiv"] # or leave this empty and we'll figure it out for you
+    "architecture transformer et mécanisme d'attention",
+    included_sources=["valyu/valyu-arxiv"] # ou laissez vide et nous trouverons pour vous
 )
 
-# Get paper details
+# Obtenir les détails de l'article
 for paper in response.results:
-    print(f"Title: {paper.title}")
-    print(f"Authors: {paper.metadata.get('authors', [])}")
-    print(f"Abstract: {paper.content[:300]}...")`,
+    print(f"Titre : {paper.title}")
+    print(f"Auteurs : {paper.metadata.get('authors', [])}")
+    print(f"Résumé : {paper.content[:300]}...")`,
       },
       {
         language: "TypeScript",
@@ -87,13 +87,13 @@ for paper in response.results:
 
 const valyu = new Valyu({ apiKey: '<your_api_key>' });
 
-// Search for academic papers
+// Recherche d'articles académiques
 const response = await valyu.search({
-    query: 'transformer architecture attention mechanism',
-    includedSources: ['valyu/valyu-arxiv'], // or leave this empty and we'll figure it out for you
+    query: 'architecture transformer et mécanisme d\'attention',
+    includedSources: ['valyu/valyu-arxiv'], // ou laissez vide et nous trouverons pour vous
 });
 
-// Get paper details
+// Obtenir les détails de l'article
 response.results.forEach(paper => {
 });`,
       },
@@ -103,8 +103,8 @@ response.results.forEach(paper => {
   -H "x-api-key: <your_api_key>" \\
   -H "Content-Type: application/json" \\
   -d '{
-    "query": "transformer architecture attention mechanism",
-    "included_sources": ["valyu/valyu-arxiv"] # or leave this empty and we'll figure it out for you
+    "query": "architecture transformer et mécanisme d'attention",
+    "included_sources": ["valyu/valyu-arxiv"] # ou laissez vide et nous trouverons pour vous
   }'`,
       },
     ],
@@ -112,7 +112,7 @@ response.results.forEach(paper => {
   {
     name: "Clinical Trials",
     src: "/clinicaltrials.svg",
-    description: "Clinical trial data from ClinicalTrials.gov",
+    description: "Données d'essais cliniques de ClinicalTrials.gov",
     snippets: [
       {
         language: "Python",
@@ -120,20 +120,20 @@ response.results.forEach(paper => {
 
 valyu = Valyu(api_key="<your_api_key>")
 
-# Search for clinical trials
+# Recherche d'essais cliniques
 response = valyu.search(
-    "pembrolizumab NSCLC Phase 3 trials",
+    "pembrolizumab NSCLC essais Phase 3",
     included_sources=[
         "valyu/valyu-clinical-trials"
-    ] # or leave this empty and we'll figure it out for you
+    ] # ou laissez vide et nous trouverons pour vous
 )
 
-# Extract clinical trial data
+# Extraire les données des essais cliniques
 for trial in response.results:
-    print(f"Trial ID: {trial.metadata.get('nct_id')}")
-    print(f"Phase: {trial.metadata.get('phase')}")
-    print(f"Status: {trial.metadata.get('status')}")
-    print(f"Data: {trial.content}")`,
+    print(f"ID Essai : {trial.metadata.get('nct_id')}")
+    print(f"Phase : {trial.metadata.get('phase')}")
+    print(f"Statut : {trial.metadata.get('status')}")
+    print(f"Données : {trial.content}")`,
       },
       {
         language: "TypeScript",
@@ -141,15 +141,15 @@ for trial in response.results:
 
 const valyu = new Valyu({ apiKey: '<your_api_key>' });
 
-// Search for clinical trials
+// Recherche d'essais cliniques
 const response = await valyu.search({
-    query: 'pembrolizumab NSCLC Phase 3 trials',
+    query: 'pembrolizumab NSCLC essais Phase 3',
     includedSources: [
         "valyu/valyu-clinical-trials"
-    ], // or leave this empty and we'll figure it out for you
+    ], // ou laissez vide et nous trouverons pour vous
 });
 
-// Extract clinical trial data
+// Extraire les données des essais cliniques
 response.results.forEach(trial => {
 });`,
       },
@@ -159,10 +159,10 @@ response.results.forEach(trial => {
   -H "x-api-key: <your_api_key>" \\
   -H "Content-Type: application/json" \\
   -d '{
-    "query": "pembrolizumab NSCLC Phase 3 trials",
+    "query": "pembrolizumab NSCLC essais Phase 3",
     "included_sources": [
         "valyu/valyu-clinical-trials"
-    ] # or leave this empty and we'll figure it out for you
+    ] # ou laissez vide et nous trouverons pour vous
   }'`,
       },
     ],
@@ -170,7 +170,7 @@ response.results.forEach(trial => {
   {
     name: "FDA Drug Labels",
     src: "/fda.svg",
-    description: "FDA-approved drug information and labels",
+    description: "Informations et étiquettes des médicaments approuvés par la FDA",
     snippets: [
       {
         language: "Python",
@@ -178,19 +178,19 @@ response.results.forEach(trial => {
 
 valyu = Valyu(api_key="<your_api_key>")
 
-# Search for FDA drug information
+# Recherche d'informations sur les médicaments FDA
 response = valyu.search(
-    "pembrolizumab FDA label dosing information",
+    "dosage notice pembrolizumab FDA",
     included_sources=[
         'valyu/valyu-fda-drug-labels'
-    ] # or leave this empty and we'll figure it out for you
+    ] # ou laissez vide et nous trouverons pour vous
 )
 
-# Get drug information
+# Obtenir les informations sur le médicament
 for drug in response.results:
-    print(f"Drug: {drug.metadata.get('drug_name')}")
-    print(f"Indication: {drug.metadata.get('indication')}")
-    print(f"Label Info: {drug.content}")`,
+    print(f"Médicament : {drug.metadata.get('drug_name')}")
+    print(f"Indication : {drug.metadata.get('indication')}")
+    print(f"Notice : {drug.content}")`,
       },
       {
         language: "TypeScript",
@@ -198,15 +198,15 @@ for drug in response.results:
 
 const valyu = new Valyu({ apiKey: '<your_api_key>' });
 
-// Search for FDA drug information
+// Recherche d'informations sur les médicaments FDA
 const response = await valyu.search({
-    query: 'pembrolizumab FDA label dosing information',
+    query: 'dosage notice pembrolizumab FDA',
     includedSources: [
         'valyu/valyu-fda-drug-labels'
-    ], // or leave this empty and we'll figure it out for you
+    ], // ou laissez vide et nous trouverons pour vous
 });
 
-// Get drug information
+// Obtenir les informations sur le médicament
 response.results.forEach(drug => {
 });`,
       },
@@ -216,10 +216,10 @@ response.results.forEach(drug => {
   -H "x-api-key: <your_api_key>" \\
   -H "Content-Type: application/json" \\
   -d '{
-    "query": "pembrolizumab FDA label dosing information",
+    "query": "dosage notice pembrolizumab FDA",
     "included_sources": [
         "valyu/valyu-fda-drug-labels"
-    ] # or leave this empty and we'll figure it out for you
+    ] # ou laissez vide et nous trouverons pour vous
   }'`,
       },
     ],
@@ -227,7 +227,7 @@ response.results.forEach(drug => {
   {
     name: "Web Search",
     src: "/web.svg",
-    description: "General web search with relevance scoring",
+    description: "Recherche web générale avec score de pertinence",
     snippets: [
       {
         language: "Python",
@@ -235,17 +235,17 @@ response.results.forEach(drug => {
 
 valyu = Valyu(api_key="<your_api_key>")
 
-# Search across the web
+# Recherche sur le web
 response = valyu.search(
-    "CRISPR gene therapy latest developments 2024"
+    "développements récents thérapie génique CRISPR 2024"
 )
 
-# Get ranked results
+# Obtenir les résultats classés
 for result in response.results:
-    print(f"Title: {result.title}")
-    print(f"URL: {result.metadata.get('url')}")
-    print(f"Relevance: {result.metadata.get('relevance_score')}")
-    print(f"Content: {result.content[:200]}...")`,
+    print(f"Titre : {result.title}")
+    print(f"URL : {result.metadata.get('url')}")
+    print(f"Pertinence : {result.metadata.get('relevance_score')}")
+    print(f"Contenu : {result.content[:200]}...")`,
       },
       {
         language: "TypeScript",
@@ -253,12 +253,12 @@ for result in response.results:
 
 const valyu = new Valyu({ apiKey: '<your_api_key>' });
 
-// Search across the web
+// Recherche sur le web
 const response = await valyu.search({
-    query: 'CRISPR gene therapy latest developments 2024'
+    query: 'développements récents thérapie génique CRISPR 2024'
 });
 
-// Get ranked results
+// Obtenir les résultats classés
 response.results.forEach(result => {
 });`,
       },
@@ -268,7 +268,7 @@ response.results.forEach(result => {
   -H "x-api-key: <your_api_key>" \\
   -H "Content-Type: application/json" \\
   -d '{
-    "query": "CRISPR gene therapy latest developments 2024"
+    "query": "développements récents thérapie génique CRISPR 2024"
   }'`,
       },
     ],
@@ -276,7 +276,7 @@ response.results.forEach(result => {
   {
     name: "Wiley",
     src: "/wy.svg",
-    description: "Academic research from Wiley publications",
+    description: "Recherche académique via les publications Wiley",
     snippets: [
       {
         language: "Python",
@@ -284,21 +284,21 @@ response.results.forEach(result => {
 
 valyu = Valyu(api_key="<your_api_key>")
 
-# Search Wiley research publications
+# Recherche de publications Wiley
 response = valyu.search(
-    "immunotherapy mechanisms of action",
+    "mécanismes d'action de l'immunothérapie",
     included_sources=[
         "valyu/wiley-biomedical-books",
         "valyu/wiley-biomedical-papers"
-    ] # or leave this empty and we'll pick the best sources for you
+    ] # ou laissez vide et nous choisirons les meilleures sources
 )
 
-# Access research papers
+# Accéder aux articles
 for paper in response.results:
-    print(f"Title: {paper.title}")
-    print(f"Journal: {paper.metadata.get('journal')}")
-    print(f"DOI: {paper.metadata.get('doi')}")
-    print(f"Abstract: {paper.content[:300]}...")`,
+    print(f"Titre : {paper.title}")
+    print(f"Journal : {paper.metadata.get('journal')}")
+    print(f"DOI : {paper.metadata.get('doi')}")
+    print(f"Résumé : {paper.content[:300]}...")`,
       },
       {
         language: "TypeScript",
@@ -306,16 +306,16 @@ for paper in response.results:
 
 const valyu = new Valyu({ apiKey: '<your_api_key>' });
 
-// Search Wiley research publications
+// Recherche de publications Wiley
 const response = await valyu.search({
-    query: 'immunotherapy mechanisms of action',
+    query: 'mécanismes d\'action de l\'immunothérapie',
     includedSources: [
         "valyu/wiley-biomedical-books",
         "valyu/wiley-biomedical-papers"
-    ], // or leave this empty and we'll pick the best sources for you
+    ], // ou laissez vide et nous choisirons les meilleures sources
 });
 
-// Access research papers
+// Accéder aux articles
 response.results.forEach(paper => {
 });`,
       },
@@ -325,11 +325,11 @@ response.results.forEach(paper => {
   -H "x-api-key: <your_api_key>" \\
   -H "Content-Type: application/json" \\
   -d '{
-    "query": "immunotherapy mechanisms of action",
+    "query": "mécanismes d'action de l'immunothérapie",
     "included_sources": [
         "valyu/wiley-biomedical-books",
         "valyu/wiley-biomedical-papers"
-    ] # or leave this empty and we'll pick the best sources for you
+    ] # ou laissez vide et nous choisirons les meilleures sources
   }'`,
       },
     ],

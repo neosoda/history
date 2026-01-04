@@ -57,39 +57,39 @@ export function MissingKeysDialog() {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="max-w-lg">
         <DialogHeader>
-          <DialogTitle>Setup Required</DialogTitle>
+          <DialogTitle>Configuration requise</DialogTitle>
           <DialogDescription>
-            This app requires API keys for full functionality. Some features are disabled until keys are added.
+            Cette application nécessite des clés API pour fonctionner pleinement. Certaines fonctionnalités sont désactivées tant que les clés ne sont pas ajoutées.
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-3 text-sm">
           {missingDeepResearch && (
             <div className="rounded-md border p-3">
-              <div className="font-medium">Missing DeepResearch API Key</div>
+              <div className="font-medium">Clé API DeepResearch manquante</div>
               <div className="text-muted-foreground">
-                Add DEEPRESEARCH_API_KEY or VALYU_API_KEY to your environment to enable historical research.
+                Ajoutez DEEPRESEARCH_API_KEY ou VALYU_API_KEY à votre environnement pour activer la recherche historique.
               </div>
             </div>
           )}
           {missingMapbox && (
             <div className="rounded-md border p-3">
-              <div className="font-medium">Missing Mapbox Access Token</div>
+              <div className="font-medium">Jeton d'accès Mapbox manquant</div>
               <div className="text-muted-foreground">
-                Add NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN to enable the interactive globe.
+                Ajoutez NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN pour activer le globe interactif.
               </div>
             </div>
           )}
         </div>
         <div className="mt-4 flex justify-end gap-2">
           <Button variant="outline" onClick={() => setOpen(false)}>
-            Dismiss
+            Fermer
           </Button>
           <a
             href="https://platform.valyu.ai"
             target="_blank"
             rel="noreferrer"
           >
-            <Button>Get API Key</Button>
+            <Button>Obtenir une clé API</Button>
           </a>
         </div>
       </DialogContent>

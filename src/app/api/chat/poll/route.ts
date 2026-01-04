@@ -18,7 +18,7 @@ export async function GET(req: Request) {
 
     if (!taskId) {
       return new Response(
-        JSON.stringify({ error: 'Missing taskId parameter' }),
+        JSON.stringify({ error: 'Paramètre taskId manquant' }),
         { status: 400, headers: { 'Content-Type': 'application/json' } }
       );
     }
@@ -63,7 +63,7 @@ export async function GET(req: Request) {
     } else {
       console.log('[Poll] No auth available');
       return new Response(
-        JSON.stringify({ error: 'Authentication required' }),
+        JSON.stringify({ error: 'Authentification requise' }),
         { status: 401, headers: { 'Content-Type': 'application/json' } }
       );
     }
@@ -79,18 +79,37 @@ export async function GET(req: Request) {
     const statusData = await statusResponse.json();
     console.log('[Poll] Status data:', statusData.status, 'hasOutput:', !!statusData.output);
 
-    // Update database status based on DeepResearch API status
+    // Update database status and finalize chat session if needed
     if (!isDevelopment) {
       try {
+        let updatedTaskResult: any;
+
         if (statusData.status === 'running') {
           await db.updateResearchTaskByDeepResearchId(taskId, {
             status: 'running',
           });
         } else if (statusData.status === 'completed') {
-          await db.updateResearchTaskByDeepResearchId(taskId, {
+          updatedTaskResult = await db.updateResearchTaskByDeepResearchId(taskId, {
             status: 'completed',
             completed_at: new Date(),
           });
+
+          // Finalize chat session if this research was triggered from chat
+          const task = updatedTaskResult?.data;
+          if (task && task.sessionId && statusData.output) {
+            // Deterministic ID for idempotency: one research task = one assistant message
+            const assistantMessageId = `ai-${taskId}`;
+            await db.addChatMessage(task.sessionId, {
+              id: assistantMessageId,
+              role: 'assistant',
+              content: [{ type: 'text', text: statusData.output }],
+              processing_time_ms: Date.now() - new Date(task.createdAt || task.created_at).getTime(),
+            });
+
+            await db.updateChatSession(task.sessionId, task.userId || task.user_id, {
+              last_message_at: new Date(),
+            });
+          }
         } else if (statusData.status === 'failed') {
           await db.updateResearchTaskByDeepResearchId(taskId, {
             status: 'failed',
@@ -98,7 +117,7 @@ export async function GET(req: Request) {
           });
         }
       } catch (error) {
-        // Don't fail the request if database update fails
+        console.error('[Poll] DB Update Error:', error);
       }
     }
 

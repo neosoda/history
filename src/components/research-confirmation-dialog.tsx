@@ -17,58 +17,58 @@ interface ResearchConfirmationDialogProps {
 const PRESETS = [
   {
     id: 'general',
-    label: 'General',
-    prompt: 'Provide a comprehensive historical overview of this location, covering major events, cultural significance, and key developments throughout history.',
+    label: 'Général',
+    prompt: 'Fournir un aperçu historique complet de ce lieu, couvrant les événements majeurs, l\'importance culturelle et les développements clés à travers l\'histoire.',
   },
   {
     id: 'wars',
-    label: 'Wars',
-    prompt: 'Focus on wars, battles, and military conflicts that have taken place at this location. Include details about the opposing forces, key battles, strategies, outcomes, and historical impact.',
+    label: 'Guerres',
+    prompt: 'Se concentrer sur les guerres, les batailles et les conflits militaires qui ont eu lieu à cet endroit. Inclure des détails sur les forces en présence, les batailles clés, les stratégies, les résultats et l\'impact historique.',
   },
   {
     id: 'nature',
     label: 'Nature',
-    prompt: 'Research the natural history and geography of this location, including geological formations, climate history, natural landmarks, ecosystems, and environmental changes over time.',
+    prompt: 'Rechercher l\'histoire naturelle et la géographie de ce lieu, y compris les formations géologiques, l\'histoire du climat, les sites naturels, les écosystèmes et les changements environnementaux au fil du temps.',
   },
   {
     id: 'animals',
-    label: 'Wildlife',
-    prompt: 'Focus on the animal life and wildlife of this location, including native species, extinct fauna, conservation efforts, and the relationship between wildlife and human settlement.',
+    label: 'Faune & Flore',
+    prompt: 'Se concentrer sur la vie animale et la faune de ce lieu, y compris les espèces indigènes, la faune disparue, les efforts de conservation et la relation entre la faune et les établissements humains.',
   },
   {
     id: 'people',
-    label: 'People',
-    prompt: 'Research notable people associated with this location, including historical figures, leaders, artists, scientists, and their contributions to history and culture.',
+    label: 'Personnalités',
+    prompt: 'Rechercher les personnes notables associées à ce lieu, y compris les figures historiques, les dirigeants, les artistes, les scientifiques et leurs contributions à l\'histoire et à la culture.',
   },
   {
     id: 'architecture',
     label: 'Architecture',
-    prompt: 'Focus on architectural history and significant buildings at this location, including historical structures, architectural styles, construction techniques, and cultural importance.',
+    prompt: 'Se concentrer sur l\'histoire architecturale et les bâtiments significatifs de ce lieu, y compris les structures historiques, les styles architecturaux, les techniques de construction et l\'importance culturelle.',
   },
   {
     id: 'culture',
     label: 'Culture',
-    prompt: 'Research the cultural and artistic heritage of this location, including traditions, customs, art movements, literature, music, and cultural practices throughout history.',
+    prompt: 'Rechercher le patrimoine culturel et artistique de ce lieu, y compris les traditions, les coutumes, les mouvements artistiques, la littérature, la musique et les pratiques culturelles à travers l\'histoire.',
   },
   {
     id: 'economy',
-    label: 'Economy',
-    prompt: 'Focus on the economic history and trade of this location, including major industries, trade routes, economic developments, and the evolution of commerce.',
+    label: 'Économie',
+    prompt: 'Se concentrer sur l\'histoire économique et le commerce de ce lieu, y compris les principales industries, les routes commerciales, les développements économiques et l\'évolution du commerce.',
   },
   {
     id: 'news',
-    label: 'News',
-    prompt: 'Research current and recent news events at this location, including significant political developments, social movements, disasters, celebrations, and noteworthy incidents.',
+    label: 'Actualités',
+    prompt: 'Rechercher les événements actuels et récents à cet endroit, y compris les développements politiques importants, les mouvements sociaux, les catastrophes, les célébrations et les incidents notables.',
   },
   {
     id: 'geology',
-    label: 'Geology',
-    prompt: 'Focus on the geological history and features of this location, including rock formations, tectonic activity, volcanic history, erosion patterns, mineral deposits, and the geological forces that shaped the landscape.',
+    label: 'Géologie',
+    prompt: 'Se concentrer sur l\'histoire et les caractéristiques géologiques de ce lieu, y compris les formations rocheuses, l\'activité tectonique, l\'histoire volcanique, les modèles d\'érosion, les gisements minéraux et les forces géologiques qui ont façonné le paysage.',
   },
   {
     id: 'culinary',
-    label: 'Culinary',
-    prompt: 'Research the culinary history and food culture of this location, including traditional dishes, cooking techniques, local ingredients, food-related traditions, and the evolution of cuisine over time.',
+    label: 'Gastronomie',
+    prompt: 'Rechercher l\'histoire culinaire et la culture alimentaire de ce lieu, y compris les plats traditionnels, les techniques de cuisine, les ingrédients locaux, les traditions liées à l\'alimentation et l\'évolution de la cuisine au fil du temps.',
   },
 ];
 
@@ -117,10 +117,10 @@ export function ResearchConfirmationDialog({
           <div className="flex items-center justify-between p-3 sm:p-4 border-b gap-2">
             <div className="min-w-0 flex-1">
               <h2 className="text-base sm:text-lg font-semibold truncate">
-                Research {location.name}
+                Rechercher {location.name}
               </h2>
               <p className="text-[10px] sm:text-xs text-muted-foreground mt-0.5">
-                Choose a focus or leave blank for general history
+                Choisissez un axe ou laissez vide pour l'histoire générale
               </p>
             </div>
             <button
@@ -136,7 +136,7 @@ export function ResearchConfirmationDialog({
             {/* Preset Pills */}
             <div>
               <label className="block text-[10px] sm:text-xs font-medium text-muted-foreground mb-1.5 sm:mb-2">
-                Quick presets (optional)
+                Préréglages rapides (optionnel)
               </label>
               <div className="flex flex-wrap gap-1.5 sm:gap-2">
                 {PRESETS.map((preset) => (
@@ -146,11 +146,10 @@ export function ResearchConfirmationDialog({
                       setSelectedPreset(preset.id);
                       setCustomInstructions('');
                     }}
-                    className={`px-2.5 sm:px-3 py-1.5 text-[10px] sm:text-xs font-medium rounded-lg transition-all border min-h-8 ${
-                      selectedPreset === preset.id && !customInstructions
+                    className={`px-2.5 sm:px-3 py-1.5 text-[10px] sm:text-xs font-medium rounded-lg transition-all border min-h-8 ${selectedPreset === preset.id && !customInstructions
                         ? 'bg-primary text-primary-foreground border-primary shadow-sm'
                         : 'bg-card text-card-foreground border-border hover:bg-accent hover:text-accent-foreground'
-                    }`}
+                      }`}
                   >
                     {preset.label}
                   </button>
@@ -164,7 +163,7 @@ export function ResearchConfirmationDialog({
                 onClick={() => setShowCustom(!showCustom)}
                 className="w-full flex items-center justify-between text-[10px] sm:text-xs font-medium text-muted-foreground hover:text-foreground transition-colors min-h-9"
               >
-                <span>Custom instructions</span>
+                <span>Instructions personnalisées</span>
                 <ChevronDown className={`h-3 w-3 transition-transform flex-shrink-0 ${showCustom ? 'rotate-180' : ''}`} />
               </button>
 
@@ -183,7 +182,7 @@ export function ResearchConfirmationDialog({
                         setCustomInstructions(e.target.value);
                         if (e.target.value) setSelectedPreset('');
                       }}
-                      placeholder="e.g., Focus on indigenous peoples before colonization..."
+                      placeholder="ex: Focus sur les peuples indigènes avant la colonisation..."
                       className="min-h-[70px] sm:min-h-[80px] text-xs sm:text-sm resize-none mt-1.5 sm:mt-2"
                     />
                   </motion.div>
@@ -204,7 +203,7 @@ export function ResearchConfirmationDialog({
                   className="w-full font-semibold min-h-11 text-xs sm:text-sm"
                 >
                   <Sparkles className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1.5 sm:mr-2" />
-                  <span className="truncate">Continue Without Signup</span>
+                  <span className="truncate">Continuer sans s'inscrire</span>
                 </Button>
                 {onSignUp && (
                   <Button
@@ -212,7 +211,7 @@ export function ResearchConfirmationDialog({
                     size="default"
                     className="w-full font-semibold min-h-11 text-xs sm:text-sm"
                   >
-                    <span className="truncate">Sign Up to Save Research</span>
+                    <span className="truncate">S'inscrire pour sauvegarder</span>
                   </Button>
                 )}
               </div>
@@ -225,7 +224,7 @@ export function ResearchConfirmationDialog({
                   size="sm"
                   className="min-h-11 text-xs sm:text-sm"
                 >
-                  Cancel
+                  Annuler
                 </Button>
                 <Button
                   onClick={handleConfirm}
@@ -233,7 +232,7 @@ export function ResearchConfirmationDialog({
                   className="px-4 sm:px-6 font-semibold min-h-11 text-xs sm:text-sm"
                 >
                   <Sparkles className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1.5 sm:mr-2" />
-                  <span className="truncate">Start Research</span>
+                  <span className="truncate">Démarrer la recherche</span>
                 </Button>
               </div>
             )}

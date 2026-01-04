@@ -44,7 +44,7 @@ export function SubscriptionModal({ open, onClose }: SubscriptionModalProps) {
         <DialogContent className="!max-w-2xl bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700">
           <DialogHeader className="space-y-3 pb-6">
             <DialogTitle className="text-2xl font-semibold text-gray-900 dark:text-gray-100 text-center">
-              Your Valyu Credits
+              Vos crédits Valyu
             </DialogTitle>
           </DialogHeader>
 
@@ -58,10 +58,10 @@ export function SubscriptionModal({ open, onClose }: SubscriptionModalProps) {
                   </div>
                   <div>
                     <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">
-                      Valyu Credits
+                      Crédits Valyu
                     </h3>
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      Managed by Valyu Platform
+                      Géré par la plateforme Valyu
                     </p>
                   </div>
                 </div>
@@ -70,19 +70,19 @@ export function SubscriptionModal({ open, onClose }: SubscriptionModalProps) {
               <div className="space-y-2">
                 <div className="flex items-center gap-2 text-sm">
                   <Check className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-                  <span className="text-gray-700 dark:text-gray-300">Unlimited queries (credit-based)</span>
+                  <span className="text-gray-700 dark:text-gray-300">Requêtes illimitées (basées sur les crédits)</span>
                 </div>
                 <div className="flex items-center gap-2 text-sm">
                   <Check className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-                  <span className="text-gray-700 dark:text-gray-300">Full tool access</span>
+                  <span className="text-gray-700 dark:text-gray-300">Accès complet aux outils</span>
                 </div>
                 <div className="flex items-center gap-2 text-sm">
                   <Check className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-                  <span className="text-gray-700 dark:text-gray-300">Download reports</span>
+                  <span className="text-gray-700 dark:text-gray-300">Télécharger les rapports</span>
                 </div>
                 <div className="flex items-center gap-2 text-sm">
                   <Check className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-                  <span className="text-gray-700 dark:text-gray-300">Credits shared across your organization</span>
+                  <span className="text-gray-700 dark:text-gray-300">Crédits partagés au sein de votre organisation</span>
                 </div>
               </div>
             </div>
@@ -94,10 +94,10 @@ export function SubscriptionModal({ open, onClose }: SubscriptionModalProps) {
                 className="w-full"
               >
                 <ExternalLink className="h-4 w-4 mr-2" />
-                Manage Credits on Valyu Platform
+                Gérer les crédits sur la plateforme Valyu
               </Button>
               <p className="text-xs text-center text-gray-500 dark:text-gray-400">
-                View balance, add credits, and manage your organization
+                Consultez votre solde, ajoutez des crédits et gérez votre organisation
               </p>
             </div>
           </div>
@@ -113,10 +113,10 @@ export function SubscriptionModal({ open, onClose }: SubscriptionModalProps) {
         <DialogContent className="!max-w-md sm:!max-w-2xl !w-[96vw] sm:!w-[90vw] bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 max-h-[90vh] overflow-y-auto">
           <DialogHeader className="space-y-2 sm:space-y-3 pb-4 sm:pb-6">
             <DialogTitle className="text-xl sm:text-2xl font-semibold text-gray-900 dark:text-gray-100 text-center px-2">
-              Get Full Access with Valyu
+              Obtenez un accès complet avec Valyu
             </DialogTitle>
             <p className="text-sm text-gray-600 dark:text-gray-400 text-center max-w-lg mx-auto px-2">
-              Sign in with your Valyu account to unlock unlimited research powered by your organization&apos;s credits.
+              Connectez-vous avec votre compte Valyu pour débloquer des recherches illimitées grâce aux crédits de votre organisation.
             </p>
           </DialogHeader>
 
@@ -127,25 +127,25 @@ export function SubscriptionModal({ open, onClose }: SubscriptionModalProps) {
                 <div className="p-2.5 bg-blue-600 dark:bg-blue-700 rounded-lg">
                   <Zap className="h-5 w-5 text-white" />
                 </div>
-                <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100">Why Sign In?</h3>
+                <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100">Pourquoi se connecter ?</h3>
               </div>
 
               <div className="space-y-3">
                 <div className="flex items-start gap-2">
                   <Check className="h-4 w-4 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" />
-                  <p className="text-sm text-gray-700 dark:text-gray-300"><span className="font-medium">Unlimited queries</span> - No daily limits</p>
+                  <p className="text-sm text-gray-700 dark:text-gray-300"><span className="font-medium">Requêtes illimitées</span> - Pas de limites quotidiennes</p>
                 </div>
                 <div className="flex items-start gap-2">
                   <Check className="h-4 w-4 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" />
-                  <p className="text-sm text-gray-700 dark:text-gray-300"><span className="font-medium">Use your existing credits</span> - From your Valyu organization</p>
+                  <p className="text-sm text-gray-700 dark:text-gray-300"><span className="font-medium">Utilisez vos crédits existants</span> - Depuis votre organisation Valyu</p>
                 </div>
                 <div className="flex items-start gap-2">
                   <Check className="h-4 w-4 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" />
-                  <p className="text-sm text-gray-700 dark:text-gray-300"><span className="font-medium">Single sign-on</span> - Works across all Valyu apps</p>
+                  <p className="text-sm text-gray-700 dark:text-gray-300"><span className="font-medium">Authentification unique (SSO)</span> - Fonctionne sur toutes les applications Valyu</p>
                 </div>
                 <div className="flex items-start gap-2">
                   <Check className="h-4 w-4 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" />
-                  <p className="text-sm text-gray-700 dark:text-gray-300"><span className="font-medium">Save your research</span> - Access history and reports</p>
+                  <p className="text-sm text-gray-700 dark:text-gray-300"><span className="font-medium">Sauvegardez vos recherches</span> - Accédez à l'historique et aux rapports</p>
                 </div>
               </div>
             </div>
@@ -164,8 +164,8 @@ export function SubscriptionModal({ open, onClose }: SubscriptionModalProps) {
                       <Building2 className="h-4 w-4 text-slate-700 dark:text-slate-300" />
                     </div>
                     <div className="flex-1">
-                      <h3 className="font-semibold text-gray-900 dark:text-gray-100">Need Enterprise?</h3>
-                      <p className="text-xs text-gray-600 dark:text-gray-400">Custom deployment for your organization</p>
+                      <h3 className="font-semibold text-gray-900 dark:text-gray-100">Besoin d'une offre Entreprise ?</h3>
+                      <p className="text-xs text-gray-600 dark:text-gray-400">Déploiement personnalisé pour votre organisation</p>
                     </div>
                     <ExternalLink className="h-4 w-4 text-gray-400" />
                   </div>
@@ -175,7 +175,7 @@ export function SubscriptionModal({ open, onClose }: SubscriptionModalProps) {
 
             {/* Info text */}
             <p className="text-xs text-center text-gray-500 dark:text-gray-400">
-              Don&apos;t have a Valyu account? <a href="https://platform.valyu.ai" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:underline">Create one for free</a>
+              Vous n'avez pas de compte Valyu ? <a href="https://platform.valyu.ai" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:underline">Créez-en un gratuitement</a>
             </p>
           </div>
         </DialogContent>

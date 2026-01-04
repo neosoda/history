@@ -84,7 +84,7 @@ const BottomBar = ({ onShowAuth, onShowSettings, onShowSubscription, onShowHisto
                     className="w-full justify-start gap-2 h-10"
                   >
                     <HistoryIcon className="h-4 w-4" />
-                    <span className="text-sm">History</span>
+                    <span className="text-sm">Historique</span>
                   </Button>
 
                   <Button
@@ -97,7 +97,7 @@ const BottomBar = ({ onShowAuth, onShowSettings, onShowSubscription, onShowHisto
                     className="w-full justify-start gap-2 h-10"
                   >
                     <CreditCard className="h-4 w-4" />
-                    <span className="text-sm">Subscription</span>
+                    <span className="text-sm">Abonnement</span>
                   </Button>
 
                   <Button
@@ -110,7 +110,7 @@ const BottomBar = ({ onShowAuth, onShowSettings, onShowSubscription, onShowHisto
                     className="w-full justify-start gap-2 h-10"
                   >
                     <Settings className="h-4 w-4" />
-                    <span className="text-sm">Settings</span>
+                    <span className="text-sm">Paramètres</span>
                   </Button>
 
                   <div className="border-t mt-2 pt-2">
@@ -121,7 +121,7 @@ const BottomBar = ({ onShowAuth, onShowSettings, onShowSubscription, onShowHisto
                       className="w-full justify-start gap-2 h-10 text-destructive hover:text-destructive"
                     >
                       <LogOut className="h-4 w-4" />
-                      <span className="text-sm">Sign Out</span>
+                      <span className="text-sm">Se déconnecter</span>
                     </Button>
                   </div>
                 </>
@@ -137,7 +137,7 @@ const BottomBar = ({ onShowAuth, onShowSettings, onShowSubscription, onShowHisto
                     className="w-full justify-start gap-2 h-10"
                   >
                     <LogIn className="h-4 w-4" />
-                    <span className="text-sm">Sign In</span>
+                    <span className="text-sm">Se connecter</span>
                   </Button>
 
                   <Button
@@ -150,7 +150,7 @@ const BottomBar = ({ onShowAuth, onShowSettings, onShowSubscription, onShowHisto
                     className="w-full justify-start gap-2 h-10 mt-1"
                   >
                     <UserPlus className="h-4 w-4" />
-                    <span className="text-sm">Sign Up</span>
+                    <span className="text-sm">S'inscrire</span>
                   </Button>
                 </>
               )}

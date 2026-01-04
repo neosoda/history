@@ -37,7 +37,7 @@ export default function CodeSnippetDialog({
   useEffect(() => {
     if (typeof window !== 'undefined') {
       localStorage.setItem('preferredLanguage', activeTab);
-      
+
       if (snippets.length > 0) { // Only track if dialog is actually shown
         track('Language Selection', {
           source: 'data_source_dialog',
@@ -55,7 +55,7 @@ export default function CodeSnippetDialog({
         dataSource: title,
         logoSrc: getLogoSrc(title)
       });
-      
+
       setShowBadge(true);
       const timer = setTimeout(() => {
         setShowBadge(false);
@@ -72,7 +72,7 @@ export default function CodeSnippetDialog({
       language: activeTab,
       codeLength: code.length
     });
-    
+
     await navigator.clipboard.writeText(code);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
@@ -123,7 +123,7 @@ export default function CodeSnippetDialog({
                       {title}
                     </h2>
                     <p className='text-xs text-gray-500 dark:text-gray-400 mt-0.5'>
-                      Integration snippet for Valyu API
+                      Extrait d'intégration pour l'API Valyu
                     </p>
                   </div>
                 </div>
@@ -136,11 +136,10 @@ export default function CodeSnippetDialog({
                     <button
                       key={lang}
                       onClick={() => setActiveTab(lang)}
-                      className={`px-3 py-1.5 text-sm font-light transition-colors ${
-                        activeTab === lang
-                          ? 'text-gray-900 dark:text-gray-100 border-b border-gray-900 dark:border-gray-100'
-                          : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
-                      }`}
+                      className={`px-3 py-1.5 text-sm font-light transition-colors ${activeTab === lang
+                        ? 'text-gray-900 dark:text-gray-100 border-b border-gray-900 dark:border-gray-100'
+                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+                        }`}
                     >
                       {lang}
                     </button>
@@ -191,7 +190,7 @@ export default function CodeSnippetDialog({
                       });
                     }}
                   >
-                    Get API Key &rarr;
+                    Obtenir une clé API &rarr;
 
                     {/* Animated free credits badge */}
                     <AnimatePresence>
@@ -212,7 +211,7 @@ export default function CodeSnippetDialog({
                         >
                           <div className='relative'>
                             <div className='bg-gradient-to-r from-green-500 to-emerald-500 text-white text-xs font-medium px-2.5 py-1 rounded-full shadow-lg'>
-                              $10 free credits
+                              10$ de crédits offerts
                             </div>
                             {/* Small arrow pointing down */}
                             <div className='absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-[4px] border-r-[4px] border-t-[4px] border-l-transparent border-r-transparent border-t-green-500'></div>

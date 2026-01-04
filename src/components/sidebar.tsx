@@ -6,7 +6,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuthStore } from '@/lib/stores/use-auth-store';
-import { createClient } from '@/utils/supabase/client-wrapper';
 import {
   History,
   Settings,
@@ -78,23 +77,11 @@ export function Sidebar({
   const { data: tasks = [], isLoading: loadingTasks } = useQuery({
     queryKey: ['research-tasks'],
     queryFn: async () => {
-      if (isDevelopment) {
-        const response = await fetch('/api/research/tasks');
-        const { tasks } = await response.json();
-        return tasks;
-      }
-
-      const supabase = createClient();
-      const { data: { session } } = await supabase.auth.getSession();
-
-      const response = await fetch('/api/research/tasks', {
-        headers: { 'Authorization': `Bearer ${session?.access_token}` }
-      });
-
+      const response = await fetch('/api/research/tasks');
       const { tasks } = await response.json();
       return tasks;
     },
-    enabled: isDevelopment || !!user,
+    enabled: !!user,
     refetchInterval: 5000, // Refresh every 5 seconds to update status badges
   });
 
@@ -148,7 +135,7 @@ export function Sidebar({
 
     if (hasActiveResearch) {
       const confirmed = window.confirm(
-        'Close current research and return to globe?'
+        'Fermer la recherche actuelle et revenir au globe ?'
       );
 
       if (confirmed) {
@@ -181,7 +168,7 @@ export function Sidebar({
           animate={{ opacity: 1, x: 0 }}
           onClick={toggleSidebar}
           className="hidden sm:fixed left-0 top-1/2 -translate-y-1/2 z-50 w-10 h-16 sm:flex items-center justify-center bg-card border-r-2 border-t-2 border-b-2 border-border hover:border-border/80 rounded-r-2xl transition-all duration-200 shadow-lg hover:shadow-xl hover:w-12 group"
-          title="Open Menu"
+          title="Ouvrir le menu"
         >
           <svg
             className="w-5 h-5 text-muted-foreground group-hover:text-foreground transition-colors"
@@ -218,18 +205,16 @@ export function Sidebar({
               <div className="relative group/tooltip">
                 <button
                   onClick={() => setAlwaysOpen(!alwaysOpen)}
-                  className={`w-12 h-12 flex items-center justify-center rounded-[20px] transition-all duration-200 hover:scale-110 active:scale-95 ${
-                    alwaysOpen
-                      ? 'bg-primary/10'
-                      : 'hover:bg-accent'
-                  }`}
+                  className={`w-12 h-12 flex items-center justify-center rounded-[20px] transition-all duration-200 hover:scale-110 active:scale-95 ${alwaysOpen
+                    ? 'bg-primary/10'
+                    : 'hover:bg-accent'
+                    }`}
                 >
                   <svg
-                    className={`w-6 h-6 transition-colors ${
-                      alwaysOpen
-                        ? 'text-primary'
-                        : 'text-muted-foreground'
-                    }`}
+                    className={`w-6 h-6 transition-colors ${alwaysOpen
+                      ? 'text-primary'
+                      : 'text-muted-foreground'
+                      }`}
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -243,7 +228,7 @@ export function Sidebar({
                   </svg>
                 </button>
                 <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-popover text-popover-foreground text-sm font-medium rounded-lg opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50 border border-border shadow-md">
-                  {alwaysOpen ? 'Always Open (On)' : 'Always Open (Off)'}
+                  {alwaysOpen ? 'Toujours ouvert (Actif)' : 'Toujours ouvert (Inactif)'}
                 </div>
               </div>
 
@@ -265,7 +250,7 @@ export function Sidebar({
                   />
                 </button>
                 <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-popover text-popover-foreground text-sm font-medium rounded-lg opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50 border border-border shadow-md">
-                  Home
+                  Accueil
                 </div>
               </div>
 
@@ -282,12 +267,12 @@ export function Sidebar({
                     <Plus className="h-6 w-6 text-muted-foreground group-hover:text-foreground transition-colors" />
                   </button>
                   <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-popover text-popover-foreground text-sm font-medium rounded-lg opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50 border border-border shadow-md">
-                    New Research
+                    Nouvelle recherche
                   </div>
                 </div>
               )}
 
-                      {/* Research History */}
+              {/* Research History */}
               <div className="relative group/tooltip">
                 <button
                   onClick={() => {
@@ -297,24 +282,22 @@ export function Sidebar({
                       setShowHistory(!showHistory);
                     }
                   }}
-                  className={`w-12 h-12 flex items-center justify-center rounded-[20px] transition-all duration-200 hover:scale-110 active:scale-95 ${
-                    !user && !isDevelopment
-                      ? 'opacity-50 cursor-not-allowed hover:bg-accent'
-                      : showHistory
-                        ? 'bg-primary text-primary-foreground shadow-lg'
-                        : 'hover:bg-accent'
-                  }`}
+                  className={`w-12 h-12 flex items-center justify-center rounded-[20px] transition-all duration-200 hover:scale-110 active:scale-95 ${!user && !isDevelopment
+                    ? 'opacity-50 cursor-not-allowed hover:bg-accent'
+                    : showHistory
+                      ? 'bg-primary text-primary-foreground shadow-lg'
+                      : 'hover:bg-accent'
+                    }`}
                 >
-                  <History className={`h-6 w-6 transition-colors ${
-                    !user && !isDevelopment
-                      ? 'text-muted-foreground/50'
-                      : showHistory
-                        ? 'text-primary-foreground'
-                        : 'text-muted-foreground'
-                  }`} />
+                  <History className={`h-6 w-6 transition-colors ${!user && !isDevelopment
+                    ? 'text-muted-foreground/50'
+                    : showHistory
+                      ? 'text-primary-foreground'
+                      : 'text-muted-foreground'
+                    }`} />
                 </button>
                 <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-popover text-popover-foreground text-sm font-medium rounded-lg opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50 border border-border shadow-md">
-                  {!user && !isDevelopment ? 'Sign up (free) for history' : 'Research History'}
+                  {!user && !isDevelopment ? 'Inscrivez-vous (gratuit) pour l\'historique' : 'Historique de recherche'}
                 </div>
               </div>
 
@@ -331,7 +314,7 @@ export function Sidebar({
                     <CreditCard className="h-6 w-6 text-muted-foreground group-hover:text-foreground transition-colors" />
                   </button>
                   <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-popover text-popover-foreground text-sm font-medium rounded-lg opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50 border border-border shadow-md">
-                    Manage Credits
+                    Gérer les crédits
                   </div>
                 </div>
               )}
@@ -346,7 +329,7 @@ export function Sidebar({
                     <Building2 className="h-6 w-6 text-muted-foreground group-hover:text-foreground transition-colors" />
                   </button>
                   <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-popover text-popover-foreground text-sm font-medium rounded-lg opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50 border border-border shadow-md">
-                    Enterprise Solutions
+                    Solutions Entreprise
                   </div>
                 </div>
               )}
@@ -361,7 +344,7 @@ export function Sidebar({
                     <Globe2 className="h-6 w-6 text-muted-foreground group-hover:text-foreground transition-colors" />
                   </button>
                   <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-popover text-popover-foreground text-sm font-medium rounded-lg opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50 border border-border shadow-md">
-                    Map Style
+                    Style de carte
                   </div>
                 </div>
               )}
@@ -376,7 +359,7 @@ export function Sidebar({
                     <Settings className="h-6 w-6 text-muted-foreground group-hover:text-foreground transition-colors" />
                   </button>
                   <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-popover text-popover-foreground text-sm font-medium rounded-lg opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50 border border-border shadow-md">
-                    Settings
+                    Paramètres
                   </div>
                 </div>
               )}
@@ -400,7 +383,7 @@ export function Sidebar({
                     </span>
                   </button>
                   <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-popover text-popover-foreground text-sm font-medium rounded-lg opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50 border border-border shadow-md">
-                    Log in
+                    Connexion
                   </div>
                 </div>
               )}
@@ -422,7 +405,7 @@ export function Sidebar({
                   {/* Only show tooltip when menu is NOT open */}
                   {!showProfileMenu && (
                     <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-popover text-popover-foreground text-sm font-medium rounded-lg opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50 border border-border shadow-md">
-                      Account
+                      Compte
                     </div>
                   )}
 
@@ -442,32 +425,32 @@ export function Sidebar({
                           transition={{ duration: 0.15 }}
                           className="absolute left-full ml-4 bottom-0 bg-popover/95 backdrop-blur-xl border border-border rounded-2xl shadow-2xl py-2 px-1 min-w-[220px] z-50"
                         >
-                        {/* User Email */}
-                        <div className="px-3 py-2.5 mb-1">
-                          <p className="text-xs text-muted-foreground mb-1">Signed in as</p>
-                          <p className="text-sm font-medium text-popover-foreground truncate">
-                            {user.email}
-                          </p>
-                        </div>
+                          {/* User Email */}
+                          <div className="px-3 py-2.5 mb-1">
+                            <p className="text-xs text-muted-foreground mb-1">Connecté en tant que</p>
+                            <p className="text-sm font-medium text-popover-foreground truncate">
+                              {user.email}
+                            </p>
+                          </div>
 
-                        {/* Divider */}
-                        <div className="h-px bg-border my-1" />
+                          {/* Divider */}
+                          <div className="h-px bg-border my-1" />
 
-                        {/* Sign Out */}
-                        <button
-                          onClick={() => {
-                            setShowProfileMenu(false);
-                            const confirmed = window.confirm('Are you sure you want to sign out?');
-                            if (confirmed) {
-                              signOut();
-                            }
-                          }}
-                          className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-red-600 hover:bg-red-500/10 rounded-xl transition-all duration-200"
-                        >
-                          <LogOut className="h-4 w-4" />
-                          <span className="font-medium">Sign out</span>
-                        </button>
-                      </motion.div>
+                          {/* Sign Out */}
+                          <button
+                            onClick={() => {
+                              setShowProfileMenu(false);
+                              const confirmed = window.confirm('Are you sure you want to sign out?');
+                              if (confirmed) {
+                                signOut();
+                              }
+                            }}
+                            className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-red-600 hover:bg-red-500/10 rounded-xl transition-all duration-200"
+                          >
+                            <LogOut className="h-4 w-4" />
+                            <span className="font-medium">Sign out</span>
+                          </button>
+                        </motion.div>
                       </>
                     )}
                   </AnimatePresence>
@@ -498,7 +481,7 @@ export function Sidebar({
                       </svg>
                     </button>
                     <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-popover text-popover-foreground text-sm font-medium rounded-lg opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50 border border-border shadow-md">
-                      Close
+                      Fermer
                     </div>
                   </div>
                 </>
@@ -536,7 +519,7 @@ export function Sidebar({
               {/* Header */}
               <div className="p-3 sm:p-4 border-b border-border flex-shrink-0">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-base sm:text-lg font-semibold text-card-foreground">Research History</h3>
+                  <h3 className="text-base sm:text-lg font-semibold text-card-foreground">Historique de recherche</h3>
                   <div className="flex items-center gap-1 sm:gap-2">
                     {/* Close button on mobile */}
                     <Button
@@ -544,7 +527,7 @@ export function Sidebar({
                       size="sm"
                       onClick={() => setShowHistory(false)}
                       className="h-9 w-9 p-0 sm:hidden min-h-11 min-w-11"
-                      title="Close"
+                      title="Fermer"
                     >
                       <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -555,7 +538,7 @@ export function Sidebar({
                       size="sm"
                       onClick={handleNewResearch}
                       className="h-9 w-9 p-0 min-h-11 min-w-11"
-                      title="New Research"
+                      title="Nouvelle recherche"
                     >
                       <Plus className="h-4 w-4" />
                     </Button>
@@ -577,7 +560,7 @@ export function Sidebar({
                 ) : tasks.length === 0 ? (
                   <div className="flex items-center justify-center h-full p-3 sm:p-4">
                     <p className="text-xs sm:text-sm text-muted-foreground text-center">
-                      No research history yet.<br />Click anywhere on the globe to start researching!
+                      Aucun historique de recherche pour le moment.<br />Cliquez n'importe où sur le globe pour commencer la recherche !
                     </p>
                   </div>
                 ) : (
@@ -603,7 +586,11 @@ export function Sidebar({
                             </div>
                             <div className={`inline-flex items-center gap-1 mt-1.5 px-1.5 sm:px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-medium ${statusBg} ${statusColor}`}>
                               <StatusIcon className={`h-2.5 w-2.5 sm:h-3 sm:w-3 ${task.status === 'running' ? 'animate-spin' : ''}`} />
-                              <span className="capitalize">{task.status}</span>
+                              <span className="capitalize">
+                                {task.status === 'completed' ? 'terminé' :
+                                  task.status === 'running' ? 'en cours' :
+                                    task.status === 'failed' ? 'échoué' : 'en attente'}
+                              </span>
                             </div>
                           </div>
                         </div>
@@ -652,7 +639,7 @@ export function Sidebar({
               className="fixed left-0 sm:left-24 top-1/2 -translate-y-1/2 z-50 w-full sm:w-80 max-w-sm bg-popover/95 backdrop-blur-xl border-r sm:border border-border sm:rounded-2xl shadow-2xl p-4 sm:p-6"
             >
               <div className="flex items-center justify-between mb-3 sm:mb-4">
-                <h3 className="text-base sm:text-lg font-semibold text-popover-foreground">Map Style</h3>
+                <h3 className="text-base sm:text-lg font-semibold text-popover-foreground">Style de carte</h3>
                 <button
                   onClick={() => setShowMapStyles(false)}
                   className="sm:hidden p-2 hover:bg-accent rounded-lg min-h-11 min-w-11"
@@ -664,14 +651,14 @@ export function Sidebar({
               </div>
               <div className="space-y-1.5 sm:space-y-2">
                 {[
-                  { value: 'satellite-streets-v12', label: 'Satellite Streets', description: 'Satellite imagery with labels' },
-                  { value: 'satellite-v9', label: 'Satellite', description: 'Pure satellite imagery' },
-                  { value: 'streets-v12', label: 'Streets', description: 'Classic street map' },
-                  { value: 'outdoors-v12', label: 'Outdoors', description: 'Topographic style' },
-                  { value: 'light-v11', label: 'Light', description: 'Minimal light theme' },
-                  { value: 'dark-v11', label: 'Dark', description: 'Minimal dark theme' },
-                  { value: 'navigation-day-v1', label: 'Navigation Day', description: 'Navigation optimized' },
-                  { value: 'navigation-night-v1', label: 'Navigation Night', description: 'Night mode navigation' },
+                  { value: 'satellite-streets-v12', label: 'Satellite (Rues)', description: 'Imagerie satellite avec étiquettes' },
+                  { value: 'satellite-v9', label: 'Satellite', description: 'Imagerie satellite pure' },
+                  { value: 'streets-v12', label: 'Rues', description: 'Carte routière classique' },
+                  { value: 'outdoors-v12', label: 'Plein air', description: 'Style topographique' },
+                  { value: 'light-v11', label: 'Clair', description: 'Thème clair minimaliste' },
+                  { value: 'dark-v11', label: 'Sombre', description: 'Thème sombre minimaliste' },
+                  { value: 'navigation-day-v1', label: 'Navigation (Jour)', description: 'Optimisé pour la navigation' },
+                  { value: 'navigation-night-v1', label: 'Navigation (Nuit)', description: 'Navigation en mode nuit' },
                 ].map((option) => (
                   <button
                     key={option.value}
@@ -679,11 +666,10 @@ export function Sidebar({
                       onGlobeThemeChange?.(option.value);
                       setShowMapStyles(false);
                     }}
-                    className={`w-full text-left px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl transition-all min-h-12 ${
-                      globeTheme === option.value
-                        ? 'bg-primary/10 border-l-2 border-primary'
-                        : 'hover:bg-accent active:bg-accent'
-                    }`}
+                    className={`w-full text-left px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl transition-all min-h-12 ${globeTheme === option.value
+                      ? 'bg-primary/10 border-l-2 border-primary'
+                      : 'hover:bg-accent active:bg-accent'
+                      }`}
                   >
                     <div className="font-medium text-xs sm:text-sm text-popover-foreground">{option.label}</div>
                     <div className="text-[10px] sm:text-xs text-muted-foreground">{option.description}</div>

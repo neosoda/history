@@ -24,7 +24,7 @@ export function ShareButton({ query, className }: ShareButtonProps) {
   const shareOnX = (e: React.MouseEvent) => {
     e.preventDefault();
     const url = getCurrentUrl();
-    const text = 'Yo @ValyuNetwork just put bloomberg-grade data behind a chatbot and open sourced it 👉';
+    const text = 'Incroyable, @ValyuNetwork vient de mettre des données de qualité Bloomberg derrière un chatbot et l\'a publié en open source 👉';
     const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
     window.open(twitterUrl, '_blank', 'width=550,height=420');
   };
@@ -47,7 +47,7 @@ export function ShareButton({ query, className }: ShareButtonProps) {
         variant="outline"
         size="sm"
         className="transition-all duration-200 rounded-lg h-9 w-9 sm:h-10 sm:w-10 p-0 border-none shadow-none hover:bg-gray-100 dark:hover:bg-gray-800 group"
-        title="Share on X"
+        title="Partager sur X"
       >
         <RiTwitterXFill className="h-3.5 w-3.5 sm:h-4 sm:w-4 group-hover:scale-110 transition-transform" />
       </Button>
@@ -55,10 +55,9 @@ export function ShareButton({ query, className }: ShareButtonProps) {
         onClick={copyLink}
         variant="outline"
         size="sm"
-        className={`transition-all duration-200 rounded-lg h-9 w-9 sm:h-10 sm:w-10 p-0 border-none shadow-none hover:bg-gray-100 dark:hover:bg-gray-800 group ${
-          copied ? 'bg-green-100 dark:bg-green-900/20' : ''
-        }`}
-        title={copied ? 'Copied!' : 'Copy link'}
+        className={`transition-all duration-200 rounded-lg h-9 w-9 sm:h-10 sm:w-10 p-0 border-none shadow-none hover:bg-gray-100 dark:hover:bg-gray-800 group ${copied ? 'bg-green-100 dark:bg-green-900/20' : ''
+          }`}
+        title={copied ? 'Copié !' : 'Copier le lien'}
       >
         {copied ? (
           <Check className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-green-600 dark:text-green-400" />

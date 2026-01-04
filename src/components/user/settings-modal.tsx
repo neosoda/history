@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { useAuthStore } from '@/lib/stores/use-auth-store';
-import { createClient } from '@/utils/supabase/client-wrapper';
 import {
   Dialog,
   DialogContent,
@@ -30,9 +29,9 @@ export function SettingsModal({ open, onClose }: SettingsModalProps) {
 
   const handleEmailUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!newEmail.trim() || newEmail === user.email) {
-      setMessage({ type: 'error', text: 'Please enter a different email address' });
+      setMessage({ type: 'error', text: 'Veuillez entrer une adresse e-mail différente' });
       return;
     }
 
@@ -40,24 +39,18 @@ export function SettingsModal({ open, onClose }: SettingsModalProps) {
     setMessage(null);
 
     try {
-      const supabase = createClient();
-      const { data, error } = await supabase.auth.updateUser({
-        email: newEmail.trim()
-      });
+      const { pb } = await import('@/lib/pocketbase');
+      await pb.collection('users').requestEmailChange(newEmail.trim());
 
-      if (error) {
-        setMessage({ type: 'error', text: error.message });
-      } else {
-        setMessage({ 
-          type: 'success', 
-          text: 'Email update initiated. Please check both your current and new email addresses for confirmation links.' 
-        });
-        setNewEmail('');
-      }
-    } catch (error) {
-      setMessage({ 
-        type: 'error', 
-        text: error instanceof Error ? error.message : 'Failed to update email' 
+      setMessage({
+        type: 'success',
+        text: 'Demande de changement d\'e-mail envoyée. Veuillez consulter votre nouvelle adresse e-mail pour le lien de confirmation.'
+      });
+      setNewEmail('');
+    } catch (error: any) {
+      setMessage({
+        type: 'error',
+        text: error.message || 'Échec de la mise à jour de l\'e-mail'
       });
     } finally {
       setLoading(false);
@@ -68,7 +61,7 @@ export function SettingsModal({ open, onClose }: SettingsModalProps) {
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="max-w-md w-[92vw]">
         <DialogHeader>
-          <DialogTitle className="text-base sm:text-lg">Account Settings</DialogTitle>
+          <DialogTitle className="text-base sm:text-lg">Paramètres du compte</DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4 sm:space-y-6">
@@ -91,7 +84,7 @@ export function SettingsModal({ open, onClose }: SettingsModalProps) {
             <div className="flex items-center gap-1.5 sm:gap-2">
               <Monitor className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-gray-500 flex-shrink-0" />
               <label className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">
-                Theme
+                Thème
               </label>
             </div>
             <ThemeSelector />
@@ -101,7 +94,7 @@ export function SettingsModal({ open, onClose }: SettingsModalProps) {
           <form onSubmit={handleEmailUpdate} className="space-y-3 sm:space-y-4">
             <div>
               <label className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 sm:mb-2 block">
-                Change Email Address
+                Changer l'adresse e-mail
               </label>
               <div className="relative">
                 <Mail className="absolute left-2.5 sm:left-3 top-2.5 sm:top-3 h-3.5 w-3.5 sm:h-4 sm:w-4 text-gray-400" />
@@ -109,7 +102,7 @@ export function SettingsModal({ open, onClose }: SettingsModalProps) {
                   type="email"
                   value={newEmail}
                   onChange={(e) => setNewEmail(e.target.value)}
-                  placeholder="Enter new email address"
+                  placeholder="Entrez la nouvelle adresse e-mail"
                   className="pl-8 sm:pl-10 text-xs sm:text-sm min-h-11"
                   required
                 />
@@ -117,11 +110,10 @@ export function SettingsModal({ open, onClose }: SettingsModalProps) {
             </div>
 
             {message && (
-              <div className={`flex items-start gap-1.5 sm:gap-2 p-2.5 sm:p-3 rounded-lg text-xs sm:text-sm ${
-                message.type === 'success'
-                  ? 'bg-green-50 text-green-700 dark:bg-green-900/20 dark:text-green-400'
-                  : 'bg-red-50 text-red-700 dark:bg-red-900/20 dark:text-red-400'
-              }`}>
+              <div className={`flex items-start gap-1.5 sm:gap-2 p-2.5 sm:p-3 rounded-lg text-xs sm:text-sm ${message.type === 'success'
+                ? 'bg-green-50 text-green-700 dark:bg-green-900/20 dark:text-green-400'
+                : 'bg-red-50 text-red-700 dark:bg-red-900/20 dark:text-red-400'
+                }`}>
                 {message.type === 'success' ? (
                   <CheckCircle className="h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0 mt-0.5" />
                 ) : (
@@ -138,21 +130,21 @@ export function SettingsModal({ open, onClose }: SettingsModalProps) {
                 onClick={onClose}
                 className="flex-1 min-h-11 text-xs sm:text-sm"
               >
-                Cancel
+                Annuler
               </Button>
               <Button
                 type="submit"
                 disabled={loading || !newEmail.trim()}
                 className="flex-1 min-h-11 text-xs sm:text-sm"
               >
-                {loading ? 'Updating...' : 'Update Email'}
+                {loading ? 'Mise à jour...' : 'Mettre à jour l\'e-mail'}
               </Button>
             </div>
           </form>
 
           <div className="text-[10px] sm:text-xs text-gray-500 p-2.5 sm:p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-            <strong>Note:</strong> You&apos;ll receive confirmation emails at both your current and new email addresses.
-            You must confirm the change from both addresses for security.
+            <strong>Note :</strong> Vous recevrez des e-mails de confirmation sur votre adresse actuelle et sur la nouvelle.
+            Vous devez confirmer le changement depuis les deux adresses par sécurité.
           </div>
         </div>
       </DialogContent>

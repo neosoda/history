@@ -15,26 +15,26 @@ interface EnterpriseContactModalProps {
 }
 
 const COMPANY_SIZES = [
-  '1-10 employees',
-  '11-50 employees',
-  '51-200 employees',
-  '201-500 employees',
-  '501-1000 employees',
-  '1000+ employees'
+  '1-10 employés',
+  '11-50 employés',
+  '51-200 employés',
+  '201-500 employés',
+  '501-1000 employés',
+  '1000+ employés'
 ];
 
 const INDUSTRIES = [
-  'Pharmaceutical Company',
-  'Biotech Startup',
-  'Academic Institution',
-  'Research Hospital',
-  'Clinical Research Organization',
-  'Healthcare Provider',
-  'Medical Device Company',
-  'Research Firm',
-  'Technology',
-  'Consulting',
-  'Other'
+  'Industrie Pharmaceutique',
+  'Startup Biotech',
+  'Institution Académique',
+  'Hôpital de Recherche',
+  'CRO (Recherche Clinique)',
+  'Fournisseur de Soins de Santé',
+  'Dispositifs Médicaux',
+  'Cabinet de Recherche',
+  'Technologie',
+  'Conseil',
+  'Autre'
 ];
 
 export function EnterpriseContactModal({ open, onClose }: EnterpriseContactModalProps) {
@@ -67,10 +67,10 @@ export function EnterpriseContactModal({ open, onClose }: EnterpriseContactModal
 
   const isFormValid = () => {
     return formData.companyName &&
-           formData.contactName &&
-           formData.contactEmail &&
-           formData.jobTitle &&
-           formData.useCase;
+      formData.contactName &&
+      formData.contactEmail &&
+      formData.jobTitle &&
+      formData.useCase;
   };
 
   const handleSubmit = async (shouldBookCall: boolean) => {
@@ -138,10 +138,10 @@ export function EnterpriseContactModal({ open, onClose }: EnterpriseContactModal
                 <Check className="w-8 h-8 text-emerald-600 dark:text-emerald-400" />
               </div>
               <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
-                Thanks for your enquiry
+                Merci pour votre demande
               </h3>
               <p className="text-sm text-gray-600 dark:text-gray-400 text-center">
-                {bookedCall ? "Booking call with Hendrik" : "We'll be in touch soon"}
+                {bookedCall ? "Réservation de l'appel avec Hendrik" : "Nous vous contacterons bientôt"}
               </p>
             </motion.div>
           ) : (
@@ -157,10 +157,10 @@ export function EnterpriseContactModal({ open, onClose }: EnterpriseContactModal
                   <Building2 className="w-7 h-7 text-slate-700 dark:text-slate-300" />
                 </div>
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
-                  Enterprise AI Search Infrastructure
+                  Infrastructure de recherche IA Entreprise
                 </h2>
                 <p className="text-gray-600 dark:text-gray-400 text-sm max-w-md mx-auto">
-                  Deploy enterprise-grade biomedical search and AI agents in your organization
+                  Déployez une recherche biomédicale de classe entreprise et des agents IA au sein de votre organisation
                 </p>
               </div>
 
@@ -168,11 +168,11 @@ export function EnterpriseContactModal({ open, onClose }: EnterpriseContactModal
               <div className="space-y-6">
                 {/* Company Details */}
                 <div className="space-y-4">
-                  <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100">Company Details</h3>
+                  <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100">Détails de l'entreprise</h3>
 
                   <div>
                     <label htmlFor="companyName" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                      Company Name <span className="text-red-500">*</span>
+                      Nom de l'entreprise <span className="text-red-500">*</span>
                     </label>
                     <Input
                       type="text"
@@ -188,11 +188,11 @@ export function EnterpriseContactModal({ open, onClose }: EnterpriseContactModal
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label htmlFor="companySize" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                        Company Size
+                        Taille de l'entreprise
                       </label>
                       <Select value={formData.companySize} onValueChange={(value) => handleSelectChange('companySize', value)}>
                         <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Select size" />
+                          <SelectValue placeholder="Sélectionner la taille" />
                         </SelectTrigger>
                         <SelectContent>
                           {COMPANY_SIZES.map(size => (
@@ -204,11 +204,11 @@ export function EnterpriseContactModal({ open, onClose }: EnterpriseContactModal
 
                     <div>
                       <label htmlFor="industry" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                        Industry
+                        Secteur d'activité
                       </label>
                       <Select value={formData.industry} onValueChange={(value) => handleSelectChange('industry', value)}>
                         <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Select industry" />
+                          <SelectValue placeholder="Sélectionner le secteur" />
                         </SelectTrigger>
                         <SelectContent>
                           {INDUSTRIES.map(industry => (
@@ -222,11 +222,11 @@ export function EnterpriseContactModal({ open, onClose }: EnterpriseContactModal
 
                 {/* Contact Details */}
                 <div className="space-y-4">
-                  <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100">Your Details</h3>
+                  <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100">Vos détails</h3>
 
                   <div>
                     <label htmlFor="contactName" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                      Full Name <span className="text-red-500">*</span>
+                      Nom complet <span className="text-red-500">*</span>
                     </label>
                     <Input
                       type="text"
@@ -242,7 +242,7 @@ export function EnterpriseContactModal({ open, onClose }: EnterpriseContactModal
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label htmlFor="contactEmail" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                        Email <span className="text-red-500">*</span>
+                        E-mail <span className="text-red-500">*</span>
                       </label>
                       <Input
                         type="email"
@@ -257,7 +257,7 @@ export function EnterpriseContactModal({ open, onClose }: EnterpriseContactModal
 
                     <div>
                       <label htmlFor="jobTitle" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                        Job Title <span className="text-red-500">*</span>
+                        Poste <span className="text-red-500">*</span>
                       </label>
                       <Input
                         type="text"
@@ -275,7 +275,7 @@ export function EnterpriseContactModal({ open, onClose }: EnterpriseContactModal
                 {/* Use Case */}
                 <div>
                   <label htmlFor="useCase" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    Tell us about your needs <span className="text-red-500">*</span>
+                    Parlez-nous de vos besoins <span className="text-red-500">*</span>
                   </label>
                   <Textarea
                     id="useCase"
@@ -284,7 +284,7 @@ export function EnterpriseContactModal({ open, onClose }: EnterpriseContactModal
                     onChange={handleChange}
                     rows={4}
                     className="resize-none"
-                    placeholder="Describe your use case, team size, specific requirements, or integration needs..."
+                    placeholder="Décrivez votre cas d'utilisation, la taille de l'équipe, vos besoins spécifiques ou d'intégration..."
                     required
                   />
                 </div>
@@ -296,8 +296,8 @@ export function EnterpriseContactModal({ open, onClose }: EnterpriseContactModal
                       <Check className="w-5 h-5 text-slate-600 dark:text-slate-400" />
                     </div>
                     <div className="text-sm text-slate-900 dark:text-slate-100">
-                      <p className="font-medium mb-1">Enterprise-grade security</p>
-                      <p className="text-slate-600 dark:text-slate-400">Trusted by leading research institutions worldwide</p>
+                      <p className="font-medium mb-1">Sécurité de classe entreprise</p>
+                      <p className="text-slate-600 dark:text-slate-400">Utilisé par les plus grandes institutions de recherche au monde</p>
                     </div>
                   </div>
                 </div>
@@ -313,7 +313,7 @@ export function EnterpriseContactModal({ open, onClose }: EnterpriseContactModal
                       <Loader2 className="w-4 h-4 animate-spin" />
                     ) : (
                       <>
-                        <span>Submit & Book Call</span>
+                        <span>Envoyer et réserver un appel</span>
                         <ExternalLink className="w-4 h-4" />
                       </>
                     )}

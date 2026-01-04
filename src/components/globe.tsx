@@ -212,68 +212,68 @@ export const Globe = forwardRef<GlobeRef, GlobeProps>(function Globe({ onLocatio
       // Handle clicks on the map (only if no marker and interaction enabled)
       if (!marker && !disableInteraction) {
         map.on('click', async (e) => {
-        const { lng, lat } = e.lngLat;
-        const zoom = map.getZoom();
+          const { lng, lat } = e.lngLat;
+          const zoom = map.getZoom();
 
-        try {
-          // Reverse geocode to get the location name with types parameter
-          const response = await fetch(
-            `https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?types=country,region,place,locality,district&access_token=${mapboxToken}`
-          );
-          const data = await response.json();
+          try {
+            // Reverse geocode to get the location name with types parameter
+            const response = await fetch(
+              `https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?types=country,region,place,locality,district&access_token=${mapboxToken}`
+            );
+            const data = await response.json();
 
-          if (data.features && data.features.length > 0) {
-            // Select appropriate feature based on zoom level
-            let selectedFeature = data.features[0];
+            if (data.features && data.features.length > 0) {
+              // Select appropriate feature based on zoom level
+              let selectedFeature = data.features[0];
 
-            // Zoom level guidelines:
-            // < 5: World/Continental view - ALWAYS prefer country
-            // 5-7: Country view - prefer country or large region
-            // 7-10: Regional view - prefer region or place
-            // > 10: City view - prefer place or locality
+              // Zoom level guidelines:
+              // < 5: World/Continental view - ALWAYS prefer country
+              // 5-7: Country view - prefer country or large region
+              // 7-10: Regional view - prefer region or place
+              // > 10: City view - prefer place or locality
 
-            if (zoom < 5) {
-              // Zoomed out - ALWAYS prefer country
-              selectedFeature = data.features.find((f: any) => f.place_type?.includes('country')) || data.features[0];
-            } else if (zoom < 7) {
-              // Medium zoom - prefer country or large region
-              selectedFeature = data.features.find((f: any) =>
-                f.place_type?.includes('country') || f.place_type?.includes('region')
-              ) || data.features[0];
-            } else if (zoom < 10) {
-              // Zoomed in - prefer region or place
-              selectedFeature = data.features.find((f: any) =>
-                f.place_type?.includes('region') || f.place_type?.includes('place')
-              ) || data.features[0];
+              if (zoom < 5) {
+                // Zoomed out - ALWAYS prefer country
+                selectedFeature = data.features.find((f: any) => f.place_type?.includes('country')) || data.features[0];
+              } else if (zoom < 7) {
+                // Medium zoom - prefer country or large region
+                selectedFeature = data.features.find((f: any) =>
+                  f.place_type?.includes('country') || f.place_type?.includes('region')
+                ) || data.features[0];
+              } else if (zoom < 10) {
+                // Zoomed in - prefer region or place
+                selectedFeature = data.features.find((f: any) =>
+                  f.place_type?.includes('region') || f.place_type?.includes('place')
+                ) || data.features[0];
+              }
+              // Else: use most specific (default first feature) for very zoomed in views
+
+              const locationName = selectedFeature.place_name || selectedFeature.text || `Emplacement (${lat.toFixed(2)}, ${lng.toFixed(2)})`;
+
+              // Add a marker
+              new mapboxgl.Marker({ color: '#FF6B6B' })
+                .setLngLat([lng, lat])
+                .setPopup(
+                  new mapboxgl.Popup({ offset: 25 })
+                    .setHTML(`<h3 class="font-semibold">${locationName}</h3><p class="text-sm">Cliquez pour rechercher l'histoire</p>`)
+                )
+                .addTo(map);
+
+              // Trigger the location click callback
+              onLocationClick({
+                name: locationName,
+                lat,
+                lng,
+              });
             }
-            // Else: use most specific (default first feature) for very zoomed in views
-
-            const locationName = selectedFeature.place_name || selectedFeature.text || `Location (${lat.toFixed(2)}, ${lng.toFixed(2)})`;
-
-            // Add a marker
-            new mapboxgl.Marker({ color: '#FF6B6B' })
-              .setLngLat([lng, lat])
-              .setPopup(
-                new mapboxgl.Popup({ offset: 25 })
-                  .setHTML(`<h3 class="font-semibold">${locationName}</h3><p class="text-sm">Click to research history</p>`)
-              )
-              .addTo(map);
-
-            // Trigger the location click callback
+          } catch (error) {
+            // Fallback: use coordinates
             onLocationClick({
-              name: locationName,
+              name: `Emplacement (${lat.toFixed(2)}, ${lng.toFixed(2)})`,
               lat,
               lng,
             });
           }
-        } catch (error) {
-          // Fallback: use coordinates
-          onLocationClick({
-            name: `Location (${lat.toFixed(2)}, ${lng.toFixed(2)})`,
-            lat,
-            lng,
-          });
-        }
         });
       }
 
@@ -287,7 +287,7 @@ export const Globe = forwardRef<GlobeRef, GlobeProps>(function Globe({ onLocatio
       });
 
     } catch (err) {
-      setError('Failed to initialize map');
+      setError('Échec de l\'initialisation de la carte');
       setIsLoading(false);
     }
 
@@ -348,14 +348,14 @@ export const Globe = forwardRef<GlobeRef, GlobeProps>(function Globe({ onLocatio
               f.place_type?.includes('country') || f.place_type?.includes('region')
             ) || data.features[0];
 
-            const locationName = selectedFeature.place_name || selectedFeature.text || `Location (${lat.toFixed(2)}, ${lng.toFixed(2)})`;
+            const locationName = selectedFeature.place_name || selectedFeature.text || `Emplacement (${lat.toFixed(2)}, ${lng.toFixed(2)})`;
 
             // Add a marker
             new mapboxgl.Marker({ color: '#FF6B6B' })
               .setLngLat([lng, lat])
               .setPopup(
                 new mapboxgl.Popup({ offset: 25 })
-                  .setHTML(`<h3 class="font-semibold">${locationName}</h3><p class="text-sm">Researching history...</p>`)
+                  .setHTML(`<h3 class="font-semibold">${locationName}</h3><p class="text-sm">Recherche de l'histoire...</p>`)
               )
               .addTo(map);
 
@@ -369,7 +369,7 @@ export const Globe = forwardRef<GlobeRef, GlobeProps>(function Globe({ onLocatio
         } catch (error) {
           // Fallback: use coordinates
           onLocationClick({
-            name: `Location (${lat.toFixed(2)}, ${lng.toFixed(2)})`,
+            name: `Emplacement (${lat.toFixed(2)}, ${lng.toFixed(2)})`,
             lat,
             lng,
           });
@@ -382,10 +382,10 @@ export const Globe = forwardRef<GlobeRef, GlobeProps>(function Globe({ onLocatio
     return (
       <div className="w-full h-full flex items-center justify-center bg-muted">
         <div className="text-center">
-          <h3 className="text-lg font-semibold text-destructive mb-2">Map Error</h3>
+          <h3 className="text-lg font-semibold text-destructive mb-2">Erreur de carte</h3>
           <p className="text-sm text-muted-foreground">{error}</p>
           <p className="text-xs text-muted-foreground mt-2">
-            Please check your Mapbox configuration
+            Veuillez vérifier votre configuration Mapbox
           </p>
         </div>
       </div>
@@ -398,15 +398,15 @@ export const Globe = forwardRef<GlobeRef, GlobeProps>(function Globe({ onLocatio
         <div className="absolute inset-0 flex items-center justify-center bg-background z-10">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-            <p className="text-sm text-muted-foreground">Loading globe...</p>
+            <p className="text-sm text-muted-foreground">Chargement du globe...</p>
           </div>
         </div>
       )}
       <div ref={mapContainerRef} className="w-full h-full" />
       {!marker && (
         <div className="absolute bottom-4 left-4 bg-background/90 backdrop-blur-sm px-4 py-2 rounded-lg shadow-lg">
-          <p className="text-sm font-medium">Click anywhere on the globe to research its history</p>
-          <p className="text-xs text-muted-foreground mt-1">Rotation pauses when you interact</p>
+          <p className="text-sm font-medium">Cliquez n'importe où sur le globe pour rechercher son histoire</p>
+          <p className="text-xs text-muted-foreground mt-1">La rotation s'arrête lors de l'interaction</p>
         </div>
       )}
     </div>
